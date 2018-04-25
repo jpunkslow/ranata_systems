@@ -1,6 +1,6 @@
 <?php
 
-class Auth extends MY_Controller {
+class Signin extends MY_Controller {
 
     function __construct() {
         parent::__construct();
@@ -22,7 +22,7 @@ class Auth extends MY_Controller {
             if ($this->form_validation->run() == FALSE) {
 
                 $view_data["redirect"] = $redirect;
-                $this->load->view('index', $view_data);
+                $this->load->view('signin/index', $view_data);
             } else {
 
                 if ($redirect) {
@@ -65,7 +65,7 @@ class Auth extends MY_Controller {
             $parser_data["SIGNATURE"] = $email_template->signature;
             $parser_data["SITE_URL"] = get_uri();
             $key = encode_id($this->encrypt->encode($existing_user->email . '|' . (time() + (24 * 60 * 60))), "reset_password");
-            $parser_data['RESET_PASSWORD_URL'] = get_uri("auth/new_password/" . $key);
+            $parser_data['RESET_PASSWORD_URL'] = get_uri("signin/new_password/" . $key);
 
             $message = $this->parser->parse_string($email_template->message, $parser_data, TRUE);
             if (send_app_mail($email, $email_template->subject, $message)) {
@@ -82,7 +82,7 @@ class Auth extends MY_Controller {
     //show forgot password recovery form
     function request_reset_password() {
         $view_data["form_type"] = "request_reset_password";
-        $this->load->view('index', $view_data);
+        $this->load->view('signin/index', $view_data);
     }
 
     //when user clicks to reset password link from his/her email, redirect to this url
@@ -95,7 +95,7 @@ class Auth extends MY_Controller {
             if ($this->Users_model->is_email_exists($email)) {
                 $view_data["key"] = $key;
                 $view_data["form_type"] = "new_password";
-                $this->load->view('index', $view_data);
+                $this->load->view('signin/index', $view_data);
                 return false;
             }
         }
