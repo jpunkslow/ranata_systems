@@ -1,0 +1,1 @@
+!function(){"use strict";$(document).ready(function(){$("#tab-container").easytabs({updateHash:!1})})}(jQuery);

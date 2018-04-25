@@ -1,0 +1,1 @@
+!function(){"use strict";$(".banner-area").flexslider({animation:"fade",start:function(){$("body").removeClass("loading")}})}(jQuery);
