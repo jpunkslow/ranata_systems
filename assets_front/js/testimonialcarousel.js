@@ -1,1 +1,0 @@
-!function(){"use strict";$(".carousel").carousel({interval:5e3})}(jQuery);
