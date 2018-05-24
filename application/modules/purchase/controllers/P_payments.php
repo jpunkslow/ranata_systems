@@ -347,7 +347,7 @@ class P_payments extends MY_Controller {
         $query = $this->Master_Vendors_model->get_details($options)->row();
         // $value = $this->Purchase_Payments_model->get_payments_total_summary($data->id);
         $row_data = array(
-            $data->code,
+            anchor(get_uri("purchase/p_payments/view/" . $data->id), "#".$data->code),
             // $data->fid_inv,
             $query->name." - ".$query->company_name,
             $data->paid,
@@ -368,7 +368,7 @@ class P_payments extends MY_Controller {
         );
 
 
-        $row_data[] = anchor(get_uri("purchase/p_payments/view/").$data->id, "<i class='fa fa-eye'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("purchase/p_payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
+        $row_data[] = anchor(get_uri("purchase/p_payments/nota/").$data->id, "<i class='fa fa-print'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("purchase/p_payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
                 
 
         return $row_data;

@@ -6,22 +6,22 @@
             $sidebar_menu[] = array("name" => "Dashboard","slug"=>"dashboard", "url" => "dashboard", "class" => "fa-desktop");
             
             $jurnal_submenu = array();
-            $jurnal_submenu[] = array("name" => "Payments", "slug"=>"payments","url" => "accounting/payments");
-            $jurnal_submenu[] = array("name" => "Receivements", "slug"=>"receivements","url" => "accounting/receivements");
+            $jurnal_submenu[] = array("name" => "Expenses Cash", "slug"=>"payments","url" => "accounting/expenses");
+            $jurnal_submenu[] = array("name" => "Income Cash", "slug"=>"receivements","url" => "accounting/income");
 
 
-            $sidebar_menu[] = array("name" => "Input Jurnal Kas", "slug"=>"","url" => "#", "class" => "fa-desktop", "submenu" => $jurnal_submenu);
+            $sidebar_menu[] = array("name" => "Input Journal Cash", "slug"=>"","url" => "#", "class" => "fa-desktop", "submenu" => $jurnal_submenu);
 
             $ar_submenu = array();
             $ar_submenu[] = array("name" => "Sales Quotation", "slug"=>"quotation","url" => "sales/quotation");
             $ar_submenu[] = array("name" => "Sales Order", "slug"=>"order","url" => "sales/order");
             $ar_submenu[] = array("name" => "Sales Invoice","slug"=>"s_invoices", "url" => "sales/s_invoices");
-            $ar_submenu[] = array("name" => "Sales Payment", "slug"=>"s_payments","url" => "sales/s_payments");
+            $ar_submenu[] = array("name" => "Sales Receipts", "slug"=>"s_payments","url" => "sales/s_payments");
 
             $sidebar_menu[] = array("name" => "Input AR", "slug"=>"#","url" => "#", "class" => "fa-desktop","submenu" => $ar_submenu);
             
             $ap_submenu = array();
-            $ap_submenu[] = array("name" => "Purchase Request","slug"=>"request", "url" => "purchase/request");
+            $ap_submenu[] = array("name" => "Purchase Requisition","slug"=>"request", "url" => "purchase/request");
             $ap_submenu[] = array("name" => "Purchase Order", "slug"=>"p_order","url" => "purchase/p_order");
             $ap_submenu[] = array("name" => "Purchase Invoice", "slug"=>"p_invoices","url" => "purchase/p_invoices");
             $ap_submenu[] = array("name" => "Purchase Payment", "slug"=>"p_payments","url" => "purchase/p_payments");
@@ -30,30 +30,32 @@
             $sidebar_menu[] = array("name" => "Input AP","slug"=>"#", "url" => "#", "class" => "fa-desktop", "submenu" => $ap_submenu);
             
             $acc_submenu = array();
-            $acc_submenu[] = array("name" => "General Accounts", "slug"=>"general_accounts","url" => "accounting/general_accounts");
-            $acc_submenu[] = array("name" => "Jurnal Umum Entry", "slug"=>"general_ledger","url" => "accounting/general_ledger");
+            $acc_submenu[] = array("name" => "Edit Journal Entry", "slug"=>"general_accounts","url" => "accounting/general_accounts");
+            $acc_submenu[] = array("name" => "General Ledger", "slug"=>"general_ledger","url" => "accounting/general_ledger");
+            $acc_submenu[] = array("name" => "Trial Balance", "slug"=>"general_ledger","url" => "accounting/general_ledger");
 
             $sidebar_menu[] = array("name" => "Accounting","slug"=>"accounting", "url" => "#", "class" => "fa-desktop", "submenu" => $acc_submenu);
 
             $rpt_submenu = array();
-            $rpt_submenu[] = array("name" => "Neraca Saldo", "slug"=>"neraca","url" => "reports/neraca");
-            $rpt_submenu[] = array("name" => "Buku Besar", "slug"=>"bukubesar","url" => "master/bukubesar");
-            $rpt_submenu[] = array("name" => "Laba Rugi", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
+            $rpt_submenu[] = array("name" => "Profit and Loss", "slug"=>"neraca","url" => "reports/neraca");
+            $rpt_submenu[] = array("name" => "Profit and Loss Total", "slug"=>"bukubesar","url" => "master/bukubesar");
+            $rpt_submenu[] = array("name" => "Profit and Loss Project", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
             
-            $rpt_submenu[] = array("name" => "Receivable Of Reports","slug"=>"r_receivable", "url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Payable Of Reports", "slug"=>"r_payable","url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Sales Of Reports", "slug"=>"r_sales","url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Cash Flow Of Reports", "slug"=>"r_cashflow","url" => "master/coa");
+            $rpt_submenu[] = array("name" => "Balance Sheet","slug"=>"r_receivable", "url" => "master/coa");
+            $rpt_submenu[] = array("name" => "Aging Receivable Detail Piutang", "slug"=>"r_payable","url" => "master/coa");
+            $rpt_submenu[] = array("name" => "Aging Payable Detail", "slug"=>"r_sales","url" => "master/coa");
+            $rpt_submenu[] = array("name" => "Sales Reports", "slug"=>"r_cashflow","url" => "master/coa");
+            $rpt_submenu[] = array("name" => "Cash Flow Reports", "slug"=>"r_cashflow","url" => "master/coa");
 
 
             $sidebar_menu[] = array("name" => "Reports", "slug"=>"#","url" => "#", "class" => "fa-desktop", "submenu" => $rpt_submenu);
             // MENU DATA MASTER INPUT
             $master_submenu = array();
             $master_submenu[] = array("name" => "Chart Of Account", "slug"=>"coa","url" => "master/coa");
-            $master_submenu[] = array("name" => "Customer", "slug"=>"customers","url" => "master/customers");
-            $master_submenu[] = array("name" => "Vendor", "slug"=>"vendors","url" => "master/vendors");
-            $master_submenu[] = array("name" => "Products", "slug"=>"items","url" => "master/items");
-            $master_submenu[] = array("name" => "Assets", "slug"=>"assets","url" => "master/assets");
+            $master_submenu[] = array("name" => "Customers", "slug"=>"customers","url" => "master/customers");
+            $master_submenu[] = array("name" => "Vendors", "slug"=>"vendors","url" => "master/vendors");
+            $master_submenu[] = array("name" => "Items or Products", "slug"=>"items","url" => "master/items");
+            $master_submenu[] = array("name" => "Fixed Assets", "slug"=>"assets","url" => "master/assets");
             $master_submenu[] = array("name" => "Projects", "slug"=>"projects","url" => "master/projects");
             // $master_submenu[] = array("name" => "payable", "url" => "accounting/payable");
 

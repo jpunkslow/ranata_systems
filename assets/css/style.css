@@ -422,7 +422,7 @@ a.dark:hover{
     text-decoration: none;
     position: relative;
     display: block;
-    padding: 10px 20px 12px;
+    padding: 10px 5px 12px;
     color:#e8e9ea;
     z-index: 2;
     -moz-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
@@ -508,7 +508,7 @@ a.dark:hover{
 #sidebar-menu li ul > li > a {
     background-color: #9a1010ad;
     border-left: 15px solid #30b792;
-    padding-left: 25px;
+    padding-left: 5px;
     font-weight: normal;
     font-size: 13px;
 }

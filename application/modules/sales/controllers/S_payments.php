@@ -368,7 +368,7 @@ class S_payments extends MY_Controller {
         );
 
 
-        $row_data[] = anchor(get_uri("sales/payments/view/").$data->id, "<i class='fa fa-eye'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("sales/payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
+        $row_data[] = anchor(get_uri("sales/payments/view/").$data->id, "<i class='fa fa-print'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("sales/payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
                 
 
         return $row_data;

@@ -395,7 +395,7 @@ class S_invoices extends MY_Controller {
     private function _make_item_row($data) {
         $item = "<b>$data->title</b>";
         if ($data->description) {
-            $item.="<br /><span>" . nl2br($data->description) . "</span>";
+            $item.="<br /><span>" . nl2br($data->description) . "</span><br><span style='float:right;'>".$data->category."<span>";
         }
         $type = $data->unit_type ? $data->unit_type : "";
 

@@ -189,6 +189,10 @@ $autoload['model'] = array(
 
     'purchase/Purchase_Request_model',
     'purchase/Purchase_RequestItems_model',
+
+    //LOAD REFERENCE MODEL
+    'reference/Ref_category_model',
+    'reference/Ref_utype_model'
     
 
 );

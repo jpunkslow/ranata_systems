@@ -477,7 +477,10 @@ class Order extends MY_Controller {
     function item_list_data($invoice_id = 0) {
 
         $list_data = $this->Sales_OrderItems_model->get_details(array("fid_order" => $invoice_id))->result();
+
+        $cat = $this->Ref_category_model->get_details()->row();
         $result = array();
+
         foreach ($list_data as $data) {
             $result[] = $this->_make_item_row($data);
         }
@@ -487,16 +490,46 @@ class Order extends MY_Controller {
 
     }
 
+    function item_list_data_test($invoice_id = 0){
+        $list_data = $this->Sales_OrderItems_model->get_details(array("fid_order" => $invoice_id))->result();
+        $cat = $this->Ref_category_model->get_details()->result();
+        $result = array();
+        foreach($cat as $row){
+            $result[] = $this->_make_item_row_test($row);
+            foreach($list_data as $data){
+                if($data->category == $row->category){
+                    $result[] = $this->_make_item_row($data);
+                }
+            }
+        }
+
+        echo json_encode(array("data" => $result));
+
+
+    }
+
+    private function _make_item_row_test($data) {
+        return array(
+            "",
+            $data->category,
+        "",
+        "",
+        "",
+        ""
+        );
+    }
+
     /* prepare a row of invoice item list table */
 
     private function _make_item_row($data) {
         $item = "<b>$data->title</b>";
         if ($data->description) {
-            $item.="<br /><span>" . nl2br($data->description) . "</span>";
+            $item.="<br /><span>" . nl2br($data->description) . "</span><br><span style='float:right;'>".$data->category."<span>";
         }
         $type = $data->unit_type ? $data->unit_type : "";
 
         return array(
+            
             $item,
             to_decimal_format($data->quantity) . " " . $type,
             to_currency($data->rate),
@@ -505,6 +538,8 @@ class Order extends MY_Controller {
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/order/delete_item"), "data-action" => "delete"))
         );
     }
+
+    
 
     function get_item_suggestion() {
         $key = $this->input->get('q');
