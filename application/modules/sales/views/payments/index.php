@@ -1,11 +1,11 @@
 <div id="page-content" class="m20 clearfix">
     <div class="panel panel-default">
         <div class="page-title clearfix">
-            <h1>Customers Receipt</h1>
+            <h1>Sales Receipts</h1>
             <div class="title-button-group">
                 <div class="btn-group" role="group">
                     <?php
-                    echo modal_anchor(get_uri("sales/s_payments/add_receipt"), "<i class='fa fa-plus-circle'></i> " . "Add Cust Receipt", array("class" => "btn btn-primary", "title" => "Add Cust Receipt"));
+                    echo modal_anchor(get_uri("sales/s_payments/add_receipt"), "<i class='fa fa-plus-circle'></i> " . "Add Sales Receipt", array("class" => "btn btn-primary", "title" => "Add Sales Receipt"));
                 
                 ?>
                 </div>
@@ -34,13 +34,13 @@
             source: '<?php echo_uri("sales/s_payments/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: "NO VOUCHER #"},
-                {title: "CUSTOMERS"},
+                {title: "KODE VOUCHER #"},
+                {title: "CUSTOMER"},
                 {title: "STATUS","class": "text-center"},
                 // {title: "KAS"},
-                {title: "TANGGAL"},
+                {title: "PAY DATE"},
                 {title: "MEMO"},
-                {title: "MATA UANG","class": "text-center"},
+                {title: "CURRENCY","class": "text-center"},
                 {title: "TOTAL", "class": "text-right"},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
             ],

@@ -13,7 +13,7 @@
                     <ul class="dropdown-menu" role="menu">
                         
                         <li role="presentation"><?php echo anchor(get_uri("sales/s_invoices/download_pdf/" . $invoice_info->id), "<i class='fa fa-download'></i> " . lang('download_pdf'), array("title" => lang('download_pdf'))); ?> </li>
-                        <li role="presentation"><?php echo anchor(get_uri("sales/s_invoices/preview/" . $invoice_info->id . "/1"), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
+                        <li role="presentation"><?php echo anchor(get_uri("sales/s_invoices/preview/" . $invoice_info->id ), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
                         <li role="presentation" class="divider"></li>
                         <?php if($invoice_info->status != "paid"){ ?>
                         <li role="presentation"><?php echo modal_anchor(get_uri("sales/s_invoices/modal_form_edit"), "<i class='fa fa-edit'></i> " . lang('edit_invoice'), array("title" => lang('edit_invoice'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?> </li>
@@ -25,6 +25,7 @@
                         <?php if($invoice_info->status != "paid"){ ?>
                 <?php echo modal_anchor(get_uri("sales/s_invoices/item_modal_form"), "<i class='fa fa-plus-circle'></i> " . lang('add_item'), array("class" => "btn btn-default", "title" => lang('add_item'), "data-post-invoice_id" => $invoice_info->id)); } ?>
                 <?php  echo modal_anchor(get_uri("sales/s_invoices/send_invoice_modal_form/" . $invoice_info->id), "<i class='fa fa-envelope-o'></i> " . "Send Email Invoice", array("class" => "btn btn-primary","title" => lang('email_invoice_to_client'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?>
+                <?php  echo modal_anchor(get_uri("sales/s_invoices/posting_modal_form/" . $invoice_info->id), "<i class='fa fa-money'></i> " . "Posting Invoices", array("class" => "btn btn-default","title" => "Posting to Journal", "data-post-id" => $invoice_info->id)); ?>
             </div>
         </div>
 
@@ -95,11 +96,12 @@
             order: [[0, "asc"]],
             hideTools: true,
             columns: [
+
+                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"},
                 {title: '<?php echo lang("item") ?> '},
                 {title: '<?php echo lang("quantity") ?>', "class": "text-right w15p"},
                 {title: '<?php echo lang("rate") ?>', "class": "text-right w15p"},
-                {title: '<?php echo lang("total") ?>', "class": "text-right w15p"},
-                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
+                {title: '<?php echo lang("total") ?>', "class": "text-right w15p"}
             ],
             onDeleteSuccess: function (result) {
                 $("#invoice-total-section").html(result.invoice_total_view);

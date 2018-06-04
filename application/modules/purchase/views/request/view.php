@@ -1,7 +1,7 @@
 <div id="page-content" class="clearfix">
     <div style="max-width: 1000px; margin: auto;">
         <div class="page-title clearfix mt15">
-            <h1> <?php echo "Request : ".get_request_id($invoice_info->code); ?>
+            <h1> <?php echo "REQUEST : ".get_request_id($invoice_info->code); ?>
                 
             </h1>
             <div class="title-button-group">
@@ -20,6 +20,7 @@
                         
                     </ul>
                 </span>
+                <?php echo modal_anchor(get_uri("purchase/request/item_modal_form"), "<i class='fa fa-plus-circle'></i> " . lang('add_item'), array("class" => "btn btn-default", "title" => lang('add_item'), "data-post-invoice_id" => $invoice_info->id)); ?>
                 <?php  echo modal_anchor(get_uri("purchase/request/send_request_modal_form/" . $invoice_info->id), "<i class='fa fa-envelope-o'></i> " . "Email Request", array("class" => "btn btn-primary","title" => lang('email_invoice_to_client'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?>
             </div>
         </div>
@@ -37,17 +38,17 @@
                     <div class="col-sm-6">
                         <table style="font-size:14px;">
                             <tr>
-                                <td width="200">Nomer Request</td>
-                                <td>:</td>
+                                <td width="200">Request Code</td>
+                                <td width="20">:</td>
                                 <td> <strong>#<?php echo $invoice_info->code ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Tanggal Buat</td>
+                                <td>Created Date</td>
                                 <td>:</td>
                                 <td> <?php echo format_to_date($invoice_info->created_at,true) ?></td>
                             </tr>
                             <tr>
-                                <td>Tanggal Kadaluarsa</td>
+                                <td>Expired Date</td>
                                 <td>:</td>
                                 <td> <?php echo format_to_date($invoice_info->exp_date,false) ?></td>
                             </tr>
@@ -56,14 +57,14 @@
                     <div class="col-sm-6">
                         <table style="font-size:14px;" class="display">
                             <tr>
-                                <td width="200">Nama Pelanggan</td>
-                                <td>:</td>
-                                <td> <strong><?php echo $client_info->name."(".$client_info->name.")" ?></strong></td>
+                                <td width="200">Vendor Name</td>
+                                <td width="20">:</td>
+                                <td> <strong><?php echo $client_info->code." - ".$client_info->name ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Status</td>
+                                <td>Contacts</td>
                                 <td>:</td>
-                                <td> <?php echo $invoice_info->status ?></td>
+                                <td> <?php echo ($client_info->contact ? $client_info->contact : $client_info->mobile_number) ?></td>
                             </tr>
                             <tr>
                                 <td>Email</td>
@@ -76,7 +77,7 @@
                 <hr>
                 <div class="clearfix">
                     
-                <?php echo modal_anchor(get_uri("purchase/request/item_modal_form"), "<i class='fa fa-plus-circle'></i> " . lang('add_item'), array("class" => "btn btn-primary", "title" => lang('add_item'), "data-post-invoice_id" => $invoice_info->id)); ?>
+                
                 </div>
 
                 <div class="table-responsive mt15 pl15 pr15">

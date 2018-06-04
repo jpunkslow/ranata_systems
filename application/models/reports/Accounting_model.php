@@ -5,9 +5,8 @@ class Accounting_model extends CI_Model {
 
 	function getJenisKas() {
 		$this->db->select('*');
-		$this->db->from('acc_nama_kas_tbl');
-		$this->db->where('aktif','Y');
-		$this->db->order_by('id', 'ASC');
+		$this->db->from('acc_coa_type');
+		$this->db->order_by('account_number', 'ASC');
 		$query = $this->db->get();
 		if($query->num_rows()>0){
 			$out = $query->result();
@@ -105,5 +104,22 @@ class Accounting_model extends CI_Model {
 
 		$query = $this->db->get();
 		return $query->row();
+	}
+
+
+
+	function getCoaHead(){
+		$data = $this->db->query("SELECT * FROM acc_coa_type WHERE deleted = 0 order by account_number ASC");
+		return $data;
+	}
+
+	function getDebetKas($id){
+		$data = $this->db->query("SELECT SUM(debet) as debet FROM transaction_journal WHERE  fid_coa = $id AND deleted = 0")->row();		
+		return $data;
+	}
+
+	function getCreditKas($id){
+		$data = $this->db->query("SELECT SUM(credit) as credit FROM transaction_journal WHERE  fid_coa = $id AND deleted = 0")->row();
+		return $data;		
 	}
 }

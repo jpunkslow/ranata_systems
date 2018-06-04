@@ -1,7 +1,7 @@
-<div><b><?php echo "Quot To"; ?></b></div>
+<div><b><?php echo "QUOT TO"; ?></b></div>
 <div style="line-height: 2px; border-bottom: 1px solid #f2f2f2;"> </div>
 <div style="line-height: 3px;"> </div>
-<strong><?php echo $client_info->company_name; ?> </strong>
+<strong><span><?php echo $client_info->code.' - '.$client_info->name; ?></span> </strong>
 <div style="line-height: 3px;"> </div>
 <span class="invoice-meta" style="font-size: 90%; color: #666;">
     <?php if ($client_info->address) { ?>
@@ -17,7 +17,9 @@
             <?php } ?>
             <?php if ($client_info->country) { ?>
                 <br /><?php echo $client_info->country; ?>
-            <?php } ?>
+            <?php } if ($client_info->mobile){
+                echo "<br>".$client_info->mobile;
+            } ?>
             
 
 

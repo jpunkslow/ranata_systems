@@ -1,7 +1,7 @@
 <div id="page-content" class="p20 clearfix">
     <div class="panel panel-default">
         <div class="page-title clearfix">
-            <h1> Master Produk</h1>
+            <h1> Master Item Products</h1>
             <div class="title-button-group">
                 <?php echo modal_anchor(get_uri("master/items/modal_form"), "<i class='fa fa-plus-circle'></i> " . lang('add_item'), array("class" => "btn btn-primary", "title" => lang('add_item'))); ?>
             </div>
@@ -20,10 +20,11 @@
             source: '<?php echo_uri("master/items/list_data") ?>',
             order: [[0, 'desc']],
             columns: [
-                {title: 'Nama Produk'},
-                {title: 'Kode Pajak'},
-                {title: 'Kategori'},
-                {title: 'Tipe'},
+                {title: 'Item Name'},
+                {title: 'Tax Code'},
+                {title: 'Category'},
+                {title: 'Type'},
+                {title: 'Price'},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
             ],
             printColumns: [0, 1, 2, 3, 4],

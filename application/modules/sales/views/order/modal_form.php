@@ -25,7 +25,7 @@
         <label for="fid_quot" class=" col-md-3">REF QUOT#</label>
             <div class=" col-md-9">
                 <?php
-                   echo form_dropdown("fid_quot", $quot_dropdown, "", "class='select2 validate-hidden' id='quot' ");
+                   echo form_dropdown("fid_quot", $quot_dropdown, "", "class='select2 validate-hidden' id='fid_quot' ");
                     ?>
             </div>
     </div>    
@@ -119,6 +119,7 @@
         </div>
     </div>
     
+    
 </div>
 
 <div class="modal-footer">
@@ -173,6 +174,30 @@
 
                          $.each(data, function(index, element) {
 
+                            $("#email_to").val(element.email);
+                            $("#inv_address").val(element.address);
+                            $("#delivery_address").val(element.address);
+                         });
+                    }
+                });
+            }
+        });
+        $("#fid_quot").select2().on("change", function () {
+            var client_id = $(this).val();
+            if ($(this).val()) {
+                // $('#invoice_project_id').select2("destroy");
+                // $("#invoice_project_id").hide();
+                // appLoader.show({container: "#invoice-porject-dropdown-section"});
+                $.ajax({
+                    url: "<?php echo get_uri("sales/order/getQuotId") ?>" + "/" + client_id,
+                    dataType: "json",
+                    // data: data,
+                    type:'GET',
+                    success: function (data) {
+
+                         $.each(data, function(index, element) {
+                            $("#fid_cust").val(element.id).select2();
+                            
                             $("#email_to").val(element.email);
                             $("#inv_address").val(element.address);
                             $("#delivery_address").val(element.address);

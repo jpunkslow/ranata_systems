@@ -9,8 +9,8 @@
             <td><?php echo to_currency($invoice_total_summary->tax, $invoice_total_summary->currency_symbol); ?></td>
         </tr>
     <?php } ?>
-    <!-- <tr>
-        <td><?php echo lang("balance_due"); ?></td>
-        <td><?php echo to_currency($invoice_total_summary->balance_due, $invoice_total_summary->currency_symbol); ?></td>
-    </tr> -->
+    <tr>
+        <td><?php echo "Grand Total"; ?></td>
+        <td><?php echo to_currency($invoice_total_summary->invoice_total, $invoice_total_summary->currency_symbol); ?></td>
+    </tr> 
 </table>

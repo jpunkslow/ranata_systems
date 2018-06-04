@@ -12,11 +12,33 @@ class S_invoices extends MY_Controller {
         $this->load->model('sales/Sales_Order_model');
 
         $this->load->model('sales/Sales_InvoicesItems_model');
+        $this->load->model('sales/Sales_Payments_model');
+           
     }
 
     function index() {
 
         $this->template->rander("invoice/index");
+    }
+
+    function getOrderId($id){
+
+        if(!empty($id)){
+            $options = array(
+                "id" => $id,
+            );
+            $data = $this->Sales_Order_model->get_details($options)->row();
+            if($data){
+                $data_cust = $this->Master_Customers_model->get_details(array("id" => $data->fid_cust))->row();
+                
+                echo json_encode(array("success" => true,"data" => $data_cust));    
+            }else{
+                echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+            }
+            
+        }else{
+            echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+        }
     }
 
     /* load client add/edit modal */
@@ -32,6 +54,9 @@ class S_invoices extends MY_Controller {
 
         $this->load->view('invoice/modal_form',$view_data);
     }
+
+
+
 
     function modal_form_edit() {
 
@@ -54,6 +79,30 @@ class S_invoices extends MY_Controller {
         
 
         $this->load->view('invoice/modal_form_edit', $view_data);
+    }
+
+    function posting_modal_form() {
+
+        validate_submitted_data(array(
+            "id" => "numeric"
+        ));
+
+
+        $id = $this->input->post('id');
+        $options = array(
+            "id" => $id,
+        );
+
+
+        $view_data = get_s_invoices_making_data($id);
+        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+       
+       
+        $view_data['model_info'] = $this->Sales_Invoices_model->get_details($options)->row();
+       
+        
+
+        $this->load->view('invoice/posting_modal_form', $view_data);
     }
 
     /* insert or update a client */
@@ -82,9 +131,10 @@ class S_invoices extends MY_Controller {
 
         
 
-        $save_id = $this->Sales_Invoices_model->save($data);
-        if ($save_id) {
-            $check = $this->db->query("SELECT * FROM sales_order_items WHERE fid_order = '$order_id'")->result();
+        
+        if (!empty($order_id)) {
+            $save_id = $this->Sales_Invoices_model->save($data);
+            $check = $this->db->query("SELECT * FROM sales_order_items WHERE fid_order = '$order_id' AND deleted = 0")->result();
 
             if($check){
                 foreach($check as $row){
@@ -96,15 +146,15 @@ class S_invoices extends MY_Controller {
                         "category" => $row->category,
                         "quantity" => $row->quantity,
                         "unit_type" => $row->unit_type,
+                        "basic_price" => $row->basic_price,
                         "rate" => $row->rate,
                         "total" => $row->total
                     );
 
+                    $save_data = $this->Sales_InvoicesItems_model->save($item["data"]);
                 }
 
-                $save_data = $this->Sales_InvoicesItems_model->save($item["data"]);
 
-                if($save_data){
                     $query = array("fid_order" => $order_id);
                     $exe = $this->Sales_Invoices_model->save($query,$save_id); 
                
@@ -112,14 +162,19 @@ class S_invoices extends MY_Controller {
                     $item_info = $this->Sales_InvoicesItems_model->get_details($options)->row();
                     // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
                     echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
-                }else{
-                    echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-                }
+                
+            }else{
+                 echo json_encode(array("success" => false, 'message' => "GEK BENER ".$order_id));
+            }
+        } else {
+            $save_id = $this->Sales_Invoices_model->save($data);
+            if($save_id){
+                    echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
+                
             }else{
                  echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
             }
-        } else {
-            echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            // echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
         }
     }
 
@@ -156,7 +211,148 @@ class S_invoices extends MY_Controller {
         }
     }
 
+    function posting_save() {
+        $id = $this->input->post('id');
 
+
+        validate_submitted_data(array(
+            "code" => "required"
+            
+        ));
+
+        
+        $code = $this->input->post("code");
+        $voucher_code = "";
+        $date = date("Y-m-d");
+        $type = "sales";
+        $description = $this->input->post("memo");
+        $amount = $this->input->post('amount');
+        $dp = $this->input->post('dp');
+        $pay_type = $this->input->post('pay_type');
+        $fid_coa = $this->input->post('fid_bank');
+        $fid_cust = $this->input->post('fid_cust');
+        $currency = $this->input->post('currency');
+
+
+
+        try{
+
+
+            if($pay_type == "CASH"){
+                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
+                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+
+                $status_data = array("status" => "posting" ,"PAID" => "PAID");
+                $this->Sales_Invoices_model->save($status_data, $id);
+
+                  $data = array(
+                        "code" => getMaxId("sales_payments","PAY"),
+                        "fid_cust" => $fid_cust,
+                        "fid_inv" => $id,
+                        "paid" => "PAID",
+                        "pay_date" => $date,
+                        "fid_bank" => $fid_coa,
+                        "currency" => $currency,
+                        "fid_tax" => $this->input->post('fid_tax'),
+                        "amount" => $amount,
+                        "memo" => $description,
+                        "created_at" => get_current_utc_time()
+                    );
+
+                    
+
+                    $save_id = $this->Sales_Payments_model->save($data);
+            }
+            // if($pay_type == "CREDIT"){
+            //     $curr = 12;
+            //     if($currency == "IDR"){
+            //         $curr = 12;
+            //     }
+            //     if($currency == "USD"){
+            //         $curr = 13;
+            //     }
+            //     $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+            //     $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+            // }
+            if($pay_type == "DP"){
+                $curr = 12;
+                if($currency == "IDR"){
+                    $curr = 12;
+                }
+                if($currency == "USD"){
+                    $curr = 13;
+                }
+                $dp_sum = $amount - $dp;
+
+
+
+                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$dp,0);
+                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$dp_sum,0);
+                $dp_sales = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,29,0,$dp);
+                $sales = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$dp_sum);
+
+                    $status_data = array("status" => "posting" ,"PAID" => "CREDIT");
+                    $this->Sales_Invoices_model->save($status_data, $id);
+
+                   $data = array(
+                        "code" => getMaxId("sales_payments","PAY"),
+                        "fid_cust" => $fid_cust,
+                        "fid_inv" => $id,
+                        "paid" => "CREDIT",
+                        "pay_date" => $date,
+                        "fid_bank" => $fid_coa,
+                        "currency" => $currency,
+                        "fid_tax" => $this->input->post('fid_tax'),
+                        "amount" => $amount,
+                        "residu" => $dp_sum,
+                        "memo" => $description,
+                        "created_at" => get_current_utc_time()
+                    );
+
+                    
+
+                    $save_id = $this->Sales_Payments_model->save($data);
+
+
+            }
+            if ($save_id) {
+
+                echo json_encode(array("success" => true, "data" => $this->_row_data($kas),'message' => lang('record_saved')));
+            } else {
+                echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            }
+
+        }catch(Exception $e){
+            echo json_encode(array("success" => false, 'message' => $e));
+
+        }
+
+        // $save_id = $this->Sales_Invoices_model->save($data, $id);
+        
+    }
+
+    private function _insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$debet,$credit){
+
+        $kas = array(
+                "journal_code" => $code,
+                "voucher_code" => $voucher_code,
+                "date" => $date,
+                "type" => $type,
+                "description" => $description,
+                "fid_coa" => $fid_coa,
+                "fid_header" => "",
+                "debet" => $debet,
+                "credit" => $credit,
+                "username" => "admin"
+            );
+
+           $insert_kas = $this->db->insert("transaction_journal",$kas);
+
+           return $insert_kas;
+
+    }
     /* delete or undo a client */
 
     function delete() {
@@ -214,13 +410,13 @@ class S_invoices extends MY_Controller {
         $value = $this->Sales_Invoices_model->get_invoices_total_summary($data->id);
         $row_data = array(
         
-            anchor(get_uri("sales/s_invoices/view/" . $data->id), "#".$data->code),
+            anchor(get_uri("sales/s_invoices/view/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
             modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
             $this->_get_invoices_status_label($data),
             $data->email_to,
             format_to_date($data->inv_date, false),
             $data->currency,
-            to_currency($value->invoice_subtotal)
+            to_currency($value->invoice_total)
 
         );
 
@@ -265,6 +461,10 @@ class S_invoices extends MY_Controller {
         } else if ($invoice_info->status == "sent") {
             $invoice_status_class   = "label-success";
             $status = "Sudah Terkirim";
+
+        }else if ($invoice_info->status == "posting") {
+            $invoice_status_class   = "label-info";
+            $status = "Posting";
 
         }
         else if ($invoice_info->status == "paid") {
@@ -320,6 +520,8 @@ class S_invoices extends MY_Controller {
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
+            
+            "basic_price" => unformat_currency($this->input->post('invoice_item_basic')),
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
 
             "total" => $rate * $quantity,
@@ -403,31 +605,24 @@ class S_invoices extends MY_Controller {
 
         if($val->status != "paid"){
                     return array(
+                        modal_anchor(get_uri("sales/s_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/s_invoices/delete_item"), "data-action" => "delete")),
             $item,
             to_decimal_format($data->quantity) . " " . $type,
             to_currency($data->rate),
             to_currency($data->total),
 
-            // if($val->status != "paid"){
-                            modal_anchor(get_uri("sales/s_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/s_invoices/delete_item"), "data-action" => "delete"))                
-            // }
-
-            // "&nbsp;"
 
         );
 
         }else{
             return array(
+                "&nbsp;",
             $item,
             to_decimal_format($data->quantity) . " " . $type,
             to_currency($data->rate),
-            to_currency($data->total),
+            to_currency($data->total)
 
-            // if($val->status != "paid"){
-                            // modal_anchor(get_uri("sales/s_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/invoices/delete_item"), "data-action" => "delete"))                
-            // }
-
-            "&nbsp;"
+            
 
         );
 

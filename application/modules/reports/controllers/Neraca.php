@@ -21,6 +21,8 @@ class Neraca extends MY_Controller {
 
     	$view_data['getAkun'] = $this->Accounting_model->getAkun();
 
+        $view_data['getCoa'] = $this->Accounting_model->getCoaHead();
+
 
     	$this->template->rander("reports/r_neraca",$view_data); 
 

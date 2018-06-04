@@ -13,7 +13,7 @@
                     <ul class="dropdown-menu" role="menu">
                         
                         <li role="presentation"><?php echo anchor(get_uri("sales/order/download_pdf/" . $invoice_info->id), "<i class='fa fa-download'></i> " . lang('download_pdf'), array("title" => lang('download_pdf'))); ?> </li>
-                        <li role="presentation"><?php echo anchor(get_uri("sales/order/preview/" . $invoice_info->id . "/1"), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
+                        <li role="presentation"><?php echo anchor(get_uri("sales/order/preview/" . $invoice_info->id ), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
                         <li role="presentation" class="divider"></li>
                         <li role="presentation"><?php echo modal_anchor(get_uri("sales/order/modal_form_edit"), "<i class='fa fa-edit'></i> " . lang('edit_invoice'), array("title" => lang('edit_invoice'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?> </li>
 

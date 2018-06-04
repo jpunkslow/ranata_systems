@@ -18,6 +18,7 @@ class Coa extends MY_Controller{
     }
 
 
+
     function getId($id){
 
         if(!empty($id)){
@@ -30,6 +31,21 @@ class Coa extends MY_Controller{
         }else{
             echo json_encode(array('success' => false,'message' => lang('error_occurred')));
         }
+    }
+
+    function getParentId($id){
+        if(!empty($id)){
+            $query = $this->db->query("SELECT account_number AS max_code from acc_coa_type WHERE id = $id AND deleted = 0")->row();
+
+            $urut = (int) substr($query->max_code, 0);
+            $urut++;
+            $data = $query->max_code;
+        // return $data;
+            echo json_encode(array("success" => true,"data" => array('account_number' => $data)));
+
+        }else{
+            echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+        }   
     }
 
 
@@ -73,27 +89,6 @@ class Coa extends MY_Controller{
 
     function add() {
        
-        //check duplicate email address, if found then show an error message
-        
-
-        // validate_submitted_data(array(
-        //     "kd_aktiva" => "required",
-        //     "coa" => "required",
-        //     "jns_trans" => "required"
-        // ));
-
-        // $user_data = array(
-        //     "kd_aktiva" => $this->input->post('kd_aktiva'),
-        //     "coa" => $this->input->post('coa'),
-        //     "jns_trans" => $this->input->post('jns_trans'),
-        //     "akun" => $this->input->post('akun'),
-        //     "laba_rugi" => $this->input->post('laba_rugi'),
-        //     "neraca" => $this->input->post('neraca'),
-        //     "pemasukan" => $this->input->post('pemasukan'),
-        //     "pengeluaran" => $this->input->post('pengeluaran'),
-        //     "aktif" => $this->input->post('aktif'),
-        //     "saldo_awal" => $this->input->post('saldo_awal')
-        // );
 
         validate_submitted_data(array(
             "account_number" => "required",
@@ -104,6 +99,8 @@ class Coa extends MY_Controller{
         if(empty($parent)){
             $parent = "Head";
         }else{
+            // $get = $this->Master_Coa_Type_model->get_details(array('id' => $parent))->row();
+
             $parent = null;
         }
         $user_data = array(
@@ -114,7 +111,7 @@ class Coa extends MY_Controller{
             "account_type" => $this->input->post('account_type'),
             "reporting" => $this->input->post('reporting'),
             "akun" => $this->input->post('akun'),
-            "parental" => $this->input->post('parent')
+            "parental" => $this->input->post('parent')  
             
         );
 
@@ -223,7 +220,7 @@ class Coa extends MY_Controller{
         $row_data = array(
             // $user_avatar,
             // "no" => $no++,
-    			$data->order_by,
+    			// $data->a,
     			 $data->account_number,
                  $name, 
     			 // $data->account_name,

@@ -104,6 +104,18 @@
             }
         });
 
+        updateInvoiceStatusBar = function (invoiceId) {
+            $.ajax({
+                url: "<?php echo get_uri("purchase/request/get_invoice_status_bar"); ?>/" + invoiceId,
+                success: function (result) {
+                    if (result) {
+                        $("#request-status-bar").html(result);
+                        // $("#status_detail").html(result);
+                    }
+                }
+            });
+        };
+
         initWYSIWYGEditor("#message", {height: 400, toolbar: []});
 
     });

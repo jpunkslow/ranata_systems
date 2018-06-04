@@ -45,7 +45,8 @@ class Items extends MY_Controller {
             "title" => $this->input->post('title'),
             "code" => $this->input->post('code'),
             "category" => $this->input->post('category'),
-            "unit_type" => $this->input->post('unit_type')
+            "unit_type" => $this->input->post('unit_type'),
+            "price" => $this->input->post('price')
         );
 
         $item_id = $this->Master_Items_model->save($item_data);
@@ -69,7 +70,9 @@ class Items extends MY_Controller {
             "title" => $this->input->post('title'),
             "code" => $this->input->post('code'),
             "category" => $this->input->post('category'),
-            "unit_type" => $this->input->post('unit_type')
+            "unit_type" => $this->input->post('unit_type'),
+
+            "price" => $this->input->post('price')
         );
 
         $item_id = $this->Master_Items_model->save($item_data, $id);
@@ -133,6 +136,7 @@ class Items extends MY_Controller {
             $data->code,
             $data->category,
             $data->unit_type,
+            to_currency($data->price,false),
             modal_anchor(get_uri("master/items/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_item'), "data-post-id" => $data->id))
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("master/items/delete"), "data-action" => "delete"))
         );

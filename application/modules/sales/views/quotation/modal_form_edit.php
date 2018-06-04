@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="inv_address" class=" col-md-3">Alamat</label>
+        <label for="inv_address" class=" col-md-3">Address</label>
         <div class="col-md-9">
              <?php 
                 echo form_textarea(array(
@@ -51,13 +51,13 @@
                 "name" => "inv_address",
                 "value" => $model_info->inv_address,
                 "class" => "form-control",
-                "placeholder" => "Alamat",
+                "placeholder" => "Address",
                 ));
             ?>
         </div>
     </div>
     <div class="form-group">
-        <label for="delivery_address" class=" col-md-3">Alamat Pengiriman</label>
+        <label for="delivery_address" class=" col-md-3">Delivery Address</label>
         <div class="col-md-9">
              <?php 
                 echo form_textarea(array(
@@ -65,7 +65,7 @@
                 "name" => "delivery_address",
                 "value" => $model_info->delivery_address,
                 "class" => "form-control",
-                "placeholder" => "Alamat Pengiriman",
+                "placeholder" => "Delivery Address",
                 // "data-rule-required" => true,
                 // "data-msg-required" => lang("field_required"),
             ));
@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="exp_date" class="col-md-3">Tanggal Kadaluarsa</label>
+        <label for="exp_date" class="col-md-3">Expired Date</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -88,9 +88,18 @@
             ?>
         </div>
     </div>
+     <div class="form-group">
+        <label for="fid_tax" class=" col-md-3"><?php echo lang('tax'); ?></label>
+        <div class="col-md-9">
+            <?php
+            echo form_dropdown("fid_tax", $taxes_dropdown, array($model_info->fid_tax), "class='select2 tax-select2'");
+            ?>
+        </div>
+    </div>
+
 
     <div class="form-group">
-        <label for="currency" class=" col-md-3">Mata Uang</label>
+        <label for="currency" class=" col-md-3">Currency</label>
         <div class="col-md-9">
              <?php 
                 echo form_dropdown(

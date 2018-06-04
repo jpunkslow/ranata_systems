@@ -12,7 +12,7 @@
                 "name" => "code",
                 "class" => "form-control validate-hidden",
                 "autofocus" => true,
-                "value" => "/RAN/REQ/".date("Y")."/".date('d'),
+                "value" => getMaxId('purchase_request',"REQ"),
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));

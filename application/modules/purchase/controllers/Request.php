@@ -65,6 +65,8 @@ class Request extends MY_Controller {
             "status" => 'draft',
             "email_to" => $this->input->post('email_to'),
             // "exp_date" => "",
+            "fid_tax" => $this->input->post('fid_tax'),
+
             "currency" => $this->input->post('currency'),
             "created_at" => get_current_utc_time()
         );
@@ -191,7 +193,7 @@ class Request extends MY_Controller {
             $view_data = get_request_making_data($id);
 
             if ($view_data) {
-                $view_data['invoice_status'] = $this->_get_quotation_status_label($view_data["invoice_info"], false);
+                $view_data['invoice_status_label'] = $this->_get_quotation_status_label($view_data["invoice_info"], true);
 
                 $this->template->rander("request/view", $view_data);
             } else {
@@ -203,8 +205,23 @@ class Request extends MY_Controller {
     }
 
      //prepare invoice status label 
-    private function _get_quotation_status_label($data, $return_html = true) {
-        return get_quotation_status_label($data, $return_html);
+    private function _get_quotation_status_label($invoice_info, $return_html = true) {
+        $invoice_status_class = "label-warning";
+        $status = "draft";
+        if ($invoice_info->status == "draft" ) {
+            $invoice_status_class = "label-warning";
+            $status = "Draft";
+        } else if ($invoice_info->status == "sent") {
+            $invoice_status_class   = "label-success";
+            $status = "Sudah Terkirim";
+
+        }
+         $invoice_status = "<span class='label $invoice_status_class large'>" . $status . "</span>";
+        if ($return_html) {
+            return $invoice_status;
+        } else {
+            return $status;
+        }
     }
 
 
@@ -366,7 +383,9 @@ class Request extends MY_Controller {
     function get_invoice_status_bar($invoice_id = 0) {
 
         $view_data["invoice_info"] = $this->Purchase_Request_model->get_details(array("id" => $invoice_id))->row();
-        $view_data['invoice_status_label'] = $this->_get_quotation_status_label($view_data["invoice_info"]);
+        
+        $view_data["client_info"] = $this->Master_Vendors_model->get_details(array("id" => $view_data["invoice_info"]->fid_vendor))->row();
+        $view_data['invoice_status_label'] = $this->_get_quotation_status_label($view_data["invoice_info"],true);
         $this->load->view('request/request_status_bar', $view_data);
     }
 

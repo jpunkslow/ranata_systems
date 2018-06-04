@@ -5,7 +5,7 @@
     
 
     <div class="form-group">
-        <label for="title" class=" col-md-3">Nama Produk</label>
+        <label for="title" class=" col-md-3">Item Name</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="code" class="col-md-3">Kode Pajak</label>
+        <label for="code" class="col-md-3">Tax Code</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="category" class=" col-md-3">Kategori Produk</label>
+        <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
              <?php 
                 echo form_dropdown(
@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="unit_type" class=" col-md-3">Tipe Produk</label>
+        <label for="unit_type" class=" col-md-3">Type</label>
         <div class="col-md-9">
              <?php 
                 echo form_dropdown(
@@ -62,6 +62,20 @@
                         ), $model_info->unit_type, "class='select2 mini'"
                     );
                         ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="price" class="col-md-3">Pricing</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "price",
+                "name" => "price",
+                "value" => $model_info->price,
+                "class" => "form-control",
+                "placeholder" => "Kode Pajak Produk"
+            ));
+            ?>
         </div>
     </div>
 </div>

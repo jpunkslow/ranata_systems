@@ -5,6 +5,24 @@
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">
             <div class="form-group">
+                <label for="code" class=" col-md-3"> Kode Vendor</label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "code",
+                        "name" => "code",
+                        "class" => "form-control",
+                        "placeholder" => 'Customers Name',
+                        "value" => $model_info->code,
+                        "readonly" => true,
+                        "autofocus" => true,
+                        "data-rule-required" => true,
+                        "data-msg-required" => lang("field_required"),
+                    ));
+                    ?>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="name" class=" col-md-3">Vendor Name</label>
                 <div class=" col-md-9">
                     <?php
@@ -21,21 +39,7 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="company_name" class=" col-md-3"> Nama Perusahaan</label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_input(array(
-                        "id" => "company_name",
-                        "name" => "company_name",
-
-                        "value" => $model_info->company_name,
-                        "class" => "form-control",
-                        "placeholder" =>  'Company Name',
-                    ));
-                    ?>
-                </div>
-            </div>
+            
             <div class="form-group">
                 <label for="npwp" class=" col-md-3">NPWP Number</label>
                 <div class=" col-md-9">
@@ -87,14 +91,15 @@
                 <label for="termin" class=" col-md-3">Termin</label>
                 <div class=" col-md-9">
                     <?php
-                    echo form_input(array(
-                        "id" => "termin",
-                        "name" => "termin",
-                        "value" => $model_info->termin,
-                        "class" => "form-control",
-                        "data-rule-required" => true,
-                        "placeholder" => "Vendor Termin"
-                    ));
+                    echo form_dropdown(
+                    "termin", array(
+                        "30" => "1-30 Hari",
+                        "60" => "1-60 Hari",
+                        "90" => "1-90 Hari",
+                        "120" => "1-120 Hari",
+                        '150' => "1-150 Hari"
+                        ), $model_info->termin, "class='select2 mini'"
+                    );
                     ?>
                 </div>
             </div>
@@ -172,6 +177,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $("#vendor-form .select2").select2();
         $("#vendor-form").appForm({
             onSuccess: function(result) {
                 if (result.success) {

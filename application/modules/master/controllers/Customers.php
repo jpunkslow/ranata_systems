@@ -65,12 +65,16 @@ class Customers extends MY_Controller {
 
     function add_customers() {
         validate_submitted_data(array(
+            "code" => "required",
             "name" => "required"
+
         ));
 
         $data = array(
+            "code" => $this->input->post('code'),
             "name" => $this->input->post('name'),
-            "company_name" => $this->input->post('company_name'),
+
+            // "company_name" => $this->input->post('company_name'),
             "npwp" => $this->input->post('npwp'),
             "address" => $this->input->post('address'),
             "termin" => $this->input->post('termin'),
@@ -103,8 +107,10 @@ class Customers extends MY_Controller {
         ));
 
         $data = array(
+
+            "code" => $this->input->post('code'),
             "name" => $this->input->post('name'),
-            "company_name" => $this->input->post('company_name'),
+            // "company_name" => $this->input->post('company_name'),
             "npwp" => $this->input->post('npwp'),
             "address" => $this->input->post('address'),
             "termin" => $this->input->post('termin'),
@@ -177,7 +183,7 @@ class Customers extends MY_Controller {
 
 
         $row_data = array(
-            $data->id,
+            $data->code,
             $data->name,
             $data->npwp,
             $data->address,

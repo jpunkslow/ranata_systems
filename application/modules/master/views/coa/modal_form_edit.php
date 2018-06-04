@@ -122,12 +122,16 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+         RELOAD_VIEW_AFTER_UPDATE = false; //go to invoice page
+        
 
         $("#master_coa-form .select2").select2();
         $("#master_coa-form").appForm({
             onSuccess: function(result) {
-                if (result.success) {
-                    $("#master_coa-table").appTable({newData: result.data, dataId: result.id});
+                if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {
+                    location.reload();
+                } else {
+                    window.location = "<?php echo site_url('master/coa'); ?>";
                 }
             }
        });

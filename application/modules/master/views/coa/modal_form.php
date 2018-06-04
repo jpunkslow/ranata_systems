@@ -115,12 +115,15 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
+           RELOAD_VIEW_AFTER_UPDATE = false; //go to invoice page
+        
         $("#master_coa-form .select2").select2();
         $("#master_coa-form").appForm({
             onSuccess: function(result) {
-                if (result.success) {
-                    $("#master_coa-table").appTable({newData: result.data, dataId: result.id});
+                if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {
+                    location.reload();
+                } else {
+                    window.location = "<?php echo site_url('master/coa'); ?>";
                 }
             }
        });
@@ -139,5 +142,27 @@
             $("#master_coa-form").trigger('submit');
         });
 
+
+        $("#parent").select2().on("change", function () {
+            var client_id = $(this).val();
+            if ($(this).val()) {
+                // $('#invoice_project_id').select2("destroy");
+                // $("#invoice_project_id").hide();
+                // appLoader.show({container: "#invoice-porject-dropdown-section"});
+                $.ajax({
+                    url: "<?php echo get_uri("master/coa/getParentId") ?>" + "/" + client_id,
+                    dataType: "json",
+                    // data: data,
+                    type:'GET',
+                    success: function (data) {
+
+                         $.each(data, function(index, element) {
+                            $("#account_number").val(element.account_number);
+                            
+                         });
+                    }
+                });
+            }
+        });
     });
 </script>

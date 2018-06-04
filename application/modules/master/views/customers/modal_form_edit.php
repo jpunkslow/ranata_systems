@@ -5,6 +5,24 @@
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">
              <div class="form-group">
+                <label for="code" class=" col-md-3"> Kode Customer</label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "code",
+                        "name" => "code",
+                        "class" => "form-control",
+                        "placeholder" => 'Customers Name',
+                        "value" => $model_info->code,
+                        "readonly" => true,
+                        "autofocus" => true,
+                        "data-rule-required" => true,
+                        "data-msg-required" => lang("field_required"),
+                    ));
+                    ?>
+                </div>
+            </div>
+             <div class="form-group">
                 <label for="name" class=" col-md-3"> Nama</label>
                 <div class=" col-md-9">
                     <?php
@@ -13,7 +31,7 @@
                         "name" => "name",
                         "value" => $model_info->name,
                         "class" => "form-control",
-                        "placeholder" => 'Customers Name',
+                        "placeholder" => 'Customers Name / Company Name',
                         "autofocus" => true,
                         "data-rule-required" => true,
                         "data-msg-required" => lang("field_required"),
@@ -21,7 +39,7 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="company_name" class=" col-md-3"> Nama Perusahaan</label>
                 <div class=" col-md-9">
                     <?php
@@ -35,7 +53,7 @@
                     ));
                     ?>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="npwp" class=" col-md-3">Nomor NPWP</label>
                 <div class=" col-md-9">

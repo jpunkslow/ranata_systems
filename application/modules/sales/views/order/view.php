@@ -13,7 +13,7 @@
                     <ul class="dropdown-menu" role="menu">
                         
                         <li role="presentation"><?php echo anchor(get_uri("sales/order/download_pdf/" . $invoice_info->id), "<i class='fa fa-download'></i> " . lang('download_pdf'), array("title" => lang('download_pdf'))); ?> </li>
-                        <li role="presentation"><?php echo anchor(get_uri("sales/order/preview/" . $invoice_info->id . "/1"), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
+                        <li role="presentation"><?php echo anchor(get_uri("sales/order/preview/" . $invoice_info->id ), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
                         <li role="presentation" class="divider"></li>
                         <li role="presentation"><?php echo modal_anchor(get_uri("sales/order/modal_form_edit"), "<i class='fa fa-edit'></i> " . lang('edit_invoice'), array("title" => lang('edit_invoice'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?> </li>
 
@@ -38,17 +38,17 @@
                     <div class="col-sm-6">
                         <table style="font-size:14px;">
                             <tr>
-                                <td width="200">Nomer Order</td>
-                                <td>:</td>
+                                <td width="200">Order Code</td>
+                                <td width="20">:</td>
                                 <td> <strong>#<?php echo $invoice_info->code ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Tanggal Buat</td>
+                                <td>Created Date</td>
                                 <td>:</td>
                                 <td> <?php echo format_to_date($invoice_info->created_at,true) ?></td>
                             </tr>
                             <tr>
-                                <td>Tanggal Kadaluarsa</td>
+                                <td>Expired Date</td>
                                 <td>:</td>
                                 <td> <?php echo format_to_date($invoice_info->exp_date,false) ?></td>
                             </tr>
@@ -57,14 +57,14 @@
                     <div class="col-sm-6">
                         <table style="font-size:14px;" class="display">
                             <tr>
-                                <td width="200">Nama Pelanggan</td>
-                                <td>:</td>
-                                <td> <strong><?php echo $client_info->name."(".$client_info->company_name.")" ?></strong></td>
+                                <td width="200">Customers</td>
+                                <td width="20"> :</td>
+                                <td> <strong><?php echo $client_info->code." - ".$client_info->name ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Status</td>
+                                <td>Contacts</td>
                                 <td>:</td>
-                                <td> <?php echo $invoice_status_label ?></td>
+                                <td > <?php echo ($client_info->mobile ? $client_info->mobile : $client_info->contact) ?></td>
                             </tr>
                             <tr>
                                 <td>Email</td>

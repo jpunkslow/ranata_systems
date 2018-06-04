@@ -8,15 +8,74 @@ class General_ledger extends MY_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model("accounting/General_ledger_model");
+        $this->load->model("master/Master_Saldoawal_model");
         //check permission to access this module
     }
 
     /* load clients list view */
 
     function index() {
-    	$this->template->rander('general_ledger/index');
+        $view_data['periode_dropdown'] = $this->Master_Saldoawal_model->getPeriode();
+        $view_data['coa_dropdown'] = array("" => "Choose COA Account") + $this->Master_Coa_Type_model->getCoaDrop();
+    	$this->template->rander('general_ledger/index',$view_data);
     }
 
+
+    function getReport($id = 0,$start = "", $end = ""){
+        
+        $saldo = 0;
+        $periode = substr($start, 0,4);
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($id,$periode);
+
+        $saldo = $saldo + $sa_debet - $sa_credit;
+
+        $html = "<tr><td colspan='6' align='right'><strong>Saldo Awal Sebelumnya </strong></td>";
+        $html .= "<td align='right'>".number_format($sa_debet)."</td>";
+        $html .= "<td align='right'>".number_format($sa_credit)."</td>";
+        $html .= "<td align='right'>".number_format($saldo)."</td> </tr>";
+        $where = '';
+        if(!empty($start) && !empty($end)){
+            $where = " AND date >= '$start' AND  date <= '$end' ";
+        }
+        $where_coa = "";
+        if(!empty($id)){
+            $where_coa = " AND a.fid_coa = '$id'";
+        }
+
+        $jml_deb = 0;
+        $jml_cre = 0;
+
+        $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
+
+        foreach($data->result() as $db){
+
+            $saldo = $saldo+$db->debet-$db->credit;
+
+            $html .= "<tr>";
+            $html .= "<td>".$db->journal_code."</td>";
+            $html .= "<td>".$db->date."</td>";
+            $html .= "<td>".$db->voucher_code."</td>";
+            $html .= "<td>".$db->description."</td>";
+            $html .= "<td>".$db->account_number."</td>";
+            $html .= "<td>".$db->account_name."</td>";
+            $html .= "<td align='right'>".number_format($db->debet)."</td>";
+            $html .= "<td align='right'>".number_format($db->credit)."</td>";
+            $html .= "<td align='right'>".number_format($saldo)."</td></tr>";
+
+            $jml_deb = $jml_deb + $db->debet;
+            $jml_cre = $jml_cre + $db->credit;
+        }
+
+        echo $html;
+        // echo json_encode(array("success" => true, "data" => $html,'message' => lang('record_saved')));
+
+
+
+
+
+
+    }
 
 
     

@@ -25,7 +25,7 @@ class Sales_Payments_model extends Crud_model {
                                 b.*,
                                 a.total,
                                 c.percentage,
-                                a.total + ( a.total * ( c.percentage / 100 ) ) AS sub_total 
+                                SUM(a.total + ( a.total * ( c.percentage / 100 ) ) ) AS sub_total 
                             FROM
                                 sales_invoices_items a,
                                 sales_invoices b,
@@ -33,13 +33,13 @@ class Sales_Payments_model extends Crud_model {
                             WHERE
                                 a.fid_invoices = b.id 
                                 AND b.fid_tax = c.id
-                                AND b.fid_cust = $id AND b.paid = 'Not Paid' ORDER BY b.id DESC");
+                                AND b.fid_cust = $id AND b.paid in('Not Paid','CREDIT') AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
         return $data;
     }
 
     function getInvoicesTotal($id){
         $data = $this->db->query("SELECT 
-                                a.total + ( a.total * ( c.percentage / 100 ) )  AS invoice_subtotal 
+                                SUM(a.total + ( a.total * ( c.percentage / 100 ) ) ) AS invoice_subtotal 
                             FROM
                                 sales_invoices_items a,
                                 sales_invoices b,
@@ -47,7 +47,7 @@ class Sales_Payments_model extends Crud_model {
                             WHERE
                                 a.fid_invoices = $id 
                                 AND b.fid_tax = c.id
-                                AND b.paid = 'Not Paid' ORDER BY b.id DESC");
+                                AND b.paid in('Not Paid','CREDIT') AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
         return $data;
     }
 

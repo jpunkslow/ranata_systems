@@ -1388,6 +1388,49 @@ if (typeof TableTools != 'undefined') {
             });
         };
 
+        var deleteHandlerEntry = function (e) {
+            appLoader.show();
+            var $target = $(e.currentTarget);
+
+            if (e.data && e.data.target) {
+                $target = e.data.target;
+            }
+
+            var url = $target.attr('data-action-url'),
+                    id = $target.attr('data-id'),
+                    undo = $target.attr('data-undo');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id},
+                success: function (result) {
+                    if (result.success) {
+                        var tr = $target.closest('tr'),
+                                table = $instance.DataTable();
+
+                        oTable.fnDeleteRow(table.row(tr).index());
+                        var alertId = appAlert.warning(result.message, {duration: 20000});
+
+                        //fire success callback
+                        settings.onDeleteSuccess(result);
+                        
+                        //bind undo selector
+                        if (undo !== "0") {
+                            undoHandlerEntry({
+                                alertSelector: alertId,
+                                url: url,
+                                id: id
+                            });
+                        }
+                    } else {
+                        appAlert.error(result.message);
+                    }
+                    appLoader.hide();
+                }
+            });
+        };
+
         var deleteConfirmationHandler = function (e) {
             var $deleteButton = $("#confirmDeleteButton"),
                     $target = $(e.currentTarget);
@@ -1418,6 +1461,7 @@ if (typeof TableTools != 'undefined') {
 
 
         $('body').find($instance).on('click', '[data-action=delete]', deleteHandler);
+        $('body').find($instance).on('click', '[data-action=delete_entry]', deleteHandlerEntry);
         $('body').find($instance).on('click', '[data-action=delete-confirmation]', deleteConfirmationHandler);
 
         $.fn.dataTableExt.oApi.getSettings = function (oSettings) {

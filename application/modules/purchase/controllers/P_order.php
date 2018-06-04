@@ -17,6 +17,27 @@ class P_order extends MY_Controller {
         $this->template->rander("order/index");
     }
 
+    function getQuotId($id){
+
+        if(!empty($id)){
+            $options = array(
+                "id" => $id,
+            );
+            $data = $this->Purchase_Request_model->get_details($options)->row();
+            if($data){
+                $data_cust = $this->Master_Vendors_model->get_details(array("id" => $data->fid_cust))->row();
+                
+                echo json_encode(array("success" => true,"data" => $data_cust));    
+            }else{
+                echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+            }
+            
+        }else{
+            echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+        }
+    }
+
+
     /* load client add/edit modal */
 
     function modal_form() {
@@ -25,7 +46,7 @@ class P_order extends MY_Controller {
         $view_data['model_info'] = $this->Purchase_Order_model->get_one($this->input->post('id'));
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         $view_data['quot_dropdown'] = array("" => "-") + $this->Purchase_Request_model->get_dropdown_list(array("code"));
-        $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Vendors_model->get_dropdown_list(array("name"));
+        $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Vendors_model->get_dropdown_list(array("code", "name"));
 
         $this->load->view('order/modal_form',$view_data);
     }
@@ -76,8 +97,9 @@ class P_order extends MY_Controller {
 
         
 
-        $save_id = $this->Purchase_Order_model->save($data);
-        if ($save_id) {
+        
+        if (!empty($quot)) {
+            $save_id = $this->Purchase_Order_model->save($data);
             $check = $this->db->query("SELECT * FROM purchase_request_items WHERE fid_quotation = '$quot'")->result();
 
             if($check){
@@ -93,12 +115,11 @@ class P_order extends MY_Controller {
                         "rate" => $row->rate,
                         "total" => $row->total
                     );
+                    $save_data = $this->Purchase_OrderItems_model->save($item["data"]);
 
                 }
 
-                $save_data = $this->Purchase_OrderItems_model->save($item["data"]);
-
-                if($save_data){
+                
                     $query = array("fid_quot" => $quot);
                     $exe = $this->Purchase_Order_model->save($query,$save_id); 
                
@@ -106,14 +127,20 @@ class P_order extends MY_Controller {
                     $item_info = $this->Purchase_OrderItems_model->get_details($options)->row();
                     // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
                     echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
-                }else{
-                    echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-                }
+                
             } else {
                 echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
             }
         }else {
-            echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            $save_id = $this->Purchase_Order_model->save($data);
+           
+            if($save_id){
+                
+                    echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
+                
+            } else {
+                echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            }
         }
     }
 
@@ -145,7 +172,7 @@ class P_order extends MY_Controller {
         $save_id = $this->Purchase_Order_model->save($data, $customers_id);
         if ($save_id) {
 
-            $check = $this->db->query("SELECT * FROM purchase_request_items WHERE fid_quotation = '$quot'")->result();
+            $check = $this->db->query("SELECT * FROM purchase_request_items WHERE fid_quotation = '$quot' AND deleted = 0")->result();
 
             if($check){
                 foreach($check as $row){
@@ -498,7 +525,7 @@ class P_order extends MY_Controller {
             $invoice_data = get_p_order_making_data($invoice_id);
             // $this->_check_invoice_access_permission($invoice_data);
 
-            prepare_order_pdf($invoice_data, "download");
+            prepare_p_order_pdf($invoice_data, "download");
         } else {
             show_404();
         }
@@ -565,7 +592,7 @@ class P_order extends MY_Controller {
         $contact = $this->Master_Customers_model->get_one($contact_id);
 
         $invoice_data = get_p_order_making_data($invoice_id);
-        $attachement_url = prepare_order_pdf($invoice_data, "send_email");
+        $attachement_url = prepare_p_order_pdf($invoice_data, "send_email");
 
         $default_bcc = get_setting('send_bcc_to'); //get default settings
         $bcc_emails = "";

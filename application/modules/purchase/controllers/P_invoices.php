@@ -18,6 +18,26 @@ class P_invoices extends MY_Controller {
         $this->template->rander("invoice/index");
     }
 
+    function getOrderId($id){
+
+        if(!empty($id)){
+            $options = array(
+                "id" => $id,
+            );
+            $data = $this->Purchase_Order_model->get_details($options)->row();
+            if($data){
+                $data_cust = $this->Master_Vendors_model->get_details($options)->row();
+                
+                echo json_encode(array("success" => true,"data" => $data_cust));    
+            }else{
+                echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+            }
+            
+        }else{
+            echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+        }
+    }
+
     /* load client add/edit modal */
 
     function modal_form() {
@@ -82,9 +102,10 @@ class P_invoices extends MY_Controller {
 
         
 
-        $save_id = $this->Purchase_Invoices_model->save($data);
-        if ($save_id) {
-            $check = $this->db->query("SELECT * FROM purchase_order_items WHERE fid_order = '$order_id'")->result();
+        
+        if (!empty($order_id)) {
+            $save_id = $this->Purchase_Invoices_model->save($data);
+            $check = $this->db->query("SELECT * FROM purchase_order_items WHERE fid_order = '$order_id' AND deleted = 0")->result();
 
             if($check){
                 foreach($check as $row){
@@ -104,7 +125,6 @@ class P_invoices extends MY_Controller {
 
                 $save_data = $this->Purchase_InvoicesItems_model->save($item["data"]);
 
-                if($save_data){
                     $query = array("fid_order" => $order_id);
                     $exe = $this->Purchase_Invoices_model->save($query,$save_id); 
                
@@ -112,14 +132,20 @@ class P_invoices extends MY_Controller {
                     $item_info = $this->Purchase_InvoicesItems_model->get_details($options)->row();
                     // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
                     echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
-                }else{
-                    echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-                }
+                
             }else{
                  echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
             }
         } else {
-            echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+           $save_id = $this->Purchase_Invoices_model->save($data);
+            
+            if($save_id){
+                
+                    echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
+                
+            }else{
+                 echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            }
         }
     }
 
@@ -435,34 +461,25 @@ class P_invoices extends MY_Controller {
         $val = $this->Purchase_Invoices_model->get_details(array("id" => $data->fid_invoices))->row();
 
         if($val->status != "paid"){
-                    return array(
-            $item,
-            to_decimal_format($data->quantity) . " " . $type,
-            to_currency($data->rate),
-            to_currency($data->total),
-
-            // if($val->status != "paid"){
-                            modal_anchor(get_uri("purchase/p_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("purchase/invoices/delete_item"), "data-action" => "delete"))                
-            // }
-
-            // "&nbsp;"
-
-        );
+            return array(
+                modal_anchor(get_uri("purchase/p_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("purchase/invoices/delete_item"), "data-action" => "delete")),
+                $item,
+                to_decimal_format($data->quantity) . " " . $type,
+                to_currency($data->rate),
+                to_currency($data->total)
+                
+            );
 
         }else{
             return array(
-            $item,
-            to_decimal_format($data->quantity) . " " . $type,
-            to_currency($data->rate),
-            to_currency($data->total),
 
-            // if($val->status != "paid"){
-                            // modal_anchor(get_uri("purchase/p_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("purchase/invoices/delete_item"), "data-action" => "delete"))                
-            // }
+                "&nbsp;",
+                $item,
+                to_decimal_format($data->quantity) . " " . $type,
+                to_currency($data->rate),
+                to_currency($data->total)
 
-            "&nbsp;"
-
-        );
+            );
 
         }
     }

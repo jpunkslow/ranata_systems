@@ -22,18 +22,19 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="npwp" class=" col-md-3">Assets Type</label>
+                <label for="activa_type" class=" col-md-3">Assets Type</label>
                 <div class=" col-md-9">
                     <?php
-                    echo form_input(array(
-                        "id" => "activa_type",
-                        "name" => "activa_type",
-                        "value" => $model_info->activa_type,
-                        "class" => "form-control",
-                        "placeholder" =>  'Activa Type',
-                        "data-rule-required" => true,
-                        "data-msg-required" => lang("field_required"),
-                    ));
+                    echo form_dropdown(
+                                "activa_type", array(
+                            "Peralatan_Toko" => "Peralatan Toko",
+                            "Peralatan_Kantor" => "Peralatan Kantor",
+                            "Kendaraan" => "Kendaraan",
+                            "Bangunan" => "Bangunan",
+                            "Tanah" => "Tanah",
+                            "Lainnya" => "Lainnya"
+                                ), $model_info->activa_type, "class='select2 mini' id='activa_type'"
+                        );
                     ?>
                 </div>
             </div>
@@ -68,32 +69,27 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="depreciated_method" class=" col-md-3">Depreciated Method</label>
+                <label for="asset_residu" class=" col-md-3">Assets Residual </label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
-                        "id" => "depreciated_method",
-                        "name" => "depreciated_method",
-                        "value" => $model_info->depreciated_method,
+                        "id" => "asset_residu",
+                        "name" => "asset_residu",
                         "class" => "form-control",
+                        "value" => $model_info->asset_residu,
                         "data-rule-required" => true,
-                        "placeholder" => "Depreciated Method"
+                        "placeholder" => "0"
                     ));
                     ?>
                 </div>
             </div>
+            
             <div class="form-group">
                 <label for="activa_account" class=" col-md-3">Assets Account </label>
                 <div class=" col-md-9">
                     <?php
-                    echo form_input(array(
-                        "id" => "activa_account",
-                        "name" => "activa_account",
-                        "value" => $model_info->activa_account,
-                        "class" => "form-control",
-                        "data-rule-required" => true,
-                        "placeholder" => "Assets Account"
-                    ));
+                    echo form_dropdown("activa_account", $coa_dropdown, $model_info->activa_account, "class='select2 validate-hidden' id='activa_account' ");
+            
                     ?>
                 </div>
             </div>
@@ -101,13 +97,7 @@
                 <label for="activa_depreciate_account" class=" col-md-3">Activa Depreciated Account</label>
                 <div class=" col-md-9">
                     <?php
-                    echo form_input(array(
-                        "id" => "activa_depreciate_account",
-                        "name" => "activa_depreciate_account",
-                        "value" => $model_info->activa_depreciate_account,
-                        "class" => "form-control",
-                        "placeholder" => 'Activa Depreciated Account'
-                    ));
+                      echo form_dropdown("activa_depreciate_account", $activa_dropdown, $model_info->activa_depreciate_account, "class='select2 validate-hidden' id='activa_depreciate_account' ");
                     ?>
                 </div>
             </div>
@@ -115,12 +105,23 @@
                 <label for="activa_expense_depre_account" class=" col-md-3">Expense Depreciated Account</label>
                 <div class=" col-md-9">
                     <?php
+                   echo form_dropdown("activa_expense_depre_account", $expenses_dropdown, $model_info->activa_expense_depre_account, "class='select2 validate-hidden' id='activa_expense_depre_account' ");
+            
+                    ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="get_date" class="col-md-3">GET DATE</label>
+                <div class=" col-md-9">
+                    <?php
                     echo form_input(array(
-                        "id" => "activa_expense_depre_account",
-                        "name" => "activa_expense_depre_account",
-                        "value" => $model_info->activa_expense_depre_account,
+                        "id" => "get_date",
+                        "name" => "get_date",
                         "class" => "form-control",
-                        "placeholder" => 'Expense Depreciated Account'
+                        "placeholder" => "Y/m/d",
+                        "value" => $model_info->get_date,
+                        "data-rule-required" => true,
+                        "data-msg-required" => lang("field_required"),
                     ));
                     ?>
                 </div>
@@ -140,6 +141,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $("#assets-form .select2").select2();
+        setDatePicker("#get_date");
         $("#assets-form").appForm({
             onSuccess: function(result) {
                 if (result.success) {
@@ -160,6 +163,26 @@
 
         $("#form-submit").click(function() {
             $("#assets-form").trigger('submit');
+        });
+        $("#activa_type").select2().on("change", function () {
+            var type = $(this).val();
+            if ($(this).val()) {
+                
+                if(type == "Peralatan_Toko"){
+                    
+                    $("#activa_age").val(4);
+                }
+                if(type == "Peralatan_Kantor"){
+                    $("#activa_age").val(4);
+                }
+                if(type == "Bangunan"){
+                    $("#activa_age").val(20);
+                }
+                if(type == "Kendaraan"){
+                    $("#activa_age").val(8);
+                }
+
+            }
         });
 
     });

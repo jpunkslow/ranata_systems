@@ -30,9 +30,24 @@ class Master_Coa_Type_model extends Crud_model {
         if($kas_bank){
             $where = " AND id in ($kas_bank)";
         }
-        $data = $this->db->query("SELECT * FROM $this->table WHERE  deleted = 0  ".$where." ORDER BY order_by ASC");
+        $data = $this->db->query("SELECT * FROM $this->table WHERE  deleted = 0  ".$where." ORDER BY id ASC");
         return $data;
     }
+
+
+    // function getListCoa(){
+
+    //     $parent = $this->db->query("SELECT * FROM $this->table WHERE deleted = 0 ORDER BY account_number ASC");
+
+    //     foreach($parent->result() as $row){
+
+    //         $child = $this->db->query("SELECT * FROM $this->table WHERE deleted = 0 AND parental = $row->id ");
+    //         $data->row = $row;
+
+    //     }
+
+    //     return $data;
+    // }
 
     function get_dropdown_kas() {
         // $where["deleted"] = 0;
@@ -57,10 +72,41 @@ class Master_Coa_Type_model extends Crud_model {
         }
         return $result;
     }
-    function getCoaDrop() {
+    function getCoaDrop( $field = "",$like = "") {
         // $where["deleted"] = 0;
         // $where["id"] = (2,3);
-        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL  AND deleted = 0")->result();
+        $get = substr($like, 0,4);
+        $where = "";
+        if($field != ""){
+            $where = " AND $field LIKE '%$get%'";
+        }
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL $where  AND deleted = 0")->result();
+        $result = array();
+        foreach ($list_data as $data) {
+            // $text = "";
+            $result[$data->id] = $data->account_number." - ".$data->account_name;
+        }
+        return $result;
+    }
+
+    function getCoaExpenses() {
+        // $where["deleted"] = 0;
+        // $where["id"] = (2,3);
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND akun = 'pengeluaran'  AND deleted = 0")->result();
+        $result = array();
+        foreach ($list_data as $data) {
+            // $text = "";
+            $result[$data->id] = $data->account_number." - ".$data->account_name;
+        }
+        return $result;
+    }
+
+
+
+    function getCoaIncome() {
+        // $where["deleted"] = 0;
+        // $where["id"] = (2,3);
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND akun = 'pemasukan'  AND deleted = 0")->result();
         $result = array();
         foreach ($list_data as $data) {
             // $text = "";
@@ -76,6 +122,29 @@ class Master_Coa_Type_model extends Crud_model {
         $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND deleted = 0")->result();
 
         return $list_data;
+    }
+
+    function getCoaEntry(){
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND deleted = 0 ORDER BY account_number ASC")->result();
+
+        $result = array();
+        foreach ($list_data as $data) {
+            // $text = "";
+            $result[$data->id] = $data->account_number." - ".$data->account_name;
+        }
+        return $result;
+    }
+
+
+    function getCashCoa(){
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE account_number in('10001','10002','10003','10004','10005','10006','10007','10008','10009','10010','10011') AND deleted = 0 ORDER BY account_number ASC")->result();
+        $result = array();
+        foreach ($list_data as $data) {
+            // $text = "";
+            $result[$data->id] = $data->account_number." - ".$data->account_name;
+        }
+        return $result;
+
     }
 
 

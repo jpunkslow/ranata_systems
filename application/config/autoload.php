@@ -159,7 +159,6 @@ $autoload['model'] = array(
     'Roles_model',
     'Posts_model',
     'Timesheets_model',
-    'Expenses_model',
     'Expense_categories_model',
     'Taxes_model',
     'Social_links_model',

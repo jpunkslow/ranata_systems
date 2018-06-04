@@ -741,9 +741,49 @@ if (!function_exists('get_s_invoices_making_data')) {
             $data['order_info'] = $ci->Sales_Order_model->get_details(array("id" => $data['invoice_info']->fid_order))->row();
             
             $data['client_info'] = $ci->Master_Customers_model->get_one($data['invoice_info']->fid_cust);
-            $data['invoice_items'] = $ci->Sales_InvoicesItems_model->get_details(array("invoice_id" => $invoice_id))->result();
+            $data['invoice_items'] = $ci->Sales_InvoicesItems_model->get_details(array("fid_invoices" => $invoice_id))->result();
             // $data['invoice_status_label'] = get_invoices_status_label($invoice_info);
             $data["invoice_total_summary"] = $ci->Sales_Invoices_model->get_invoices_total_summary($invoice_id);
+            return $data;
+        }
+    }
+
+}
+
+if (!function_exists('get_s_payment_making_data')) {
+
+    function get_s_payment_making_data($invoice_id) {
+        $ci = get_instance();
+        $data['payment_info'] = $ci->Sales_Payments_model->get_details( array('id' => $invoice_id))->row();
+        $invoice_info = $ci->Sales_Invoices_model->get_details(array("id" => $data['payment_info']->fid_inv))->row();
+        if ($invoice_info) {
+            $data['invoice_info'] = $invoice_info;
+            $data['order_info'] = $ci->Sales_Order_model->get_details(array("id" => $data['invoice_info']->fid_order))->row();
+            
+            $data['client_info'] = $ci->Master_Customers_model->get_one($data['invoice_info']->fid_cust);
+            $data['invoice_items'] = $ci->Sales_InvoicesItems_model->get_details(array("fid_invoices" => $data['payment_info']->fid_inv))->result();
+            // $data['invoice_status_label'] = get_invoices_status_label($invoice_info);
+            $data["invoice_total_summary"] = $ci->Sales_Invoices_model->get_invoices_total_summary($data['payment_info']->fid_inv);
+            return $data;
+        }
+    }
+
+}
+
+if (!function_exists('get_p_payment_making_data')) {
+
+    function get_p_payment_making_data($invoice_id) {
+        $ci = get_instance();
+        $data['payment_info'] = $ci->Purchase_Payments_model->get_details( array('id' => $invoice_id))->row();
+        $invoice_info = $ci->Sales_Invoices_model->get_details(array("id" => $data['payment_info']->fid_inv))->row();
+        if ($invoice_info) {
+            $data['invoice_info'] = $invoice_info;
+            $data['order_info'] = $ci->Sales_Order_model->get_details(array("id" => $data['invoice_info']->fid_order))->row();
+            
+            $data['client_info'] = $ci->Master_Vendors_model->get_one($data['invoice_info']->fid_cust);
+            $data['invoice_items'] = $ci->Sales_InvoicesItems_model->get_details(array("fid_invoices" => $data['payment_info']->fid_inv))->result();
+            // $data['invoice_status_label'] = get_invoices_status_label($invoice_info);
+            $data["invoice_total_summary"] = $ci->Sales_Invoices_model->get_invoices_total_summary($data['payment_info']->fid_inv);
             return $data;
         }
     }
@@ -931,6 +971,90 @@ if (!function_exists('prepare_s_invoice_pdf')) {
 
 }
 
+if (!function_exists('prepare_s_payment_pdf')) {
+
+    function prepare_s_payment_pdf($invoice_data, $mode = "download") {
+        $ci = get_instance();
+        $ci->load->library('pdf');
+        $ci->pdf->setPrintHeader(false);
+        $ci->pdf->setPrintFooter(false);
+        $ci->pdf->SetCellPadding(1.5);
+        $ci->pdf->setImageScale(1.42);
+        $ci->pdf->AddPage();
+        $ci->pdf->SetFontSize(10);
+
+        if ($invoice_data) {
+
+            $invoice_data["mode"] = $mode;
+
+            $html = $ci->load->view("payments/payment_pdf", $invoice_data, true);
+
+            if ($mode != "html") {
+                $ci->pdf->writeHTML($html, true, false, true, false, '');
+            }
+
+            $invoice_info = get_array_value($invoice_data, "invoice_info");
+            $payment_info = get_array_value($invoice_data, "payment_info");
+            $pdf_file_name =  "SALES_PAY#" . str_replace("/", "_", $payment_info->code) . ".pdf";
+
+            if ($mode === "download") {
+                $ci->pdf->Output($pdf_file_name, "D");
+            } else if ($mode === "send_email") {
+                $temp_download_path = getcwd() . "/" . get_setting("temp_file_path") . $pdf_file_name;
+                $ci->pdf->Output($temp_download_path, "F");
+                return $temp_download_path;
+            } else if ($mode === "view") {
+                $ci->pdf->Output($pdf_file_name, "I");
+            } else if ($mode === "html") {
+                return $html;
+            }
+        }
+    }
+
+}
+
+if (!function_exists('prepare_p_payment_pdf')) {
+
+    function prepare_p_payment_pdf($invoice_data, $mode = "download") {
+        $ci = get_instance();
+        $ci->load->library('pdf');
+        $ci->pdf->setPrintHeader(false);
+        $ci->pdf->setPrintFooter(false);
+        $ci->pdf->SetCellPadding(1.5);
+        $ci->pdf->setImageScale(1.42);
+        $ci->pdf->AddPage();
+        $ci->pdf->SetFontSize(10);
+
+        if ($invoice_data) {
+
+            $invoice_data["mode"] = $mode;
+
+            $html = $ci->load->view("payments/payment_pdf", $invoice_data, true);
+
+            if ($mode != "html") {
+                $ci->pdf->writeHTML($html, true, false, true, false, '');
+            }
+
+            $invoice_info = get_array_value($invoice_data, "invoice_info");
+            $payment_info = get_array_value($invoice_data, "payment_info");
+            $pdf_file_name =  "PURCHASE_PAY#" . str_replace("/", "_", $payment_info->code) . ".pdf";
+
+            if ($mode === "download") {
+                $ci->pdf->Output($pdf_file_name, "D");
+            } else if ($mode === "send_email") {
+                $temp_download_path = getcwd() . "/" . get_setting("temp_file_path") . $pdf_file_name;
+                $ci->pdf->Output($temp_download_path, "F");
+                return $temp_download_path;
+            } else if ($mode === "view") {
+                $ci->pdf->Output($pdf_file_name, "I");
+            } else if ($mode === "html") {
+                return $html;
+            }
+        }
+    }
+
+}
+
 if (!function_exists('prepare_p_invoice_pdf')) {
 
     function prepare_p_invoice_pdf($invoice_data, $mode = "download") {
@@ -1038,7 +1162,7 @@ if (!function_exists('prepare_request_pdf')) {
             }
 
             $invoice_info = get_array_value($invoice_data, "invoice_info");
-            $pdf_file_name = "REQUEST" . "-#00" . $invoice_info->id .$invoice_info->code. ".pdf";
+            $pdf_file_name = "REQ". str_replace("/", "_", $invoice_info->code). ".pdf";
 
             if ($mode === "download") {
                 $ci->pdf->Output($pdf_file_name, "D");
@@ -1095,6 +1219,45 @@ if (!function_exists('prepare_order_pdf')) {
         }
     }
 
+}
+if (!function_exists('prepare_p_order_pdf')) {
+
+    function prepare_p_order_pdf($invoice_data, $mode = "download") {
+        $ci = get_instance();
+        $ci->load->library('pdf');
+        $ci->pdf->setPrintHeader(false);
+        $ci->pdf->setPrintFooter(false);
+        $ci->pdf->SetCellPadding(1.5);
+        $ci->pdf->setImageScale(1.42);
+        $ci->pdf->AddPage();
+        $ci->pdf->SetFontSize(10);
+
+        if ($invoice_data) {
+
+            $invoice_data["mode"] = $mode;
+
+            $html = $ci->load->view("order/order_pdf", $invoice_data, true);
+
+            if ($mode != "html") {
+                $ci->pdf->writeHTML($html, true, false, true, false, '');
+            }
+
+            $invoice_info = get_array_value($invoice_data, "invoice_info");
+            $pdf_file_name = "ORDER#" .str_replace("/", "_", $invoice_info->code).".pdf";
+
+            if ($mode === "download") {
+                $ci->pdf->Output($pdf_file_name, "D");
+            } else if ($mode === "send_email") {
+                $temp_download_path = getcwd() . "/" . get_setting("temp_file_path") . $pdf_file_name;
+                $ci->pdf->Output($temp_download_path, "F");
+                return $temp_download_path;
+            } else if ($mode === "view") {
+                $ci->pdf->Output($pdf_file_name, "I");
+            } else if ($mode === "html") {
+                return $html;
+            }
+        }
+    }
 }
 
 /**
@@ -1226,6 +1389,23 @@ if(!function_exists('getMaxId')){
 
 
 
+
+if(!function_exists('getCodeId')){
+
+    function getCodeId($table,$prefix = ''){
+        $ci = get_instance();
+
+        $query = $ci->db->query("SELECT MAX(id) AS max_code from $table ")->row();
+
+        $urut = (int) substr($query->max_code, 0);
+        $urut++;
+        $data = $prefix.date("y").sprintf("%03s",$urut);
+        return $data;
+    }
+}
+
+
+
 /**
  * submit data for notification
  * 
@@ -1302,4 +1482,25 @@ if (!function_exists('save_custom_fields')) {
 
 }
 
-   
+
+if(!function_exists("terbilang")){
+    function terbilang($x) {
+      $angka = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+      if ($x < 12)
+        return " " . $angka[$x];
+      elseif ($x < 20)
+        return terbilang($x - 10) . " belas";
+      elseif ($x < 100)
+        return terbilang($x / 10) . " puluh" . terbilang($x % 10);
+      elseif ($x < 200)
+        return "seratus" . terbilang($x - 100);
+      elseif ($x < 1000)
+        return terbilang($x / 100) . " ratus" . terbilang($x % 100);
+      elseif ($x < 2000)
+        return "seribu" . terbilang($x - 1000);
+      elseif ($x < 1000000)
+        return terbilang($x / 1000) . " ribu" . terbilang($x % 1000);
+      elseif ($x < 1000000000)
+        return terbilang($x / 1000000) . " juta" . terbilang($x % 1000000);
+    }
+}

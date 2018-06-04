@@ -25,12 +25,12 @@
         <label for="fid_quot" class=" col-md-3">REF REQ#</label>
             <div class=" col-md-9">
                 <?php
-                   echo form_dropdown("fid_quot", $quot_dropdown, $model_info->fid_quot, "class='select2 validate-hidden' id='quot' ");
+                   echo form_dropdown("fid_quot", $quot_dropdown, $model_info->fid_quot, "class='select2 validate-hidden' id='fid_quot' ");
                     ?>
             </div>
     </div>  
     <div class="form-group">
-        <label for="fid_cust" class="col-md-3">Vendor</label>
+        <label for="fid_cust" class="col-md-3">Vendor Name</label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown("fid_cust", $clients_dropdown, $model_info->fid_cust, "class='select2 validate-hidden' id='fid_cust' data-rule-required='true', data-msg-required='" . lang('field_required') . "'");
@@ -52,7 +52,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="inv_address" class=" col-md-3">Alamat</label>
+        <label for="inv_address" class=" col-md-3">Address</label>
         <div class="col-md-9">
              <?php 
                 echo form_textarea(array(
@@ -60,13 +60,13 @@
                 "name" => "inv_address",
                 "value" => $model_info->inv_address,
                 "class" => "form-control",
-                "placeholder" => "Alamat",
+                "placeholder" => "Address",
                 ));
             ?>
         </div>
     </div>
     <div class="form-group">
-        <label for="delivery_address" class=" col-md-3">Alamat Pengiriman</label>
+        <label for="delivery_address" class=" col-md-3">Delivery Address</label>
         <div class="col-md-9">
              <?php 
                 echo form_textarea(array(
@@ -74,7 +74,7 @@
                 "name" => "delivery_address",
                 "value" => $model_info->delivery_address,
                 "class" => "form-control",
-                "placeholder" => "Alamat Pengiriman",
+                "placeholder" => "Delivery Address",
                 // "data-rule-required" => true,
                 // "data-msg-required" => lang("field_required"),
             ));
@@ -82,7 +82,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="exp_date" class="col-md-3">Tanggal Order</label>
+        <label for="exp_date" class="col-md-3"> Order Date</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -107,7 +107,7 @@
     </div>
 
     <div class="form-group">
-        <label for="currency" class=" col-md-3">Mata Uang</label>
+        <label for="currency" class=" col-md-3">Currency</label>
         <div class="col-md-9">
              <?php 
                 echo form_dropdown(
@@ -121,20 +121,7 @@
                         ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="status" class=" col-md-3">Status order</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "status", array(
-                        "draft" => "Draft",
-                        "sent" => "Sent"
-                        ), $model_info->status, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
-    
+   
 </div>
 
 <div class="modal-footer">
@@ -161,7 +148,7 @@
                 // $("#invoice_project_id").hide();
                 // appLoader.show({container: "#invoice-porject-dropdown-section"});
                 $.ajax({
-                    url: "<?php echo get_uri("master/customers/getId") ?>" + "/" + client_id,
+                    url: "<?php echo get_uri("master/vendors/getId") ?>" + "/" + client_id,
                     dataType: "json",
                     // data: data,
                     type:'GET',
@@ -169,6 +156,30 @@
 
                          $.each(data, function(index, element) {
 
+                            $("#email_to").val(element.email);
+                            $("#inv_address").val(element.address);
+                            $("#delivery_address").val(element.address);
+                         });
+                    }
+                });
+            }
+        });
+         $("#fid_quot").select2().on("change", function () {
+            var client_id = $(this).val();
+            if ($(this).val()) {
+                // $('#invoice_project_id').select2("destroy");
+                // $("#invoice_project_id").hide();
+                // appLoader.show({container: "#invoice-porject-dropdown-section"});
+                $.ajax({
+                    url: "<?php echo get_uri("purchase/p_order/getQuotId") ?>" + "/" + client_id,
+                    dataType: "json",
+                    // data: data,
+                    type:'GET',
+                    success: function (data) {
+
+                         $.each(data, function(index, element) {
+                            $("#fid_cust").val(element.id).select2();
+                            
                             $("#email_to").val(element.email);
                             $("#inv_address").val(element.address);
                             $("#delivery_address").val(element.address);

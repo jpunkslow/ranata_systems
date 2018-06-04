@@ -11,6 +11,12 @@ class P_payments extends MY_Controller {
         $this->load->model('purchase/Purchase_Payments_model');
 
         $this->load->model('purchase/Purchase_Invoices_model');
+
+        $this->load->model('sales/Sales_Invoices_model');
+        $this->load->model('sales/Sales_InvoicesItems_model');
+                $this->load->model('sales/Sales_Order_model');
+
+
     }
 
     function index() {
@@ -125,6 +131,8 @@ class P_payments extends MY_Controller {
         if ($save_id) {
             $status_data = array("paid" => "Paid", "status" => "paid");
             if ($this->Purchase_Invoices_model->save($status_data, $this->input->post('fid_inv'))) {
+                $this->_insertTransaction($this->input->post('voucher'),"",$this->input->post('pay_date'),"sales",$this->input->post('memo'),$this->input->post('fid_bank'),0,$this->input->post('total'));
+                $this->_insertTransaction($this->input->post('voucher'),"",$this->input->post('pay_date'),"sales",$this->input->post('memo'),17,$this->input->post('total'),0);
                 echo json_encode(array('success' => true, 'message' => lang("invoice_sent_message"), "id" => $save_id));
             }
             
@@ -132,6 +140,27 @@ class P_payments extends MY_Controller {
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
         }
+    }
+
+    private function _insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$debet,$credit){
+
+        $kas = array(
+                "journal_code" => $code,
+                "voucher_code" => $voucher_code,
+                "date" => $date,
+                "type" => $type,
+                "description" => $description,
+                "fid_coa" => $fid_coa,
+                "fid_header" => "",
+                "debet" => $debet,
+                "credit" => $credit,
+                "username" => "admin"
+            );
+
+           $insert_kas = $this->db->insert("transaction_journal",$kas);
+
+           return $insert_kas;
+
     }
 
     /* insert or update a client */
@@ -347,28 +376,20 @@ class P_payments extends MY_Controller {
         $query = $this->Master_Vendors_model->get_details($options)->row();
         // $value = $this->Purchase_Payments_model->get_payments_total_summary($data->id);
         $row_data = array(
-            anchor(get_uri("purchase/p_payments/view/" . $data->id), "#".$data->code),
+            anchor(get_uri("purchase/p_payments/prints/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
             // $data->fid_inv,
-            $query->name." - ".$query->company_name,
-            $data->paid,
+            $query->code." - ".$query->name,
+            $this->_get_payments_status_label($data),
             // $data->fid_bank,
             format_to_date($data->pay_date),
             $data->memo,
             $data->currency,
             to_currency($data->amount)
-            // anchor(get_uri("purchase/s_payments/view/" . $data->id), "#".$data->code),
-            // modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
-            // // $this->_get_payments_status_label($data),
-            
-            // // $data->email_to,
-            // format_to_date($data->pay_date, false)
-            // $data->currency,
-            // to_currency($value->invoice_subtotal)
 
         );
 
 
-        $row_data[] = anchor(get_uri("purchase/p_payments/nota/").$data->id, "<i class='fa fa-print'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("purchase/p_payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
+        $row_data[] = anchor(get_uri("purchase/p_payments/prints/").$data->id."/".str_replace("/", "-", $data->code), "<i class='fa fa-print'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("purchase/p_payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
                 
 
         return $row_data;
@@ -401,7 +422,7 @@ class P_payments extends MY_Controller {
             if ($view_data) {
                 $view_data['invoice_status'] = $this->_get_payments_status_label($view_data["invoice_info"], true);
                 
-                $view_data['invoice_status_label'] = $this->_get_payments_status_label($view_data["invoice_info"]);
+                $view_data['invoice_status_label'] = $this->_get_payments_status_label($view_data["invoice_info"],true);
 
                 $this->template->rander("payments/view", $view_data);
             } else {
@@ -418,211 +439,60 @@ class P_payments extends MY_Controller {
         $invoice_status_class = "label-default";
         $status = "draft";
         $now = get_my_local_time("Y-m-d");
-        if ($invoice_info->status == "draft" ) {
+        if ($invoice_info->paid == "CREDIT" ) {
             $invoice_status_class = "label-warning";
-            $status = "Draft";
-        } else if ($invoice_info->status == "sent") {
-            $invoice_status_class   = "label-success";
-            $status = "Sudah Terkirim";
+            $status = "Belum dibayar";
+
+        }else if ($invoice_info->paid == "PAID") {
+            $invoice_status_class   = "label-primary";
+            $status = "Dibayar";
 
         }
+
         $invoice_status = "<span class='label $invoice_status_class large'>" . $status . "</span>";
         if ($return_html) {
             return $invoice_status;
         } else {
-            return $status;
+            return $invoice_status;
         }
     }
     
-
-
-    /* add or edit an invoice item */
-
-    /* list of invoice items, prepared for datatable  */
-
-   
-
-    /* prepare a row of invoice item list table */
-
-    // private function _make_item_row($data) {
-    //     $item = "<b>$data->title</b>";
-    //     if ($data->description) {
-    //         $item.="<br /><span>" . nl2br($data->description) . "</span>";
-    //     }
-    //     $type = $data->unit_type ? $data->unit_type : "";
-
-    //     return array(
-    //         $item,
-    //         to_decimal_format($data->quantity) . " " . $type,
-    //         to_currency($data->rate),
-    //         to_currency($data->total),
-    //         modal_anchor(get_uri("purchase/payments/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id))
-    //         . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("purchase/payments/delete_item"), "data-action" => "delete"))
-    //     );
-    // }
-
-    // function get_item_suggestion() {
-    //     $key = $this->input->get('q');
-    //     $suggestion = array();
-
-    //     $items = $this->Sales_PaymentsItems_model->get_item_suggestion($key);
-
-    //     foreach ($items as $item) {
-    //         $suggestion[] = array("id" => $item->title, "text" => $item->title, "price" => $item->price , "category" => $item->category,"unit_type" => $item->unit_type);
-    //     }
-
-    //     $suggestion[] = array("id" => "+", "text" => "+ " . lang("create_new_item"));
-
-    //     echo json_encode($suggestion);
-    // }
-
-    // function get_item_info_suggestion() {
-    //     $item = $this->Sales_PaymentsItems_model->get_item_info_suggestion($this->input->post("item_name"));
-    //     if ($item) {
-    //         echo json_encode(array("success" => true, "item_info" => $item));
-    //     } else {
-    //         echo json_encode(array("success" => false));
-    //     }
-    // }
-
-    // private function _get_invoice_total_view($invoice_id = 0) {
-    //     $view_data["invoice_total_summary"] = $this->Purchase_Payments_model->get_payments_total_summary($invoice_id);
-    //     return $this->load->view('payments/payments_total_section', $view_data, true);
-    // }
-
-    // function get_invoice_status_bar($invoice_id = 0) {
-
-    //     $view_data["invoice_info"] = $this->Purchase_Payments_model->get_details(array("id" => $invoice_id))->row();
-    //     $view_data["client_info"] = $this->Master_Vendors_model->get_details(array("id" => $view_data["invoice_info"]->fid_cust))->row();
-    //     $view_data['invoice_status_label'] = $this->_get_payments_status_label($view_data["invoice_info"]);
-    //     $this->load->view('payments/payments_status_bar', $view_data);
-    // }
-
-    //  function preview($invoice_id = 0, $show_close_preview = false) {
+    function prints($invoice_id = 0, $show_close_preview = false) {
 
 
 
 
-    //     if ($invoice_id) {
-    //         $view_data = get_payments_making_data($invoice_id);
+        if ($invoice_id) {
+            $view_data = get_p_payment_making_data($invoice_id);
 
 
-    //         $view_data['invoice_preview'] = prepare_payments_pdf($view_data, "html");
+            $view_data['invoice_preview'] = prepare_p_payment_pdf($view_data, "html");
 
-    //         //show a back button
-    //         $view_data['show_close_preview'] = true;
+            //show a back button
+            $view_data['show_close_preview'] = true;
 
-    //         $view_data['invoice_id'] = $invoice_id;
-    //         $view_data['payment_methods'] = "";
+            $view_data['invoice_id'] = $invoice_id;
+            $view_data['payment_methods'] = "";
 
-    //         $view_data['invoice_status_label'] = $this->_get_payments_status_label($view_data["invoice_info"]);
+            $view_data['invoice_status_label'] = $this->_get_payments_status_label($view_data["payment_info"],true);
 
-    //         $this->template->rander("payments/payments_preview", $view_data);
-    //     } else {
-    //         show_404();
-    //     }
-    // }
+            $this->template->rander("payments/payment_preview", $view_data);
+        } else {
+            show_404();
+        }
+    }
 
-    // function download_pdf($invoice_id = 0) {
+    function download_pdf($invoice_id = 0) {
 
-    //     if ($invoice_id) {
-    //         $invoice_data = get_payments_making_data($invoice_id);
-    //         // $this->_check_invoice_access_permission($invoice_data);
+        if ($invoice_id) {
+            $invoice_data = get_p_payment_making_data($invoice_id);
+            // $this->_check_invoice_access_permission($invoice_data);
 
-    //         prepare_payments_pdf($invoice_data, "download");
-    //     } else {
-    //         show_404();
-    //     }
-    // }
-
-
-    // function send_payments_modal_form($invoice_id) {
-
-
-    //     if ($invoice_id) {
-    //         $options = array("id" => $invoice_id);
-    //         $invoice_info = $this->Purchase_Payments_model->get_details($options)->row();
-    //         $view_data['invoice_info'] = $invoice_info;
-    //         $contacts_options = array("id" => $invoice_info->fid_cust);
-    //         $contacts = $this->Master_Vendors_model->get_details($contacts_options)->result();
-    //         $contact_first_name = "";
-    //         $contact_last_name = "";
-    //         $contacts_dropdown = array();
-    //         foreach ($contacts as $contact) {
-    //             $contacts_dropdown[$contact->id] = $contact->name. " (" . lang("primary_contact") . ")";
-                
-    //         }
-
-
-    //         $view_data['contacts_dropdown'] = $contacts_dropdown;
-
-    //         $email_template = $this->Email_templates_model->get_final_template("send_invoice");
-
-    //         $invoice_total_summary = $this->Purchase_Payments_model->get_payments_total_summary($invoice_id);
-
-    //         $parser_data["INVOICE_ID"] = $invoice_info->id;
-    //         $parser_data["CONTACT_FIRST_NAME"] = $contact->name;
-    //         // $parser_data["CONTACT_LAST_NAME"] = $contact_last_name;
-    //         $parser_data["BALANCE_DUE"] = to_currency($invoice_total_summary->balance_due, $invoice_total_summary->currency_symbol);
-    //         $parser_data["DUE_DATE"] = $invoice_info->exp_date;
-    //         $parser_data["PROJECT_TITLE"] = $invoice_info->code;
-    //         $parser_data["INVOICE_URL"] = get_uri("invoices/preview/" . $invoice_info->id);
-    //         $parser_data['SIGNATURE'] = $email_template->signature;
-
-    //         $view_data['message'] = $this->parser->parse_string($email_template->message, $parser_data, TRUE);
-    //         $view_data['subject'] = $email_template->subject;
-
-    //         $this->load->view('payments/send_payments_modal_form', $view_data);
-    //     } else {
-    //         show_404();
-    //     }
-    // }
-
-    // function send_payments() {
-
-    //     validate_submitted_data(array(
-    //         "id" => "required|numeric"
-    //     ));
-
-    //     $invoice_id = $this->input->post('id');
-
-    //     $contact_id = $this->input->post('contact_id');
-    //     $cc = $this->input->post('invoice_cc');
-
-    //     $custom_bcc = $this->input->post('invoice_bcc');
-    //     $subject = $this->input->post('subject');
-    //     $message = decode_ajax_post_data($this->input->post('message'));
-
-    //     $contact = $this->Master_Vendors_model->get_one($contact_id);
-
-    //     $invoice_data = get_payments_making_data($invoice_id);
-    //     $attachement_url = prepare_payments_pdf($invoice_data, "send_email");
-
-    //     $default_bcc = get_setting('send_bcc_to'); //get default settings
-    //     $bcc_emails = "";
-
-    //     if ($default_bcc && $custom_bcc) {
-    //         $bcc_emails = $default_bcc . "," . $custom_bcc;
-    //     } else if ($default_bcc) {
-    //         $bcc_emails = $default_bcc;
-    //     } else if ($custom_bcc) {
-    //         $bcc_emails = $custom_bcc;
-    //     }
-
-    //     if (send_app_mail($contact->email, $subject, $message, array("attachments" => array(array("file_path" => $attachement_url)), "cc" => $cc, "bcc" => $bcc_emails))) {
-    //         // change email status
-    //         $status_data = array("status" => "sent", "last_email_sent_date" => get_my_local_time());
-    //         if ($this->Purchase_Payments_model->save($status_data, $invoice_id)) {
-    //             echo json_encode(array('success' => true, 'message' => lang("invoice_sent_message"), "invoice_id" => $invoice_id));
-    //         }
-    //         // delete the temp invoice
-    //         if (file_exists($attachement_url)) {
-    //             unlink($attachement_url);
-    //         }
-    //     } else {
-    //         echo json_encode(array('success' => false, 'message' => lang('error_occurred')));
-    //     }
-    // }
+            prepare_p_payment_pdf($invoice_data, "download");
+        } else {
+            show_404();
+        }
+    }
 
 
 }

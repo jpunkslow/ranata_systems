@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="description" class=" col-md-3">Deskripsi Item</label>
+        <label for="description" class=" col-md-3">Description</label>
         <div class="col-md-9">
             <?php
             echo form_textarea(array(
@@ -50,7 +50,7 @@
         </div>
     </div> -->
     <div class="form-group">
-        <label for="category" class=" col-md-3">Kategori</label>
+        <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -82,7 +82,7 @@
         </div>
     </div> -->
     <div class="form-group">
-        <label for="unit_type" class=" col-md-3">Tipe</label>
+        <label for="unit_type" class=" col-md-3">Type</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -115,7 +115,21 @@
     </div>
     
     <div class="form-group">
-        <label for="invoice_item_rate" class=" col-md-3">Price</label>
+        <label for="invoice_item_basic" class=" col-md-3">Basic Price</label>
+        <div class="col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "invoice_item_basic",
+                "name" => "invoice_item_basic",
+                "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price) : "",
+                "class" => "form-control",
+                "placeholder" => lang('rate')
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="invoice_item_rate" class=" col-md-3">Sell Price</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -123,7 +137,7 @@
                 "name" => "invoice_item_rate",
                 "value" => $model_info->rate ? to_decimal_format($model_info->rate) : "",
                 "class" => "form-control",
-                "placeholder" => lang('rate'),
+                "placeholder" => "0",
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));
@@ -206,7 +220,7 @@
                                 $("#invoice_unit_type").val(response.item_info.unit_type);
                                 $("#invoice_item_quantity").val("1");
 
-                                $("#invoice_item_rate").val(response.item_info.price);
+                                $("#invoice_item_basic").val(response.item_info.price);
                         }
                     }
                 });

@@ -2,14 +2,16 @@
 <div class="modal-body clearfix">
     <div class="col-md-12">
             <div class="form-group">
-                <label for="name" class=" col-md-3"> Nama</label>
+                <label for="code" class=" col-md-3"> Kode Customer</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
-                        "id" => "name",
-                        "name" => "name",
+                        "id" => "code",
+                        "name" => "code",
                         "class" => "form-control",
                         "placeholder" => 'Customers Name',
+                        "value" => getCodeId('master_customers',"CS"),
+                        "readonly" => true,
                         "autofocus" => true,
                         "data-rule-required" => true,
                         "data-msg-required" => lang("field_required"),
@@ -18,6 +20,22 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="name" class=" col-md-3"> Nama Customer</label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "name",
+                        "name" => "name",
+                        "class" => "form-control",
+                        "placeholder" => 'Customers Name / Company Name',
+                        "autofocus" => true,
+                        "data-rule-required" => true,
+                        "data-msg-required" => lang("field_required"),
+                    ));
+                    ?>
+                </div>
+            </div>
+            <!-- <div class="form-group">
                 <label for="company_name" class=" col-md-3"> Nama Perusahaan</label>
                 <div class=" col-md-9">
                     <?php
@@ -29,7 +47,7 @@
                     ));
                     ?>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="npwp" class=" col-md-3">Nomor NPWP</label>
                 <div class=" col-md-9">

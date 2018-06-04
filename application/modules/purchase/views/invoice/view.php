@@ -1,7 +1,7 @@
 <div id="page-content" class="clearfix">
     <div style="max-width: 1000px; margin: auto;">
         <div class="page-title clearfix mt15">
-            <h1> INV <?php echo get_invoice_id($invoice_info->code); ?>
+            <h1> PURCHASE INVOICES #<?php echo $invoice_info->code; ?>
                 
             </h1>
             <div class="title-button-group">
@@ -13,7 +13,7 @@
                     <ul class="dropdown-menu" role="menu">
                         
                         <li role="presentation"><?php echo anchor(get_uri("purchase/p_invoices/download_pdf/" . $invoice_info->id), "<i class='fa fa-download'></i> " . lang('download_pdf'), array("title" => lang('download_pdf'))); ?> </li>
-                        <li role="presentation"><?php echo anchor(get_uri("purchase/p_invoices/preview/" . $invoice_info->id . "/1"), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
+                        <li role="presentation"><?php echo anchor(get_uri("purchase/p_invoices/preview/" . $invoice_info->id), "<i class='fa fa-search'></i> " . lang('invoice_preview'), array("title" => lang('invoice_preview')), array("target" => "_blank")); ?> </li>
                         <li role="presentation" class="divider"></li>
                         <?php if($invoice_info->status != "paid"){ ?>
                         <li role="presentation"><?php echo modal_anchor(get_uri("purchase/p_invoices/modal_form_edit"), "<i class='fa fa-edit'></i> " . lang('edit_invoice'), array("title" => lang('edit_invoice'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?> </li>
@@ -95,11 +95,12 @@
             order: [[0, "asc"]],
             hideTools: true,
             columns: [
+
+                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"},
                 {title: '<?php echo lang("item") ?> '},
                 {title: '<?php echo lang("quantity") ?>', "class": "text-right w15p"},
                 {title: '<?php echo lang("rate") ?>', "class": "text-right w15p"},
-                {title: '<?php echo lang("total") ?>', "class": "text-right w15p"},
-                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
+                {title: '<?php echo lang("total") ?>', "class": "text-right w15p"}
             ],
             onDeleteSuccess: function (result) {
                 $("#invoice-total-section").html(result.invoice_total_view);

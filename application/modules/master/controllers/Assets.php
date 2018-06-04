@@ -13,6 +13,7 @@ class Assets extends MY_Controller {
 
     //load note list view
     function index() {
+        
 
         $this->template->rander("assets/index");
     }
@@ -34,8 +35,11 @@ class Assets extends MY_Controller {
     /* load item modal */
 
     function modal_form() {
+        $view_data['activa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","16000");
+        $view_data['expenses_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_type","Expenses");
+        $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","15000");
 
-        $this->load->view('assets/modal_form');
+        $this->load->view('assets/modal_form',$view_data);
     }
 
 
@@ -44,6 +48,9 @@ class Assets extends MY_Controller {
         validate_submitted_data(array(
             "id" => "numeric"
         ));
+         $view_data['activa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","16000");
+        $view_data['expenses_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_type","Expenses");
+        $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","15000");
 
         $view_data['model_info'] = $this->Master_Assets_model->get_one($this->input->post('id'));
 
@@ -54,17 +61,24 @@ class Assets extends MY_Controller {
 
     function add() {
 
+        validate_submitted_data(array(
+            "activa_type" => "required",
+            "activa_age" => "required",
+            "activa_pricing" => "required"
+        ));
 
         $item_data = array(
             "activa_code" => $this->input->post('activa_code'),
             "activa_type" => $this->input->post('activa_type'),
             "activa_age" => $this->input->post('activa_age'),
+            "asset_residu" => $this->input->post('asset_residu'),
             "activa_pricing" => $this->input->post('activa_pricing'),
-            "depreciated_method" => $this->input->post('depreciated_method'),
+            "depreciated_method" => "Garis_Lurus",
             "activa_account" => $this->input->post('activa_account'),
             "activa_depreciate_account" => $this->input->post('activa_depreciate_account'),
             "activa_expense_depre_account" => $this->input->post('activa_expense_depre_account'),
-            "created_at" => get_current_utc_time()
+            "created_at" => get_current_utc_time(),
+            "get_date" => $this->input->post('get_date')
             
         );
 
@@ -80,7 +94,10 @@ class Assets extends MY_Controller {
     function save() {
 
         validate_submitted_data(array(
-            "id" => "numeric"
+            "id" => "numeric",
+            "activa_type" => "required",
+            "activa_age" => "required",
+            "activa_pricing" => "required"
         ));
 
         $id = $this->input->post('id');
@@ -89,11 +106,13 @@ class Assets extends MY_Controller {
             "activa_code" => $this->input->post('activa_code'),
             "activa_type" => $this->input->post('activa_type'),
             "activa_age" => $this->input->post('activa_age'),
+            "asset_residu" => $this->input->post('asset_residu'),
             "activa_pricing" => $this->input->post('activa_pricing'),
-            "depreciated_method" => $this->input->post('depreciated_method'),
+            // "depreciated_method" => $this->input->post('depreciated_method'),
             "activa_account" => $this->input->post('activa_account'),
             "activa_depreciate_account" => $this->input->post('activa_depreciate_account'),
-            "activa_expense_depre_account" => $this->input->post('activa_expense_depre_account')
+            "activa_expense_depre_account" => $this->input->post('activa_expense_depre_account'),
+            "get_date" => $this->input->post('get_date')
             
         );
 
@@ -150,17 +169,35 @@ class Assets extends MY_Controller {
     /* prepare a row of item list table */
 
     private function _make_item_row($data) {
-        
+        $getDate = new DateTime($data->get_date);
+        $today = new DateTime();
+        $umur = $today->diff($getDate);
+        $age = ($umur->y * 12) + $umur->m;
+        $persentase = (100 / 100) * $data->activa_age;
+
+        $residu = $data->asset_residu;
+        // if($residu > 0){
+        //     $annual = ($age!=0)?($data->activa_pricing / $residu / $age):0;
+        // }
+        $annual = $data->activa_pricing / $persentase - $residu;
+        // $annual = $data->activa_pricing;
+            
+        $activa_acc = $this->Master_Coa_Type_model->get_details(array("id" => $data->activa_account))->row();
+        $activa_depre_acc = $this->Master_Coa_Type_model->get_details(array("id" => $data->activa_depreciate_account))->row();
+        $activa_exp_depre_acc = $this->Master_Coa_Type_model->get_details(array("id" => $data->activa_expense_depre_account))->row();
         return array(
-            $data->id,
             $data->activa_code,
-            $data->activa_type,
-            $data->activa_age,
-            $data->activa_pricing,
-            $data->depreciated_method,
-            $data->activa_account,
-            $data->activa_depreciate_account,
-            $data->activa_expense_depre_account,
+            str_replace("_", " ", $data->activa_type),
+            $activa_acc->account_number." - ".$activa_acc->account_name,
+            format_to_date($data->get_date,true),
+         
+            $data->activa_age." Year",
+            to_currency($data->activa_pricing,false),
+            to_currency($residu,false),
+            to_currency($annual,false),
+            to_currency($annual / 12),
+            // $activa_depre_acc->account_number." - ".$activa_depre_acc->account_name,
+            // $activa_exp_depre_acc->account_number." - ".$activa_exp_depre_acc->account_name,
             modal_anchor(get_uri("master/assets/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit'), "data-post-id" => $data->id))
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("master/assets/delete"), "data-action" => "delete"))
         );

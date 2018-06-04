@@ -20,7 +20,7 @@ class Sales_QuotationItems_model extends Crud_model {
         if($quot_id){
             $where = " AND fid_quotation = $quot_id";
         }
-        $data = $this->db->query("SELECT * FROM sales_quotation_items WHERE  deleted = 0  ".$where." ORDER BY id DESC");
+        $data = $this->db->query("SELECT * FROM sales_quotation_items WHERE  deleted = 0  ".$where." ORDER BY category ASC");
         return $data;
     }
     function get_item_suggestion($keyword = "") {

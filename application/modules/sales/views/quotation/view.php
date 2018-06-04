@@ -13,7 +13,7 @@
                     <ul class="dropdown-menu" role="menu">
                         
                         <li role="presentation"><?php echo anchor(get_uri("sales/quotation/download_pdf/" . $invoice_info->id), "<i class='fa fa-download'></i> " . lang('download_pdf'), array("title" => lang('download_pdf'))); ?> </li>
-                        <li role="presentation"><?php echo anchor(get_uri("sales/quotation/preview/" . $invoice_info->id . "/1"), "<i class='fa fa-search'></i> " . "Quotation Preview", array("title" => "Quotation Preview"), array("target" => "_blank")); ?> </li>
+                        <li role="presentation"><?php echo anchor(get_uri("sales/quotation/preview/" . $invoice_info->id), "<i class='fa fa-search'></i> " . "Quotation Preview", array("title" => "Quotation Preview"), array("target" => "_blank")); ?> </li>
                         <li role="presentation" class="divider"></li>
                         <li role="presentation"><?php echo modal_anchor(get_uri("sales/quotation/modal_form_edit"), "<i class='fa fa-edit'></i> " . "Edit Quotation", array("title" => "Edit Quotation", "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?> </li>
 
@@ -38,17 +38,17 @@
                     <div class="col-sm-6">
                         <table style="font-size:14px;">
                             <tr>
-                                <td width="200">Nomer Quotation</td>
-                                <td>:</td>
+                                <td width="160">Quotation Code</td>
+                                <td width="20">:</td>
                                 <td> <strong>#<?php echo $invoice_info->code ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Tanggal Buat</td>
+                                <td>Created Date</td>
                                 <td>:</td>
                                 <td> <?php echo format_to_date($invoice_info->created_at,true) ?></td>
                             </tr>
                             <tr>
-                                <td>Tanggal Kadaluarsa</td>
+                                <td>Expired Date</td>
                                 <td>:</td>
                                 <td> <?php echo format_to_date($invoice_info->exp_date,false) ?></td>
                             </tr>
@@ -57,14 +57,14 @@
                     <div class="col-sm-6">
                         <table style="font-size:14px;" class="display">
                             <tr>
-                                <td width="200">Nama Pelanggan</td>
-                                <td>:</td>
-                                <td> <strong><?php echo $client_info->name."(".$client_info->company_name.")" ?></strong></td>
+                                <td width="200">Customer</td>
+                                <td width="20">:</td>
+                                <td><strong><?php echo $client_info->code." - ".$client_info->name ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Status</td>
+                                <td>Contacts</td>
                                 <td>:</td>
-                                <td> <?php echo $invoice_status_label ?></td>
+                                <td > <?php echo ($client_info->mobile ? $client_info->mobile : $client_info->contact) ?></td>
                             </tr>
                             <tr>
                                 <td>Email</td>
@@ -74,7 +74,7 @@
                         </table>
                     </div>
                 </div>
-
+                <hr>
                 <div class="table-responsive mt15 pl15 pr15">
                     <table id="quotation-item-table" class="display" width="100%">            
                     </table>
@@ -109,11 +109,12 @@
             quotation: [[0, "asc"]],
             hideTools: true,
             columns: [
+
+                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"},
                 {title: '<?php echo lang("item") ?> '},
                 {title: '<?php echo lang("quantity") ?>', "class": "text-right w15p"},
                 {title: '<?php echo lang("rate") ?>', "class": "text-right w15p"},
-                {title: '<?php echo lang("total") ?>', "class": "text-right w15p"},
-                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
+                {title: '<?php echo lang("total") ?>', "class": "text-right w15p"}
             ],
             onDeleteSuccess: function (result) {
                 $("#quotation-total-section").html(result.invoice_total_view);

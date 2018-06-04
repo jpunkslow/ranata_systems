@@ -76,15 +76,14 @@ class Vendors extends MY_Controller {
         
 
         validate_submitted_data(array(
+            "code" => "required",
             "name" => "required",
-            "npwp" => "required",
-            "contact" => "required"
         ));
 
         $user_data = array(
+            "code" => $this->input->post('code'),
             "name" => $this->input->post('name'),
 
-            "company_name" => $this->input->post('company_name'),
             "npwp" => $this->input->post('npwp'),
             "address" => $this->input->post('address'),
             "termin" => $this->input->post('termin'),
@@ -117,10 +116,13 @@ class Vendors extends MY_Controller {
 
         validate_submitted_data(array(
             "id" => "numeric",
+            "code" => "required",
             "name" => "required"
         ));
 
         $data = array(
+            "code" => $this->input->post('code'),
+            
             "name" => $this->input->post('name'),
             
             "company_name" => $this->input->post('company_name'),
@@ -174,7 +176,7 @@ class Vendors extends MY_Controller {
     private function _make_row($data) {
  
         $row_data = array(
-            $data->id,
+            $data->code,
             $data->name,
             $data->npwp,
             $data->address,

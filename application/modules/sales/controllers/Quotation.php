@@ -24,7 +24,7 @@ class Quotation extends MY_Controller {
         $view_data['model_info'] = $this->Sales_Quotation_model->get_one($this->input->post('id'));
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         
-        $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
+        $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("code","name"));
 
         $this->load->view('quotation/modal_form',$view_data);
     }
@@ -43,7 +43,8 @@ class Quotation extends MY_Controller {
 
         $view_data['model_info'] = $this->Sales_Quotation_model->get_details($options)->row();
          $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
-
+         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
+        
         
 
         $this->load->view('quotation/modal_form_edit', $view_data);
@@ -65,6 +66,7 @@ class Quotation extends MY_Controller {
             "status" => 'draft',
             "email_to" => $this->input->post('email_to'),
             "exp_date" => $this->input->post('exp_date'),
+            "fid_tax" => $this->input->post('fid_tax'),
             "currency" => $this->input->post('currency'),
             "created_at" => get_current_utc_time()
         );
@@ -94,9 +96,10 @@ class Quotation extends MY_Controller {
             "fid_cust" => $this->input->post('fid_cust'),
             "inv_address" => $this->input->post('inv_address'),
             "delivery_address" => $this->input->post('delivery_address'),
-            "status" => $this->input->post('status'),
+            // "status" => $this->input->post('status'),
             "email_to" => $this->input->post('email_to'),
             "exp_date" => $this->input->post('exp_date'),
+             "fid_tax" => $this->input->post('fid_tax'),
             "currency" => $this->input->post('currency')
         );
 
@@ -168,14 +171,14 @@ class Quotation extends MY_Controller {
         $value = $this->Sales_Quotation_model->get_quotation_total_summary($data->id);
         $row_data = array(
         
-            anchor(get_uri("sales/quotation/view/" . $data->id), "#00".$data->id.$data->code),
-            modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
+            anchor(get_uri("sales/quotation/view/" . $data->id."/".str_replace("/", "-", $data->code)),"#". $data->code),
+            modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->code.' - '.$query->name, "data-post-id" => $data->fid_cust)),
             
             $this->_get_quotation_status_label($data,true),
             $data->email_to,
             format_to_date($data->exp_date, false),
             $data->currency,
-            to_currency($value->invoice_subtotal)
+            to_currency($value->invoice_total)
 
         );
 
@@ -192,7 +195,7 @@ class Quotation extends MY_Controller {
             $view_data = get_quotation_making_data($id);
 
             if ($view_data) {
-                $view_data['invoice_status'] = get_quotation_status_label($view_data["invoice_info"], true);
+                $view_data['invoice_status_label'] = $this->_get_quotation_status_label($view_data["invoice_info"], true);
 
                 $this->template->rander("quotation/view", $view_data);
             } else {
@@ -205,7 +208,7 @@ class Quotation extends MY_Controller {
 
      //prepare invoice status label 
     private function _get_quotation_status_label($invoice_info, $return_html = true) {
-         $invoice_status_class = "label-default";
+         $invoice_status_class = "label-warning";
         $status = "draft";
         if ($invoice_info->status == "draft" ) {
             $invoice_status_class = "label-warning";
@@ -342,12 +345,13 @@ class Quotation extends MY_Controller {
         $type = $data->unit_type ? $data->unit_type : "";
 
         return array(
+            modal_anchor(get_uri("sales/quotation/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id))
+            . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/quotation/delete_item"), "data-action" => "delete")),
             $item,
             to_decimal_format($data->quantity) . " " . $type,
             to_currency($data->rate),
-            to_currency($data->total),
-            modal_anchor(get_uri("sales/quotation/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id))
-            . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/quotation/delete_item"), "data-action" => "delete"))
+            to_currency($data->total)
+            
         );
     }
 
@@ -382,8 +386,9 @@ class Quotation extends MY_Controller {
 
     function get_invoice_status_bar($invoice_id = 0) {
 
-        $view_data["invoice_info"] = $this->Invoices_model->get_details(array("id" => $invoice_id))->row();
-        $view_data['invoice_status_label'] = $this->_get_quotation_status_label($view_data["invoice_info"]);
+        $view_data["invoice_info"] = $this->Sales_Quotation_model->get_details(array("id" => $invoice_id))->row();
+        $view_data["client_info"] = $this->Master_Customers_model->get_details(array("id" => $view_data["invoice_info"]->fid_cust))->row();
+        $view_data['invoice_status_label'] = $this->_get_quotation_status_label($view_data["invoice_info"],true);
         $this->load->view('quotation/quotation_status_bar', $view_data);
     }
 

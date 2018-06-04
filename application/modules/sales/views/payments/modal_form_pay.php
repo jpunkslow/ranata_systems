@@ -31,7 +31,7 @@
         </div>
     </div>
    
-    <div class="form-group">
+   <!--  <div class="form-group">
         <label for="inv_date" class="col-md-3">Tanggal Invoices</label>
         <div class=" col-md-9">
             <?php
@@ -46,9 +46,9 @@
             ));
             ?>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
-        <label for="pay_date" class="col-md-3">Tanggal Bayar</label>
+        <label for="pay_date" class="col-md-3">PAY DATE</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -73,7 +73,7 @@
     </div>
 
     <div class="form-group">
-        <label for="currency" class=" col-md-3">Mata Uang</label>
+        <label for="currency" class=" col-md-3">CURRENCY</label>
         <div class="col-md-9">
              <?php 
                 echo form_dropdown(
@@ -88,7 +88,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="total" class="col-md-3">Total Jumlah</label>
+        <label for="total" class="col-md-3">TOTAL PAYMENT</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -150,7 +150,7 @@
                 if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {
                     location.reload();
                 } else {
-                    window.location = "<?php echo site_url('sales/s_payments'); ?>" ;
+                    window.location = "<?php echo site_url('sales/s_payments/prints/'); ?>"+ result.id ;
                 }
             },
             onAjaxSuccess: function (result) {

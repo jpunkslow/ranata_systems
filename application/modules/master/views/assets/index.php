@@ -25,15 +25,17 @@
             source: '<?php echo_uri("master/assets/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: 'ID', "class": "w50 text-center"},
                 {title: "CODE"},
                 {title: "TYPE"},
+                {title: "ACTIVA NAME"},
+                {title: "GET DATE"},
                 {title: "AGE"},
-                {title: "PRICING"},
-                {title: "METHOD"},
-                {title: "ACCOUNT"},
-                {title: "DEPRECIATE ACCOUNT"},
-                {title: "EXPENSE ACCOUNT"},
+                {title: "COST"},
+                // {title: "METHOD"},
+                
+                {title: "RESIDUAL VALUE", "class": "text-right"},
+                {title: "YEARLY <br> DEPRECIATION", "class": "text-right"},
+                {title: "MONTHLY <br> DEPRECIATION", "class": "text-right"},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
             ],
             printColumns: [0, 1, 2, 3, 4,5,6,7,8],

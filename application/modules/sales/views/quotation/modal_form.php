@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="fid_cust" class="col-md-3">Customers</label>
+        <label for="fid_cust" class="col-md-3">Customers Code</label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown("fid_cust", $clients_dropdown, "", "class='select2 validate-hidden' id='fid_cust' data-rule-required='true', data-msg-required='" . lang('field_required') . "'");
@@ -42,27 +42,27 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="inv_address" class=" col-md-3">Alamat</label>
+        <label for="inv_address" class=" col-md-3">Address</label>
         <div class="col-md-9">
              <?php 
                 echo form_textarea(array(
                 "id" => "inv_address",
                 "name" => "inv_address",
                 "class" => "form-control",
-                "placeholder" => "Alamat ",
+                "placeholder" => "Address",
                 ));
             ?>
         </div>
     </div>
     <div class="form-group">
-        <label for="delivery_address" class=" col-md-3">Alamat Pengiriman</label>
+        <label for="delivery_address" class=" col-md-3">Delivery Address</label>
         <div class="col-md-9">
              <?php 
                 echo form_textarea(array(
                 "id" => "delivery_address",
                 "name" => "delivery_address",
                 "class" => "form-control",
-                "placeholder" => "Alamat Pengiriman",
+                "placeholder" => "Delivery Address",
                 // "data-rule-required" => true,
                 // "data-msg-required" => lang("field_required"),
             ));
@@ -70,7 +70,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="exp_date" class="col-md-3">Tanggal Kadaluarsa</label>
+        <label for="exp_date" class="col-md-3">Expired</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -88,13 +88,13 @@
         <label for="fid_tax" class=" col-md-3"><?php echo lang('tax'); ?></label>
         <div class="col-md-9">
             <?php
-            echo form_dropdown("fid_tax", $taxes_dropdown, array($model_info->fid_tax), "class='select2 tax-select2'");
+            echo form_dropdown("fid_tax", $taxes_dropdown, "", "class='select2 tax-select2'");
             ?>
         </div>
     </div>
 
     <div class="form-group">
-        <label for="currency" class=" col-md-3">Mata Uang</label>
+        <label for="currency" class=" col-md-3">Currency</label>
         <div class="col-md-9">
              <?php 
                 echo form_dropdown(

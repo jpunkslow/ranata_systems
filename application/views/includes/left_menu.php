@@ -6,8 +6,8 @@
             $sidebar_menu[] = array("name" => "Dashboard","slug"=>"dashboard", "url" => "dashboard", "class" => "fa-desktop");
             
             $jurnal_submenu = array();
-            $jurnal_submenu[] = array("name" => "Expenses Cash", "slug"=>"payments","url" => "accounting/expenses");
-            $jurnal_submenu[] = array("name" => "Income Cash", "slug"=>"receivements","url" => "accounting/income");
+            $jurnal_submenu[] = array("name" => "Expenses Cash", "slug"=>"expenses","url" => "accounting/expenses");
+            $jurnal_submenu[] = array("name" => "Income Cash", "slug"=>"income","url" => "accounting/income");
 
 
             $sidebar_menu[] = array("name" => "Input Journal Cash", "slug"=>"","url" => "#", "class" => "fa-desktop", "submenu" => $jurnal_submenu);
@@ -30,14 +30,14 @@
             $sidebar_menu[] = array("name" => "Input AP","slug"=>"#", "url" => "#", "class" => "fa-desktop", "submenu" => $ap_submenu);
             
             $acc_submenu = array();
-            $acc_submenu[] = array("name" => "Edit Journal Entry", "slug"=>"general_accounts","url" => "accounting/general_accounts");
+            $acc_submenu[] = array("name" => "Edit Journal Entry", "slug"=>"journal_entry","url" => "accounting/journal_entry");
             $acc_submenu[] = array("name" => "General Ledger", "slug"=>"general_ledger","url" => "accounting/general_ledger");
-            $acc_submenu[] = array("name" => "Trial Balance", "slug"=>"general_ledger","url" => "accounting/general_ledger");
+            $acc_submenu[] = array("name" => "Trial Balance", "slug"=>"neraca","url" => "accounting/neraca");
 
             $sidebar_menu[] = array("name" => "Accounting","slug"=>"accounting", "url" => "#", "class" => "fa-desktop", "submenu" => $acc_submenu);
 
             $rpt_submenu = array();
-            $rpt_submenu[] = array("name" => "Profit and Loss", "slug"=>"neraca","url" => "reports/neraca");
+            $rpt_submenu[] = array("name" => "Profit and Loss", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
             $rpt_submenu[] = array("name" => "Profit and Loss Total", "slug"=>"bukubesar","url" => "master/bukubesar");
             $rpt_submenu[] = array("name" => "Profit and Loss Project", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
             
@@ -52,6 +52,7 @@
             // MENU DATA MASTER INPUT
             $master_submenu = array();
             $master_submenu[] = array("name" => "Chart Of Account", "slug"=>"coa","url" => "master/coa");
+            $master_submenu[] = array("name" => "COA Balance", "slug"=>"saldoawal","url" => "master/saldoawal");
             $master_submenu[] = array("name" => "Customers", "slug"=>"customers","url" => "master/customers");
             $master_submenu[] = array("name" => "Vendors", "slug"=>"vendors","url" => "master/vendors");
             $master_submenu[] = array("name" => "Items or Products", "slug"=>"items","url" => "master/items");

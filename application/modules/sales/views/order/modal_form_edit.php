@@ -150,7 +150,7 @@
         setDatePicker("#exp_date");
         $("#order-form").appForm({
             onSuccess: function (result) {
-                $("#order-table").appTable({newData: result.data, dataId: result.id});
+                location.reload();
             }
         });
         

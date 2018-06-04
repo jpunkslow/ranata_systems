@@ -23,7 +23,7 @@
                 
                 <div class="pull-right">
                     <?php
-                    echo "<div class='text-center'>" . anchor("sales/quotation/download_pdf/" . $invoice_info->id, lang("download_pdf"), array("class" => "btn btn-default round")) . "</div>"
+                    echo "<div class='text-center'>" . anchor("sales/s_payment/download_pdf/" . $invoice_info->id, lang("download_pdf"), array("class" => "btn btn-default round")) . "</div>"
                     ?>
                 </div>
 

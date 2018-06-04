@@ -6,15 +6,7 @@ class Profitloss_model extends CI_Model {
 	
 
 	function get_data_akun_dapat() {
-		// $this->db->select('*');
-		// $this->db->from('acc_coa');
-		// $this->db->where('aktif', 'Y');
-		// $this->db->where('laba_rugi', 'PENDAPATAN');
-		// $this->db->where('CHAR_LENGTH(kd_aktiva) >', '1', FALSE);
-		// // $this->db->_protect_identifiers = FALSE;
-		// $this->db->order_by('LPAD(kd_aktiva, 1, 0) ASC, LPAD(kd_aktiva, 5, 1)', 'ASC');
-		// $this->db->_protect_identifiers = TRUE;
-		$query = $this->db->query("SELECT * FROM `acc_coa` WHERE `aktif` = 'Y' AND `laba_rugi` = 'PENDAPATAN' AND CHAR_LENGTH(kd_aktiva) >1 ORDER BY kd_aktiva ASC");
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Income' AND parent IS NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -22,18 +14,29 @@ class Profitloss_model extends CI_Model {
 			return array();
 		}
 
-		// $this->db->_protect_identifiers(FALSE)->select('*')->from('acc_coa')->where('aktif', 'Y')->where('laba_rugi', 'PENDAPATAN')->where('CHAR_LENGTH(kd_aktiva) >', '1', FALSE);
+	}
+	function getPendNonOp(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Other Income' AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
 	}
 
 	function get_data_akun_biaya() {
-		// $this->db->select('*');
-		// $this->db->from('acc_coa');
-		// $this->db->where('aktif', 'Y');
-		// $this->db->where('laba_rugi', 'BIAYA');
-		// $this->db->where('CHAR_LENGTH(kd_aktiva) >', '1', FALSE);
-		// // $this->db->_protect_identifiers = FALSE;
-		// $this->db->order_by('LPAD(kd_aktiva, 1, 0) ASC, LPAD(kd_aktiva, 5, 1)', 'ASC');
-		$query = $this->db->query("SELECT * FROM `acc_coa` WHERE `aktif` = 'Y' AND `laba_rugi` = 'BIAYA' AND CHAR_LENGTH(kd_aktiva) >1 ORDER BY kd_aktiva ASC");
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND `account_type` = 'Expenses' AND parent is NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+	}
+
+	function get_data_akun_biaya_other() {
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND `account_type` = 'Other Expenses' AND parent is NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -44,9 +47,9 @@ class Profitloss_model extends CI_Model {
 
 
 	function get_jml_akun($akun) {
-			$this->db->select('SUM(debet) AS jum_debet, SUM(kredit) AS jum_kredit');
-			$this->db->from('v_transaction');
-			$this->db->where('transaksi', $akun);
+			$this->db->select('SUM(debet) AS jum_debet, SUM(credit) AS jum_kredit');
+			$this->db->from('transaction_journal');
+			$this->db->where('fid_coa', $akun);
 
 		// 	if(isset($_REQUEST['tgl_dari']) && isset($_REQUEST['tgl_samp'])) {
 		// 	$tgl_dari = $_REQUEST['tgl_dari'];

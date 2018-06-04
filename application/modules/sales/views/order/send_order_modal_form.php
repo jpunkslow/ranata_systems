@@ -107,15 +107,16 @@
         initWYSIWYGEditor("#message", {height: 400, toolbar: []});
 
         updateInvoiceStatusBar = function (invoiceId) {
-        $.ajax({
-            url: "<?php echo get_uri("sales/order/get_invoice_status_bar"); ?>/" + invoiceId,
-            success: function (result) {
-                if (result) {
-                    $("#invoice-status-bar").html(result);
+            $.ajax({
+                url: "<?php echo get_uri("sales/order/get_invoice_status_bar"); ?>/" + invoiceId,
+                success: function (result) {
+                    if (result) {
+                        $("#invoice-status-bar").html(result);
+                        $("#status_detail").html(result);
+                    }
                 }
-            }
-        });
-    };
+            });
+        };
 
     });
 </script>

@@ -18,6 +18,25 @@ class Order extends MY_Controller {
 
         $this->template->rander("order/index");
     }
+    function getQuotId($id){
+
+        if(!empty($id)){
+            $options = array(
+                "id" => $id,
+            );
+            $data = $this->Sales_Quotation_model->get_details($options)->row();
+            if($data){
+                $data_cust = $this->Master_Customers_model->get_details(array("id" => $data->fid_cust))->row();
+                
+                echo json_encode(array("success" => true,"data" => $data_cust));    
+            }else{
+                echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+            }
+            
+        }else{
+            echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+        }
+    }
 
     /* load client add/edit modal */
 
@@ -28,7 +47,7 @@ class Order extends MY_Controller {
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
           $view_data['quot_dropdown'] = array("" => "-") + $this->Sales_Quotation_model->get_dropdown_list(array("code"));
 
-        $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
+        $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("code","name"));
 
         $this->load->view('order/modal_form',$view_data);
     }
@@ -49,7 +68,7 @@ class Order extends MY_Controller {
            $view_data['quot_dropdown'] = array("" => "-") + $this->Sales_Quotation_model->get_dropdown_list(array("code"));
 
         $view_data['model_info'] = $this->Sales_Order_model->get_details($options)->row();
-         $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
+         $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("code","name"));
 
         
 
@@ -98,9 +117,10 @@ class Order extends MY_Controller {
 
         
 
-        $save_id = $this->Sales_Order_model->save($data);
-        if ($save_id) {
-             $check = $this->db->query("SELECT * FROM sales_quotation_items WHERE fid_quotation = '$quot'")->result();
+        if (!empty($quot)) {
+            $save_id = $this->Sales_Order_model->save($data);
+        
+             $check = $this->db->query("SELECT * FROM sales_quotation_items WHERE fid_quotation = '$quot' AND deleted = 0")->result();
 
             if($check){
                 foreach($check as $row){
@@ -116,11 +136,12 @@ class Order extends MY_Controller {
                         "total" => $row->total
                     );
 
+                   $save_data =  $this->Sales_OrderItems_model->save($item["data"]);
                 }
 
-                $save_data = $this->Sales_OrderItems_model->save($item["data"]);
+            
 
-                if($save_data){
+                // if($save_data){
                     $query = array("fid_quot" => $quot);
                     $exe = $this->Sales_Order_model->save($query,$save_id); 
                
@@ -128,16 +149,25 @@ class Order extends MY_Controller {
                     $item_info = $this->Sales_OrderItems_model->get_details($options)->row();
                     // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
                     echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
-                }else{
-                    echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-                }
+                // }else{
+                //     echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+                // }
             }else{
                  echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
             }
             
             // echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id ,'message' => lang('record_saved')));
         } else {
-            echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            $save_id = $this->Sales_Order_model->save($data);
+        
+
+            if($save_id){
+                
+                    echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
+                
+            }else{
+                 echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+            }
         }
     }
 
@@ -173,45 +203,43 @@ class Order extends MY_Controller {
 
             // $order_id = $this->input->post("order_id");
 
-            $check = $this->db->query("SELECT * FROM sales_quotation_items WHERE fid_quotation = '$quot'")->result();
+            // $check = $this->db->query("SELECT * FROM sales_quotation_items WHERE fid_quotation = '$quot'")->result();
 
-            if($check){
-                foreach($check as $row){
+            // if($check){
+            //     foreach($check as $row){
 
-                    $item["data"] = array(
-                        "fid_order" => $save_id,
-                        "title" => $row->title,
-                        "description" => $row->description,
-                        "category" => $row->category,
-                        "quantity" => $row->quantity,
-                        "unit_type" => $row->unit_type,
-                        "rate" => $row->rate,
-                        "total" => $row->total
-                    );
+            //         $item["data"] = array(
+            //             "fid_order" => $save_id,
+            //             "title" => $row->title,
+            //             "description" => $row->description,
+            //             "category" => $row->category,
+            //             "quantity" => $row->quantity,
+            //             "unit_type" => $row->unit_type,
+            //             "rate" => $row->rate,
+            //             "total" => $row->total
+            //         );
 
-                }
+            //     }
 
-                $save_data = $this->Sales_OrderItems_model->save($item["data"]);
+            //     $save_data = $this->Sales_OrderItems_model->save($item["data"]);
 
-                if($save_data){
-                    $query = array("fid_quot" => $quot);
-                    $exe = $this->Sales_Order_model->save($query,$save_id); 
+            //     if($save_data){
+            //         $query = array("fid_quot" => $quot);
+            //         $exe = $this->Sales_Order_model->save($query,$save_id); 
                
-                    $options = array("id" => $save_data);
-                    $item_info = $this->Sales_OrderItems_model->get_details($options)->row();
-                    // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
+            //         $options = array("id" => $save_data);
+            //         $item_info = $this->Sales_OrderItems_model->get_details($options)->row();
+            //         // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
                     echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
                 }else{
                     echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
                 }
-            }else{
-                 echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-            }
+            
 
             // echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
-        } else {
-            echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-        }
+        // } else {
+        //     echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+        // }
     }
 
 
@@ -277,7 +305,7 @@ class Order extends MY_Controller {
 
         $row_data = array(
         
-            anchor(get_uri("sales/order/view/" . $data->id), "#".$data->code),
+            anchor(get_uri("sales/order/view/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
             modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
             // $data_name,
             $this->_get_order_status_label($data),
@@ -376,6 +404,7 @@ class Order extends MY_Controller {
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
+            "basic_price" => unformat_currency($this->input->post('invoice_item_basic')),
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
 
             "total" => $rate * $quantity,
@@ -422,6 +451,7 @@ class Order extends MY_Controller {
                     "category" => $row->category,
                     "quantity" => $row->quantity,
                     "unit_type" => $row->unit_type,
+                    "basic_price" => $row->rate,
                     "rate" => $row->rate,
                     "total" => $row->total
                 );

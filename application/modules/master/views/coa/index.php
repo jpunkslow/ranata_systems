@@ -15,8 +15,10 @@
                 ?>
             </div>
         </div>
-        <div class="table-responsive">
-            <table id="master_coa-table" class="display" cellspacing="0" width="100%">            
+        
+
+            <div class="table-responsive">
+            <table id="master_coa-table" class="display" cellspacing="0" width="100%">         
             </table>
         </div>
 
@@ -37,14 +39,14 @@
             source: '<?php echo_uri("master/coa/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: "ORDER"},
+                // {title: "ORDER"},
                 {title: 'NO ACCOUNT'},
                 {title: "ACCOUNT NAME"},
                 {title: "IS PARENT"},
                 {title: "NORMALLY"},
                 {title: "ACCOUNT_TYPE"},
                 {title: "REPORTING"},
-                {title: "ACCOUNT"},
+                {title: "IN/OUT"},
                 {visible: visibleDelete, title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
             ],
             displayLength: 100,

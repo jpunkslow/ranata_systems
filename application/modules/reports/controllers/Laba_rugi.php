@@ -23,10 +23,6 @@ class Laba_rugi extends MY_Controller {
 		$this->data['judul_utama'] = 'Laporan';
 		$this->data['judul_sub'] = 'Laba Rugi';
 
-		$this->data['css_files'][] = base_url() . 'assets/easyui/themes/default/easyui.css';
-		$this->data['css_files'][] = base_url() . 'assets/easyui/themes/icon.css';
-		$this->data['js_files'][] = base_url() . 'assets/easyui/jquery.easyui.min.js';
-
 		// #include tanggal
 		// $this->data['css_files'][] = base_url() . 'assets/extra/bootstrap_date_time/css/bootstrap-datetimepicker.min.css';
 		// $this->data['js_files'][] = base_url() . 'assets/extra/bootstrap_date_time/js/bootstrap-datetimepicker.min.js';
@@ -38,7 +34,9 @@ class Laba_rugi extends MY_Controller {
 
 		
 		$this->data['data_dapat'] = $this->Profitloss_model->get_data_akun_dapat();
+		$this->data['dapat_non_op'] = $this->Profitloss_model->getPendNonOp();
 		$this->data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
+		$this->data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
 
 		
 		$this->template->rander('v_profitloss', $this->data, TRUE);

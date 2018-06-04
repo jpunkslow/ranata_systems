@@ -1,4 +1,5 @@
 <div style=" margin: auto;">
+    <center><span style="font-size:16px;font-weight: bold;"><u>INVOICES</u><br><?php echo $invoice_info->code; ?></span></center>
     <?php
     $color = get_setting("invoice_color");
     if (!$color) {
@@ -31,34 +32,23 @@
     </tr>
     <?php
 
-    foreach ($invoice_items as $item) {
-        if($item->category == "Akomodasi"){
-
+    foreach ($invoice_items as $item) { 
 
         ?>
 
         <tr style="background-color: #f4f4f4; ">
-            <td style="width: 45%; border: 1px solid #fff; padding: 10px;">< <?php echo $item->title; ?>
+            <td style="width: 45%; border: 1px solid #fff; padding: 10px;"> <?php echo $item->title; ?>
                 <br />
                 <span style="color: #888; font-size: 90%;"><?php echo nl2br($item->description); ?></span>
+                <br>
+                <span style="float: right"><?php echo $item->category; ?></span>
             </td>
             <td style="text-align: center; width: 15%; border: 1px solid #fff;"> <?php echo $item->quantity . " " . $item->unit_type; ?></td>
             <td style="text-align: right; width: 20%; border: 1px solid #fff;"> <?php echo to_currency($item->rate ); ?></td>
             <td style="text-align: right; width: 20%; border: 1px solid #fff;"> <?php echo to_currency($item->total); ?></td>
         </tr>
-    <?php }else if($item->category == "Transport"){ ?>
-        <tr style="background-color: #f4f4f4; ">
-            <td style="width: 45%; border: 1px solid #fff; padding: 10px;"><?php echo $item->title; ?>
-                <br />
-                <span style="color: #888; font-size: 90%;"><?php echo nl2br($item->description); ?></span>
-            </td>
-            <td style="text-align: center; width: 15%; border: 1px solid #fff;"> <?php echo $item->quantity . " " . $item->unit_type; ?></td>
-            <td style="text-align: right; width: 20%; border: 1px solid #fff;"> <?php echo to_currency($item->rate ); ?></td>
-            <td style="text-align: right; width: 20%; border: 1px solid #fff;"> <?php echo to_currency($item->total); ?></td>
-        </tr>
-       <?php  
-        }
-    }  ?>
+   
+       <?php  }  ?>
     <tr>
         <td colspan="3" style="text-align: right;"><?php echo lang("total"); ?></td>
         <td style="text-align: right; width: 20%; border: 1px solid #fff; background-color: #f4f4f4;">
