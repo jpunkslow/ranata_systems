@@ -34,15 +34,17 @@
             source: '<?php echo_uri("sales/s_payments/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: "KODE VOUCHER #"},
-                {title: "CUSTOMER"},
+                {title: "VOUCHER CODE #"},
+                {title: "CUSTOMERS"},
                 {title: "STATUS","class": "text-center"},
                 // {title: "KAS"},
                 {title: "PAY DATE"},
                 {title: "MEMO"},
                 {title: "CURRENCY","class": "text-center"},
+                {title: "PAID", "class": "text-right"},
+                {title: "RESIDU", "class": "text-right"},
                 {title: "TOTAL", "class": "text-right"},
-                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
+                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w50"}
             ],
             printColumns: [0, 1, 2, 3, 4,5,6,7,8],
             xlsColumns: [0, 1, 2, 3, 4,5,6,7,8]

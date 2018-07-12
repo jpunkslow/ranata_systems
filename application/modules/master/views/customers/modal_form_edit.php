@@ -5,7 +5,7 @@
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">
              <div class="form-group">
-                <label for="code" class=" col-md-3"> Kode Customer</label>
+                <label for="code" class=" col-md-3">Customer Code</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -23,7 +23,7 @@
                 </div>
             </div>
              <div class="form-group">
-                <label for="name" class=" col-md-3"> Nama</label>
+                <label for="name" class=" col-md-3"> Customer Name</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -39,23 +39,9 @@
                     ?>
                 </div>
             </div>
-            <!-- <div class="form-group">
-                <label for="company_name" class=" col-md-3"> Nama Perusahaan</label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_input(array(
-                        "id" => "company_name",
-                        "name" => "company_name",
-
-                        "value" => $model_info->company_name,
-                        "class" => "form-control",
-                        "placeholder" =>  'Company Name',
-                    ));
-                    ?>
-                </div>
-            </div> -->
+            
             <div class="form-group">
-                <label for="npwp" class=" col-md-3">Nomor NPWP</label>
+                <label for="npwp" class=" col-md-3">NPWP Number</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -104,11 +90,10 @@
                     <?php
                     echo form_dropdown(
                     "termin", array(
-                        "30" => "1-30 Hari",
-                        "60" => "1-60 Hari",
-                        "90" => "1-90 Hari",
-                        "120" => "1-120 Hari",
-                        '150' => "1-150 Hari"
+                        "7" => "7 Hari",
+                        "14" => "14 Hari",
+                        "30" => "30 Hari",
+                        "120" => "> 30 Hari"
                         ), "", "class='select2 mini'"
                     );
                     ?>

@@ -7,14 +7,19 @@ class Coa extends MY_Controller{
 	function __construct() {
         parent::__construct();
         $this->access_only_admin();
+        // $this->view_data["coa"] = $this->showTree(0);
         // $this->load->model('');
+
+        global $exclude,$depth;
     }
 
 	
     public function index() {
+        // $this->showTree(0);
+        $view_data["data"] = $this->db->query("SELECT * FROM acc_coa_type WHERE deleted = 0 order by account_number ASC");
+        // $view_data["coa"] = 
 
-
-        $this->template->rander("coa/index");
+        $this->template->rander("coa/index",$view_data);
     }
 
 
@@ -58,7 +63,7 @@ class Coa extends MY_Controller{
         ));
 
 
-        $view_data['head_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->get_dropdown_kas(array("account_name"));
+        $view_data['head_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getAllCoa(array("account_name"));
 
         $this->load->view('coa/modal_form',$view_data);
     }
@@ -75,7 +80,7 @@ class Coa extends MY_Controller{
         $options = array(
             "id" => $id,
         );
-        $view_data['head_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->get_dropdown_kas(array("account_name"));
+        $view_data['head_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getAllCoa(array("account_name"));
 
 
         $view_data['model_info'] = $this->Master_Coa_Type_model->get_details($options)->row();
@@ -111,7 +116,8 @@ class Coa extends MY_Controller{
             "account_type" => $this->input->post('account_type'),
             "reporting" => $this->input->post('reporting'),
             "akun" => $this->input->post('akun'),
-            "parental" => $this->input->post('parent')  
+            "parental" => $this->input->post('parent'),
+            "deleted" => $this->input->post('status')  
             
         );
 
@@ -123,7 +129,7 @@ class Coa extends MY_Controller{
         
 
         if ($coa) {
-            echo json_encode(array("success" => true, "data" => $this->_row_data($coa), 'id' => $coa, 'message' => lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $coa, 'id' => $coa, 'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
         }
@@ -154,7 +160,8 @@ class Coa extends MY_Controller{
             "account_type" => $this->input->post('account_type'),
             "reporting" => $this->input->post('reporting'),
             "akun" => $this->input->post('akun'),
-            "parental" => $this->input->post('parent')
+            "parental" => $this->input->post('parent'),
+            "deleted" => $this->input->post('status')
             
         );
 
@@ -164,7 +171,7 @@ class Coa extends MY_Controller{
         
 
         if ($coa) {
-            echo json_encode(array("success" => true, "data" => $this->_row_data($coa), 'id' => $coa, 'message' => lang('record_saved')));
+            echo json_encode(array("success" => true, "data" => $coa, 'id' => $coa, 'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
         }
@@ -187,6 +194,66 @@ class Coa extends MY_Controller{
         echo json_encode(array("data" => $result));
     }
 
+    function list_data_coa(){
+
+         $sql = $this->db->query("SELECT * FROM acc_coa_type ");
+
+        $tree = "";
+        $depth = 1;
+        $top_level_on = 1;
+        $exclude = array();
+        array_push($exclude, 0);
+
+        foreach($sql->result() as $row){
+            $goOn = 1;
+            for($x = 0; $x< count($exclude); $x++){
+                if($exclude[$x] == $row->id){
+
+                    $goOn = 0;
+                    break;
+
+                }
+
+            }
+            if($goOn == 1){
+                $tree .= $row->account_name." </br>";
+                array_push($exclude, $row->id);
+                if($row->id < 6){
+                    $top_level_on = $row->id;
+                }
+
+                $tree .= $this->build_child($row->id);
+            }
+        }
+
+        echo $tree;
+    }
+
+
+    function build_child($oldID){
+        $tempTree = "<ul>";
+        GLOBAL $exclude, $depth;
+        $child_query =  $this->db->query("SELECT * FROM acc_coa_type WHERE parental = $oldID");
+
+        foreach($child_query->result() as $row){
+            if($row->id != $row->parental){
+                for($c=0;$c<$depth;$c++ ){
+                    $tempTree .= "&nbsp;";
+                }
+               $tempTree .= "<li>" . $row->account_name . "</li>";
+               $depth++;          // Incriment depth b/c we're building this child's child tree  (complicated yet???)
+               $tempTree .= $this->build_child($row->id);          // Add to the temporary local tree
+               $depth--;          // Decrement depth b/c we're done building the child's child tree.
+               array_push($exclude, $row->id); 
+
+            }
+        }
+
+
+    }
+
+
+
 
     //get a row data for member list
     function _row_data($id) {
@@ -199,6 +266,20 @@ class Coa extends MY_Controller{
         return $this->_make_row($data);
     }
 
+    function showTree($id){
+
+        $sql = $this->db->query("SELECT * FROM acc_coa_type WHERE parental = $id ");
+
+        foreach($sql->result() as $row){
+            // echo "<table class='table'>";
+
+            echo "<ul><li>".$row->account_name;
+            $this->showTree($row->id);
+            echo "</li></ul>";
+
+        }
+    }
+
     //prepare team member list row
     private function _make_row($data) {
         // $image_url = get_avatar($data->image);
@@ -208,23 +289,36 @@ class Coa extends MY_Controller{
 
         //check contact info view permissions
         
+        // $query = $this->db->query("SELECT * FROM acc_coa_type WHERE parental = $data->id ");
+        // if($query){
+        //     foreach($query->result() as $row){
+
+        //     }
+        // }
+        // $isParent = ($data->parent ? "Head" : "");
+        $parent = ($data->parental ? $data->parental : 0);
+        $name = $data->account_name;
         if($data->parent == "Head"){
             // $number = "<strong>". $data->account_number."</strong>";
             $name = "<strong>". $data->account_name."</strong>";
 
+        }else if($parent == $data->id && $data->parent == "Head"){
+
+            $name = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$data->account_name;
         }else{
             $name = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$data->account_name;
             // $number = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$data->account_number;    
         }
+
     	// $no = 1;
         $row_data = array(
             // $user_avatar,
             // "no" => $no++,
     			// $data->a,
     			 $data->account_number,
-                 $name, 
+                 $name,
     			 // $data->account_name,
-    			 $data->parent,
+    			 $parent,
     			 $data->normally,
     			 $data->account_type,
                  $data->reporting,

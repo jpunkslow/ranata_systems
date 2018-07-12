@@ -21,7 +21,7 @@
             ?>
         </div>
     </div>
-    <div class="form-group">
+   <!--  <div class="form-group">
         <label for="code" class="col-md-3">Tax Code</label>
         <div class=" col-md-9">
             <?php
@@ -34,7 +34,7 @@
             ));
             ?>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
@@ -64,20 +64,7 @@
                         ?>
         </div>
     </div>
-    <div class="form-group">
-        <label for="price" class="col-md-3">Pricing</label>
-        <div class=" col-md-9">
-            <?php
-            echo form_input(array(
-                "id" => "price",
-                "name" => "price",
-                "value" => $model_info->price,
-                "class" => "form-control",
-                "placeholder" => "Kode Pajak Produk"
-            ));
-            ?>
-        </div>
-    </div>
+    
 </div>
 
 <div class="modal-footer">

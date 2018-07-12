@@ -11,7 +11,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var invoiceStatisticsFlotchart = function () {
-            var invoices =<?php echo $invoices; ?>,
+            var invoices = <?php echo $invoices; ?>,
                     payments = <?php echo $payments; ?>,
                     dataset = [
                         {

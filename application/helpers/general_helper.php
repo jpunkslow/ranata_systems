@@ -6,6 +6,31 @@
  * @param string $uri
  * @return print url
  */
+
+if (!function_exists('build_child')) {
+    function build_child($oldID,$exclude = array()){
+            $ci = get_instance();
+            $tempTree = "";
+            global $exclude, $depth;
+            $child_query =  $ci->db->query("SELECT * FROM acc_coa_type WHERE parental = $oldID ORDER BY account_number ASC" );
+
+            foreach($child_query->result() as $row){
+                if($row->id != $row->parental){
+                    for($c=0;$c<$depth;$c++ ){
+                        $tempTree .= "<tr></td>OKE</td></tr>";
+                    }
+                   $tempTree .= "<tr><td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $row->account_name . "</td></tr>";
+                   $depth++;          // Incriment depth b/c we're building this child's child tree  (complicated yet???)
+                   $tempTree .= build_child($row->id);          // Add to the temporary local tree
+                   $depth--;          // Decrement depth b/c we're done building the child's child tree.
+                   // array_push($exclude, $row->id); 
+
+                }
+            }
+             return $tempTree.""; 
+    }
+
+}
 if (!function_exists('echo_uri')) {
 
     function echo_uri($uri = "") {
@@ -165,7 +190,7 @@ if (!function_exists('modal_anchor')) {
 if (!function_exists('modal_anchor_big')) {
 
     function modal_anchor_big($url, $title = '', $attributes = '') {
-        $attributes["data-act"] = "ajax-modal-big";
+        $attributes["data-act"] = "ajax-modal";
         if (get_array_value($attributes, "data-modal-title")) {
             $attributes["data-title"] = get_array_value($attributes, "data-modal-title");
         } else {
@@ -775,15 +800,15 @@ if (!function_exists('get_p_payment_making_data')) {
     function get_p_payment_making_data($invoice_id) {
         $ci = get_instance();
         $data['payment_info'] = $ci->Purchase_Payments_model->get_details( array('id' => $invoice_id))->row();
-        $invoice_info = $ci->Sales_Invoices_model->get_details(array("id" => $data['payment_info']->fid_inv))->row();
+        $invoice_info = $ci->Purchase_Invoices_model->get_details(array("id" => $data['payment_info']->fid_inv))->row();
         if ($invoice_info) {
             $data['invoice_info'] = $invoice_info;
-            $data['order_info'] = $ci->Sales_Order_model->get_details(array("id" => $data['invoice_info']->fid_order))->row();
+            $data['order_info'] = $ci->Purchase_Order_model->get_details(array("id" => $data['invoice_info']->fid_order))->row();
             
             $data['client_info'] = $ci->Master_Vendors_model->get_one($data['invoice_info']->fid_cust);
-            $data['invoice_items'] = $ci->Sales_InvoicesItems_model->get_details(array("fid_invoices" => $data['payment_info']->fid_inv))->result();
+            $data['invoice_items'] = $ci->Purchase_InvoicesItems_model->get_details(array("fid_invoices" => $data['payment_info']->fid_inv))->result();
             // $data['invoice_status_label'] = get_invoices_status_label($invoice_info);
-            $data["invoice_total_summary"] = $ci->Sales_Invoices_model->get_invoices_total_summary($data['payment_info']->fid_inv);
+            $data["invoice_total_summary"] = $ci->Purchase_Invoices_model->get_invoices_total_summary($data['payment_info']->fid_inv);
             return $data;
         }
     }
@@ -925,6 +950,42 @@ if (!function_exists('prepare_invoice_pdf')) {
             } else if ($mode === "html") {
                 return $html;
             }
+        }
+    }
+
+}
+
+if (!function_exists('prepare_report_pdf')) {
+
+    function prepare_report_pdf($invoice_data,$view, $mode = "download") {
+        $ci = get_instance();
+        $ci->load->library('pdf');
+        $ci->pdf->setPrintHeader(false);
+        $ci->pdf->setPrintFooter(false);
+        $ci->pdf->SetCellPadding(1.5);
+        $ci->pdf->setImageScale(1.42);
+        $ci->pdf->AddPage();
+        $ci->pdf->SetFontSize(10);
+
+        if ($invoice_data) {
+
+
+            $html = $ci->load->view($view, $invoice_data, true);
+
+            if ($mode != "html") {
+                $ci->pdf->writeHTML($html, true, false, true, false, '');
+            }
+
+            $pdf_file_name = "REPORT-" .date("Y-m-d") . ".pdf";
+
+            // if ($mode === "download") {
+            //     $ci->pdf->Output($pdf_file_name, "D");
+            
+            // } else if ($mode === "view") {
+                $ci->pdf->Output($pdf_file_name, "I");
+            // } else if ($mode === "html") {
+            //     return $html;
+            // }
         }
     }
 

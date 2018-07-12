@@ -108,6 +108,7 @@
                 "class" => "form-control",
                 "placeholder" => lang('quantity'),
                 "data-rule-required" => true,
+                "type" => "number",
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
@@ -124,6 +125,7 @@
                 "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price) : "",
                 "class" => "form-control",
                 "placeholder" => lang('rate'),
+                
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));
@@ -156,9 +158,16 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#invoice_item_basic').maskMoney(
+            {precision:0 
+        });
+        $('#invoice_item_rate').maskMoney(
+            {precision:0 
+        });
+        
         $('input[name=invoice_item_rate]').change(function() {
             var value = $(this).val();
-            ;
+            
         });
         $("#order-item-form .select2").select2();
         $("#order-item-form").appForm({

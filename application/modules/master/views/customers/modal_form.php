@@ -1,26 +1,9 @@
 <?php echo form_open(get_uri("master/customers/add_customers"), array("id" => "master_customers-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <div class="col-md-12">
+            
             <div class="form-group">
-                <label for="code" class=" col-md-3"> Kode Customer</label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_input(array(
-                        "id" => "code",
-                        "name" => "code",
-                        "class" => "form-control",
-                        "placeholder" => 'Customers Name',
-                        "value" => getCodeId('master_customers',"CS"),
-                        "readonly" => true,
-                        "autofocus" => true,
-                        "data-rule-required" => true,
-                        "data-msg-required" => lang("field_required"),
-                    ));
-                    ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="name" class=" col-md-3"> Nama Customer</label>
+                <label for="name" class=" col-md-3"> Customer Name</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -35,21 +18,9 @@
                     ?>
                 </div>
             </div>
-            <!-- <div class="form-group">
-                <label for="company_name" class=" col-md-3"> Nama Perusahaan</label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_input(array(
-                        "id" => "company_name",
-                        "name" => "company_name",
-                        "class" => "form-control",
-                        "placeholder" =>  'Company Name',
-                    ));
-                    ?>
-                </div>
-            </div> -->
+           
             <div class="form-group">
-                <label for="npwp" class=" col-md-3">Nomor NPWP</label>
+                <label for="npwp" class=" col-md-3">NPWP Number</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_input(array(
@@ -97,11 +68,10 @@
                     <?php
                     echo form_dropdown(
                     "termin", array(
-                        "30" => "1-30 Hari",
-                        "60" => "1-60 Hari",
-                        "90" => "1-90 Hari",
-                        "120" => "1-120 Hari",
-                        '150' => "1-150 Hari"
+                        "7" => "7 Hari",
+                        "14" => "14 Hari",
+                        "30" => "30 Hari",
+                        "120" => "> 30 Hari"
                         ), "", "class='select2 mini'"
                     );
                     ?>

@@ -17,29 +17,26 @@ class Laba_rugi extends MY_Controller {
     
 
     function index(){
-    	$this->load->library("pagination");
 
-		$this->data['judul_browser'] = 'Laporan';
-		$this->data['judul_utama'] = 'Laporan';
-		$this->data['judul_sub'] = 'Laba Rugi';
+		$periode_default = date("Y")."-01-01";
+        $periode_now = date("Y-m-d");
+        if(!empty($_GET['start']) && !empty($_GET['end'])){
+            $periode_default = $_GET['start'];
+            $periode_now = $_GET['end'];
 
-		// #include tanggal
-		// $this->data['css_files'][] = base_url() . 'assets/extra/bootstrap_date_time/css/bootstrap-datetimepicker.min.css';
-		// $this->data['js_files'][] = base_url() . 'assets/extra/bootstrap_date_time/js/bootstrap-datetimepicker.min.js';
-		// $this->data['js_files'][] = base_url() . 'assets/extra/bootstrap_date_time/js/locales/bootstrap-datetimepicker.id.js';
-
-		// 	#include seach
-		// $this->data['css_files'][] = base_url() . 'assets/theme_admin/css/daterangepicker/daterangepicker-bs3.css';
-		// $this->data['js_files'][] = base_url() . 'assets/theme_admin/js/plugins/daterangepicker/daterangepicker.js';
-
+        }
 		
-		$this->data['data_dapat'] = $this->Profitloss_model->get_data_akun_dapat();
-		$this->data['dapat_non_op'] = $this->Profitloss_model->getPendNonOp();
-		$this->data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
-		$this->data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
+		$view_data['data_dapat'] = $this->Profitloss_model->get_data_akun_dapat();
+		$view_data['dapat_non_op'] = $this->Profitloss_model->getPendNonOp();
+		$view_data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
+		$view_data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
 
-		
-		$this->template->rander('v_profitloss', $this->data, TRUE);
+		if(!empty($_GET['print'])){
+            
+            prepare_report_pdf($view_data,"laba_rugi/pdf","download");
+        }else{
+			$this->template->rander('laba_rugi/index', $view_data, TRUE);
+		}
 		// $this->load->view('themes/layout_utama_v', $this->data);
     }
 }

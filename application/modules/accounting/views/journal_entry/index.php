@@ -1,7 +1,7 @@
 <div id="page-content" class="clearfix">
     <div class="panel panel-default">
         <div class="page-title clearfix">
-            <h1>Expenses Cash</h1>
+            <h1>Journal Entry</h1>
             <div class="title-button-group">
                 <div class="btn-group" role="group">
                 </div>

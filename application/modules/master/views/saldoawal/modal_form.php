@@ -31,32 +31,21 @@
     </div>
   
     <div class="form-group">
-        <label for="debet" class="col-md-3">DEBET</label>
+        <label for="amount" class="col-md-3">AMOUNT</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
-                "id" => "debet",
-                "name" => "debet",
+                "id" => "amount",
+                "name" => "amount",
                 "class" => "form-control",
                 "placeholder" => "0"
             ));
             ?>
         </div>
     </div>
+    <input type="hidden" id="dk" name="dk">
 
-    <div class="form-group">
-        <label for="credit" class="col-md-3">CREDIT</label>
-        <div class=" col-md-9">
-            <?php
-            echo form_input(array(
-                "id" => "credit",
-                "name" => "credit",
-                "class" => "form-control",
-                "placeholder" => "0"
-            ));
-            ?>
-        </div>
-    </div>
+   
     <div class="form-group">
         <label for="date" class="col-md-3">DATE</label>
         <div class=" col-md-9">
@@ -85,7 +74,29 @@
         $("#item-form .select2").select2();
         $("#item-form").appForm({
             onSuccess: function (result) {
-                $("#item-table").appTable({newData: result.data, dataId: result.id});
+                $("#saldoawal-table").appTable({newData: result.data, dataId: result.id});
+            }
+        });
+
+        $("#fid_coa").select2().on("change", function () {
+            var client_id = $(this).val();
+            if ($(this).val()) {
+                // $('#invoice_project_id').select2("destroy");
+                // $("#invoice_project_id").hide();
+                // appLoader.show({container: "#invoice-porject-dropdown-section"});
+                $.ajax({
+                    url: "<?php echo get_uri("master/coa/getId") ?>" + "/" + client_id,
+                    dataType: "json",
+                    // data: data,
+                    type:'GET',
+                    success: function (data) {
+
+                         $.each(data, function(index, element) {
+                            
+                            $("#dk").val(element.normally);
+                         });
+                    }
+                });
             }
         });
     });

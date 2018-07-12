@@ -12,9 +12,9 @@ class P_payments extends MY_Controller {
 
         $this->load->model('purchase/Purchase_Invoices_model');
 
-        $this->load->model('sales/Sales_Invoices_model');
-        $this->load->model('sales/Sales_InvoicesItems_model');
-                $this->load->model('sales/Sales_Order_model');
+        // $this->load->model('sales/Sales_Invoices_model');
+        $this->load->model('purchase/Purchase_InvoicesItems_model');
+                $this->load->model('purchase/Purchase_Order_model');
 
 
     }
@@ -25,6 +25,26 @@ class P_payments extends MY_Controller {
 
 
         $this->template->rander("payments/index");
+    }
+
+    function getOrderId($id){
+
+        if(!empty($id)){
+            $options = array(
+                "id" => $id,
+            );
+            $data = $this->Purchase_Order_model->get_details($options)->row();
+            if($data){
+                $data_cust = $this->Master_Vendors_model->get_details(array("id" => $data->fid_cust))->row();
+                
+                echo json_encode(array("success" => true,"data" => $data_cust));    
+            }else{
+                echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+            }
+            
+        }else{
+            echo json_encode(array('success' => false,'message' => lang('error_occurred')));
+        }
     }
 
 
@@ -88,7 +108,7 @@ class P_payments extends MY_Controller {
         $options = array(
             "id" => $id,
         );
-        $view_data['bank_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getKas();
+        $view_data['bank_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCashCoa();
        
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         $view_data['model_info_total'] = $this->Purchase_Payments_model->getInvoicesTotal($id)->row();
@@ -111,30 +131,102 @@ class P_payments extends MY_Controller {
              
         ));
 
-        $data = array(
-            "code" => $this->input->post('voucher'),
-            "fid_cust" => $this->input->post('fid_cust'),
-            "fid_inv" => $this->input->post('fid_inv'),
-            "paid" => "PAID",
-            "pay_date" => $this->input->post('pay_date'),
-            "fid_bank" => $this->input->post('fid_bank'),
-            "currency" => $this->input->post('currency'),
-            "fid_tax" => $this->input->post('fid_tax'),
-            "amount" => $this->input->post('total'),
-            "memo" => $this->input->post('memo'),
-            "created_at" => get_current_utc_time()
-        );
+        $pay_type = $this->input->post('paid');
+
+        $amount = $this->input->post('total');
+        $residual = $this->input->post('residual');
+        
+        
+        $code = $this->input->post('voucher');
+        $fid_cust = $this->input->post('fid_cust');
+        $fid_inv = $this->input->post('fid_inv');
+        $paid = "PAID";
+        $pay_date = $this->input->post('pay_date');
+        $fid_bank = $this->input->post('fid_bank');
+        $currency = $this->input->post('currency');
+        $fid_tax = $this->input->post('fid_tax');
+        $amount = $amount;
+        $memo = $this->input->post('memo');
+        $voucher_code = "";
+        $type = "purchase";
 
         
+        $hutang_usaha = 27;
+        // if($currency == "IDR"){
+        //     $piutang = 12;
+        // }
+        // if($currency == "USD"){
+        //     $piutang = 13;
+        // }
 
-        $save_id = $this->Purchase_Payments_model->save($data);
+        $coa_persediaan = 17;   // Persediaan Barang deposit tiket
+        $coa_hutang_usaha = 27; // Hutang Usaha IDR
+        $coa_dp_beli = 15;
+
+        // $save_id = $this->Purchase_Payments_model->save($data);
+       
+                if($pay_type == "Not Paid"){
+                     $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$coa_hutang_usaha,$residual,0);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$fid_bank,0,$residual);
+
+                   $data = array(
+                            "code" => getMaxId("sales_payments","PAY"),
+                            "fid_cust" => $fid_cust,
+                            "fid_inv" => $fid_inv,
+                            "paid" => "PAID",
+                            "pay_date" => $pay_date,
+                            "fid_bank" => $fid_bank,
+                            "currency" => $currency,
+                            "fid_tax" => $fid_tax,
+                            "amount" => $residual,
+                            "residu" => 0,
+                            "memo" => $memo,
+                            "created_at" => get_current_utc_time()
+                        );
+
+                        
+                        $status_data = array("status" => "posting" ,"PAID" => "PAID", "residual" => 0,"amount" => $residual);
+                        $this->Purchase_Invoices_model->save($status_data, $fid_inv);
+
+                        $save_id = $this->Purchase_Payments_model->save($data);
+                }
+                if($pay_type == "CREDIT"){
+                    
+                    $sisa = $amount - $residual;
+
+                    
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$coa_persediaan,$sisa,0);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$coa_hutang_usaha,$sisa,0);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$coa_dp_beli,0,$sisa);
+                    $this->_insertTransaction($code,$voucher_code,$pay_type,$type,$memo,$fid_bank,0,$sisa);
+
+                        $status_data = array("status" => "posting" ,"PAID" => "CREDIT","amount" => $sisa, "residual" => 0);
+                        $this->Purchase_Invoices_model->save($status_data, $fid_inv);
+
+                       $data = array(
+                            "code" => getMaxId("purchase_payments","PAY"),
+                            "fid_cust" => $fid_cust,
+                            "fid_inv" => $fid_inv,
+                            "paid" => "PAID",
+                            "pay_date" => $pay_date,
+                            "fid_bank" => $fid_bank,
+                            "currency" => $currency,
+                            "fid_tax" => $fid_tax,
+                            "amount" => $amount,
+                            "residu" => 0,
+                            "memo" => $memo,
+                            "created_at" => get_current_utc_time()
+                        );
+
+                        
+
+                        $save_id = $this->Purchase_Payments_model->save($data);
+
+                }
+
         if ($save_id) {
-            $status_data = array("paid" => "Paid", "status" => "paid");
-            if ($this->Purchase_Invoices_model->save($status_data, $this->input->post('fid_inv'))) {
-                $this->_insertTransaction($this->input->post('voucher'),"",$this->input->post('pay_date'),"sales",$this->input->post('memo'),$this->input->post('fid_bank'),0,$this->input->post('total'));
-                $this->_insertTransaction($this->input->post('voucher'),"",$this->input->post('pay_date'),"sales",$this->input->post('memo'),17,$this->input->post('total'),0);
                 echo json_encode(array('success' => true, 'message' => lang("invoice_sent_message"), "id" => $save_id));
-            }
+            
             
             
         } else {
@@ -374,6 +466,7 @@ class P_payments extends MY_Controller {
         );
 
         $query = $this->Master_Vendors_model->get_details($options)->row();
+        $total = $data->amount + $data->residu;
         // $value = $this->Purchase_Payments_model->get_payments_total_summary($data->id);
         $row_data = array(
             anchor(get_uri("purchase/p_payments/prints/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
@@ -384,12 +477,15 @@ class P_payments extends MY_Controller {
             format_to_date($data->pay_date),
             $data->memo,
             $data->currency,
-            to_currency($data->amount)
+            to_currency($data->amount),
+            to_currency($data->residu),
+            
+            to_currency($total)
 
         );
 
 
-        $row_data[] = anchor(get_uri("purchase/p_payments/prints/").$data->id."/".str_replace("/", "-", $data->code), "<i class='fa fa-print'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id)).modal_anchor(get_uri("purchase/p_payments/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id));
+        $row_data[] = anchor(get_uri("purchase/p_payments/prints/").$data->id."/".str_replace("/", "-", $data->code), "<i class='fa fa-print'></i>", array("class" => "view", "title" => lang('view'), "data-post-id" => $data->id));
                 
 
         return $row_data;
@@ -441,11 +537,11 @@ class P_payments extends MY_Controller {
         $now = get_my_local_time("Y-m-d");
         if ($invoice_info->paid == "CREDIT" ) {
             $invoice_status_class = "label-warning";
-            $status = "Belum dibayar";
+            $status = "Belum Lunas";
 
         }else if ($invoice_info->paid == "PAID") {
             $invoice_status_class   = "label-primary";
-            $status = "Dibayar";
+            $status = "Lunas";
 
         }
 

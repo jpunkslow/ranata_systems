@@ -107,6 +107,21 @@
                     ?>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="status" class=" col-md-3">STATUS</label>
+                <div class=" col-md-9">
+                    <?php
+                   echo form_dropdown(
+                                "status", array(
+                            "0" => "ACTIVE",
+                            "1" => "DELETE"
+                                ), "", "class='select2 mini'"
+                        );
+                    ?>
+                </div>
+            </div>
+            
+        </div>
             
         </div>
     </div>

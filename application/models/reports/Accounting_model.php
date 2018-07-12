@@ -113,13 +113,13 @@ class Accounting_model extends CI_Model {
 		return $data;
 	}
 
-	function getDebetKas($id){
-		$data = $this->db->query("SELECT SUM(debet) as debet FROM transaction_journal WHERE  fid_coa = $id AND deleted = 0")->row();		
+	function getDebetKas($id,$start,$end){
+		$data = $this->db->query("SELECT SUM(debet) as debet FROM transaction_journal WHERE  fid_coa = $id AND date >= '$start' AND date <= '$end' AND deleted = 0")->row();		
 		return $data;
 	}
 
-	function getCreditKas($id){
-		$data = $this->db->query("SELECT SUM(credit) as credit FROM transaction_journal WHERE  fid_coa = $id AND deleted = 0")->row();
+	function getCreditKas($id,$start,$end){
+		$data = $this->db->query("SELECT SUM(credit) as credit FROM transaction_journal WHERE  fid_coa = $id AND date >= '$start' AND date <= '$end' AND deleted = 0")->row();
 		return $data;		
 	}
 }

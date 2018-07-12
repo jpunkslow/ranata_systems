@@ -21,10 +21,8 @@
             order: [[0, 'desc']],
             columns: [
                 {title: 'Item Name'},
-                {title: 'Tax Code'},
                 {title: 'Category'},
                 {title: 'Type'},
-                {title: 'Price'},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
             ],
             printColumns: [0, 1, 2, 3, 4],

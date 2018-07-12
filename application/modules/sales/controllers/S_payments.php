@@ -106,31 +106,121 @@ class S_payments extends MY_Controller {
            "fid_inv" => "required"
              
         ));
+        $pay_type = $this->input->post('paid');
+
+        $amount = $this->input->post('total');
+        $residual = $this->input->post('residual');
+        
+        
+        $code = $this->input->post('voucher');
+        $fid_cust = $this->input->post('fid_cust');
+        $fid_inv = $this->input->post('fid_inv');
+        $paid = "PAID";
+        $pay_date = $this->input->post('pay_date');
+        $fid_bank = $this->input->post('fid_bank');
+        $currency = $this->input->post('currency');
+        $fid_tax = $this->input->post('fid_tax');
+        $amount = $residual;
+        $memo = $this->input->post('memo');
+        $voucher_code = "";
+        $type = "sales";
 
         $data = array(
-            "code" => $this->input->post('voucher'),
-            "fid_cust" => $this->input->post('fid_cust'),
-            "fid_inv" => $this->input->post('fid_inv'),
+            "code" => $code,
+            "fid_cust" => $fid_cust,
+            "fid_inv" => $fid_inv,
             "paid" => "PAID",
-            "pay_date" => $this->input->post('pay_date'),
-            "fid_bank" => $this->input->post('fid_bank'),
-            "currency" => $this->input->post('currency'),
-            "fid_tax" => $this->input->post('fid_tax'),
-            "amount" => $this->input->post('total'),
-            "memo" => $this->input->post('memo'),
+            "pay_date" => $pay_date,
+            "fid_bank" => $fid_bank,
+            "currency" => $currency,
+            "fid_tax" => $fid_tax,
+            "amount" => $amount,
+            "memo" => $memo,
             "created_at" => get_current_utc_time()
         );
-
+        $piutang = 12;
+        if($currency == "IDR"){
+            $piutang = 12;
+        }
+        if($currency == "USD"){
+            $piutang = 13;
+        }
         
 
-        $save_id = $this->Sales_Payments_model->save($data);
-        if ($save_id) {
-            $status_data = array("paid" => "Paid", "status" => "paid");
-            if ($this->Sales_Invoices_model->save($status_data, $this->input->post('fid_inv'))) {
-                $this->_insertTransaction($this->input->post('voucher'),"",$this->input->post('pay_date'),"sales",$this->input->post('memo'),$this->input->post('fid_bank'),$this->input->post('total'),0);
-                $this->_insertTransaction($this->input->post('voucher'),"",$this->input->post('pay_date'),"sales",$this->input->post('memo'),44,0,$this->input->post('total'));
+
+        // $save_id = $this->Sales_Payments_model->save($data);
+        
+            // $status_data = array("paid" => "Paid", "status" => "paid");
+            // if ($this->Sales_Invoices_model->save($status_data, $fid_inv)) {
+                if($pay_type == "Not Paid"){
+                     $this->_insertTransaction($code,$voucher_code,$pay_date,"sales",$memo,$fid_bank,$amount,0);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,"sales",$memo,$piutang,0,$amount);
+
+
+                    $data = array(
+                            "code" => getMaxId("sales_payments","PAY"),
+                            "fid_cust" => $fid_cust,
+                            "fid_inv" => $fid_inv,
+                            "paid" => "PAID",
+                            "pay_date" => $pay_date,
+                            "fid_bank" => $fid_bank,
+                            "currency" => $currency,
+                            "fid_tax" => $fid_tax,
+                            "amount" => $amount,
+                            "residu" => 0,
+                            "memo" => $memo,
+                            "created_at" => get_current_utc_time()
+                        );
+
+                        
+                        $status_data = array("status" => "posting" ,"PAID" => "PAID", "residual" => 0,"amount" => $amount);
+                        $this->Sales_Invoices_model->save($status_data, $fid_inv);
+
+                        $save_id = $this->Sales_Payments_model->save($data);
+
+                }
+                if($pay_type == "CREDIT"){
+                    
+                    $sisa = $amount - $residual;
+
+                    $uang_muka_penjualan = 29;
+                    $penjualan_barang = 44;
+
+
+                    // $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$memo,$curr,$residual,0);
+                    // $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$memo,44,0,$amount);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$fid_bank,$residual,0);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$uang_muka_penjualan,$sisa,0);
+                    $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$piutang,0,$residual);
+                    $this->_insertTransaction($code,$voucher_code,$pay_type,$type,$memo,$penjualan_barang,0,$sisa);
+
+                        $status_data = array("status" => "posting" ,"PAID" => "CREDIT", "residual" => 0);
+                        $this->Sales_Invoices_model->save($status_data, $fid_inv);
+
+                       $data = array(
+                            "code" => getMaxId("sales_payments","PAY"),
+                            "fid_cust" => $fid_cust,
+                            "fid_inv" => $fid_inv,
+                            "paid" => "PAID",
+                            "pay_date" => $pay_date,
+                            "fid_bank" => $fid_bank,
+                            "currency" => $currency,
+                            "fid_tax" => $fid_tax,
+                            "amount" => $amount,
+                            "residu" => 0,
+                            "memo" => $memo,
+                            "created_at" => get_current_utc_time()
+                        );
+
+                        
+
+                        $save_id = $this->Sales_Payments_model->save($data);
+
+                }
+                if ($save_id) {
+               
                 echo json_encode(array('success' => true, 'message' => lang("invoice_sent_message"), "id" => $save_id));
-            }
+            
             
             
         } else {
@@ -351,6 +441,7 @@ class S_payments extends MY_Controller {
         );
 
         $query = $this->Master_Customers_model->get_details($options)->row();
+        $total = $data->amount + $data->residu;
         // $value = $this->Sales_Payments_model->get_payments_total_summary($data->id);
         $row_data = array(
             anchor(get_uri("sales/s_payments/prints/").$data->id."/".str_replace("/", "-", $data->code), $data->code),
@@ -361,7 +452,10 @@ class S_payments extends MY_Controller {
             format_to_date($data->pay_date),
             $data->memo,
             $data->currency,
-            to_currency($data->amount)
+            to_currency($data->amount),
+            to_currency($data->residu),
+            
+            to_currency($total)
             // anchor(get_uri("sales/s_payments/view/" . $data->id), "#".$data->code),
             // modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
             // // $this->_get_payments_status_label($data),

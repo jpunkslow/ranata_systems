@@ -3,7 +3,7 @@
         <?php if (get_setting("show_logo_in_signin_page") === "yes") { ?>
         <h2><?php echo lang('signin'); ?></h2>
             <a href="<?php echo base_url() ?>"><img class="p20" src="<?php echo get_file_uri(get_setting("system_file_path") . get_setting("site_logo")); ?>" /></a>
-            <p>Silahkan Login Untuk Mengelola Proyek Anda</p>
+            <p>Silahkan Login Terlebih Dahulu</p>
         <?php } else { ?>
             <h2><?php echo lang('signin'); ?></h2>
         <?php } ?>

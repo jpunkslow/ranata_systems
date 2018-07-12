@@ -22,7 +22,7 @@
     </div>
     <div class="form-group">
         <input type="hidden" name="order_id" value="<?php echo $model_info->id ?>">
-        <label for="fid_quot" class=" col-md-3">REF REQ#</label>
+        <label for="fid_quot" class=" col-md-3">REF QUOT#</label>
             <div class=" col-md-9">
                 <?php
                    echo form_dropdown("fid_quot", $quot_dropdown, "", "class='select2 validate-hidden' id='fid_quot' ");

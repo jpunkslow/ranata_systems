@@ -81,7 +81,7 @@ class Vendors extends MY_Controller {
         ));
 
         $user_data = array(
-            "code" => $this->input->post('code'),
+            "code" => getCodeId('master_vendor',"VD"),
             "name" => $this->input->post('name'),
 
             "npwp" => $this->input->post('npwp'),
@@ -121,7 +121,6 @@ class Vendors extends MY_Controller {
         ));
 
         $data = array(
-            "code" => $this->input->post('code'),
             
             "name" => $this->input->post('name'),
             

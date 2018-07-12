@@ -46,4 +46,24 @@ class Pages extends CI_Controller {
      
         $this->template->render_front("pages/contact", $view_data);
     }
+
+
+    function test(){
+
+        $this->showTree(0);
+
+    }
+
+
+    function showTree($id){
+
+        $sql = $this->db->query("SELECT * FROM acc_coa_type WHERE parental = $id ");
+
+        foreach($sql->result() as $row){
+            echo "<ul><li>".$row->account_name;
+            $this->showTree($row->id);
+            echo "</li></ul>";
+
+        }
+    }
 }

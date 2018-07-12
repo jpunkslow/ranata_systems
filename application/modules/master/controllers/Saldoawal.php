@@ -34,6 +34,7 @@ class Saldoawal extends MY_Controller {
 
         $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop();
         $view_data['model_info'] = $this->Master_Saldoawal_model->get_one($this->input->post('id'));
+        $view_data['model_info_coa'] = $this->Master_Coa_Type_model->get_details(array("id"=>$view_data["model_info"]->fid_coa))->row();
 
         $this->load->view('saldoawal/modal_form_edit', $view_data);
     }
@@ -46,18 +47,29 @@ class Saldoawal extends MY_Controller {
             "fid_coa" => "required"
         ));
 
+        $dk = $this->input->post('dk');
+        $amount = $this->input->post("amount");
+        $debet = 0;
+        $credit = 0;
+        if($dk == "Debet"){
+            $debet = $amount;
+        }
+        if($dk == "Kredit"){
+            $credit = $amount;
+        }
+
         $item_data = array(
             "periode" => $this->input->post('periode'),
             "date" => $this->input->post("date"),
             "fid_coa" => $this->input->post('fid_coa'),
-            "debet" => $this->input->post('debet'),
-            "credit" => $this->input->post('credit')
+            "debet" => $debet,
+            "credit" => $credit
            
         );
 
         $item_id = $this->Master_Saldoawal_model->save($item_data);
         if ($item_id) {
-            $item_info = $this->Master_Saldoawal_model->get_details()->row();
+            $item_info = $this->Master_Saldoawal_model->get_details(array('id'=> $item_id))->row();
             echo json_encode(array("success" => true, "id" => $item_info->id, "data" => $this->_make_row($item_info), 'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
@@ -71,13 +83,23 @@ class Saldoawal extends MY_Controller {
         ));
 
         $id = $this->input->post('id');
+        $dk = $this->input->post('dk');
+        $amount = $this->input->post("amount");
+        $debet = 0;
+        $credit = 0;
+        if($dk == "Debet"){
+            $debet = $this->input->post("amount");
+        }
+        if($dk == "Kredit"){
+            $credit = $this->input->post("amount");
+        }
 
         $item_data = array(
             "periode" => $this->input->post('periode'),
             "date" => $this->input->post("date"),
             "fid_coa" => $this->input->post('fid_coa'),
-            "debet" => $this->input->post('debet'),
-            "credit" => $this->input->post('credit')
+            "debet" => $debet,
+            "credit" => $credit
         );
 
         $item_id = $this->Master_Saldoawal_model->save($item_data, $id);

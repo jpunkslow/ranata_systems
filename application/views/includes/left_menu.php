@@ -3,14 +3,14 @@
         <ul class="" id="sidebar-menu">
             <?php
             
-            $sidebar_menu[] = array("name" => "Dashboard","slug"=>"dashboard", "url" => "dashboard", "class" => "fa-desktop");
+            $sidebar_menu[] = array("name" => "Dashboard","slug"=>"dashboard", "url" => "dashboard", "class" => "fa-dashboard");
             
             $jurnal_submenu = array();
-            $jurnal_submenu[] = array("name" => "Expenses Cash", "slug"=>"expenses","url" => "accounting/expenses");
-            $jurnal_submenu[] = array("name" => "Income Cash", "slug"=>"income","url" => "accounting/income");
+            $jurnal_submenu[] = array("name" => "Expense", "slug"=>"expenses","url" => "accounting/expenses");
+            $jurnal_submenu[] = array("name" => "Income", "slug"=>"income","url" => "accounting/income");
 
 
-            $sidebar_menu[] = array("name" => "Input Journal Cash", "slug"=>"","url" => "#", "class" => "fa-desktop", "submenu" => $jurnal_submenu);
+            $sidebar_menu[] = array("name" => "Input Journal", "slug"=>"","url" => "#", "class" => "fa-money", "submenu" => $jurnal_submenu);
 
             $ar_submenu = array();
             $ar_submenu[] = array("name" => "Sales Quotation", "slug"=>"quotation","url" => "sales/quotation");
@@ -18,37 +18,39 @@
             $ar_submenu[] = array("name" => "Sales Invoice","slug"=>"s_invoices", "url" => "sales/s_invoices");
             $ar_submenu[] = array("name" => "Sales Receipts", "slug"=>"s_payments","url" => "sales/s_payments");
 
-            $sidebar_menu[] = array("name" => "Input AR", "slug"=>"#","url" => "#", "class" => "fa-desktop","submenu" => $ar_submenu);
+            $sidebar_menu[] = array("name" => "Sales", "slug"=>"#","url" => "#", "class" => "fa-dollar","submenu" => $ar_submenu);
             
             $ap_submenu = array();
-            $ap_submenu[] = array("name" => "Purchase Requisition","slug"=>"request", "url" => "purchase/request");
+            $ap_submenu[] = array("name" => "Purchase Quotation","slug"=>"request", "url" => "purchase/request");
             $ap_submenu[] = array("name" => "Purchase Order", "slug"=>"p_order","url" => "purchase/p_order");
             $ap_submenu[] = array("name" => "Purchase Invoice", "slug"=>"p_invoices","url" => "purchase/p_invoices");
             $ap_submenu[] = array("name" => "Purchase Payment", "slug"=>"p_payments","url" => "purchase/p_payments");
             
 
-            $sidebar_menu[] = array("name" => "Input AP","slug"=>"#", "url" => "#", "class" => "fa-desktop", "submenu" => $ap_submenu);
+            $sidebar_menu[] = array("name" => "Purchasing","slug"=>"#", "url" => "#", "class" => "fa-shopping-cart", "submenu" => $ap_submenu);
             
             $acc_submenu = array();
-            $acc_submenu[] = array("name" => "Edit Journal Entry", "slug"=>"journal_entry","url" => "accounting/journal_entry");
+            $acc_submenu[] = array("name" => "Journal Entry", "slug"=>"journal_entry","url" => "accounting/journal_entry");
             $acc_submenu[] = array("name" => "General Ledger", "slug"=>"general_ledger","url" => "accounting/general_ledger");
-            $acc_submenu[] = array("name" => "Trial Balance", "slug"=>"neraca","url" => "accounting/neraca");
+            $acc_submenu[] = array("name" => "Trial Balance", "slug"=>"neraca_saldo","url" => "accounting/neraca_saldo");
 
-            $sidebar_menu[] = array("name" => "Accounting","slug"=>"accounting", "url" => "#", "class" => "fa-desktop", "submenu" => $acc_submenu);
+
+            $acc_submenu[] = array("name" => "Profit and Loss", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
+            $acc_submenu[] = array("name" => "Profit Loss Total", "slug"=>"labarugi_total","url" => "reports/labarugi_total");
+            // $rpt_submenu[] = array("name" => "Profit Loss Project", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
+            
+            $acc_submenu[] = array("name" => "Balance Sheet","slug"=>"balance_sheet", "url" => "reports/balance_sheet");
+            $acc_submenu[] = array("name" => "Aging Receivable", "slug"=>"aging_receivable","url" => "reports/aging_receivable");
+            $acc_submenu[] = array("name" => "Aging Payable", "slug"=>"aging_payable","url" => "reports/aging_payable");
+            $acc_submenu[] = array("name" => "Sales Reports", "slug"=>"r_sales","url" => "reports/r_sales");
+            $acc_submenu[] = array("name" => "Cash Flow Reports", "slug"=>"cashflow","url" => "reports/cashflow");
+
+            $sidebar_menu[] = array("name" => "Accounting Reports","slug"=>"accounting", "url" => "#", "class" => "fa-bar-chart", "submenu" => $acc_submenu);
 
             $rpt_submenu = array();
-            $rpt_submenu[] = array("name" => "Profit and Loss", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
-            $rpt_submenu[] = array("name" => "Profit and Loss Total", "slug"=>"bukubesar","url" => "master/bukubesar");
-            $rpt_submenu[] = array("name" => "Profit and Loss Project", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
-            
-            $rpt_submenu[] = array("name" => "Balance Sheet","slug"=>"r_receivable", "url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Aging Receivable Detail Piutang", "slug"=>"r_payable","url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Aging Payable Detail", "slug"=>"r_sales","url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Sales Reports", "slug"=>"r_cashflow","url" => "master/coa");
-            $rpt_submenu[] = array("name" => "Cash Flow Reports", "slug"=>"r_cashflow","url" => "master/coa");
 
 
-            $sidebar_menu[] = array("name" => "Reports", "slug"=>"#","url" => "#", "class" => "fa-desktop", "submenu" => $rpt_submenu);
+            // $sidebar_menu[] = array("name" => "", "slug"=>"#","url" => "#", "class" => "fa-line-chart", "submenu" => $rpt_submenu);
             // MENU DATA MASTER INPUT
             $master_submenu = array();
             $master_submenu[] = array("name" => "Chart Of Account", "slug"=>"coa","url" => "master/coa");
@@ -63,7 +65,7 @@
             $sidebar_menu[] = array("name" => "Input Master", "slug"=>"","url" => "#", "class" => "fa-list", "submenu" => $master_submenu);
             // ----- END MENU MASTER
 
-            $sidebar_menu[] = array("name" => "Settings", "slug"=>"settings","url" => "settings/general", "class" => "fa-wrench");
+            $sidebar_menu[] = array("name" => "Settings", "slug"=>"settings","url" => "settings/general", "class" => "fa-cogs");
 
             foreach ($sidebar_menu as $main_menu) {
                 $submenu = get_array_value($main_menu, "submenu");

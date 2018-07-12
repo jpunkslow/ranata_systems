@@ -1,4 +1,4 @@
-<div id="page-content" class="p20 clearfix">
+<div id="page-content" class="m20 clearfix">
     <?php
     announcements_alert_widget();
     ?>
@@ -20,22 +20,22 @@
         }
 
         //set bootstrap class for column
-        if ($total_hidden == 1) {
-            $widget_column = "4";
-        } else if ($total_hidden == 2) {
-            $widget_column = "6";
-        } else if ($total_hidden == 3) {
-            $widget_column = "12";
-        }
+        // if ($total_hidden == 1) {
+        //     $widget_column = "4";
+        // } else if ($total_hidden == 2) {
+        //     $widget_column = "6";
+        // } else if ($total_hidden == 3) {
+        //     $widget_column = "12";
+        // }
         ?>
 
-        <?php if ($show_attendance) { ?>
+        <?php   ?>
             <div class="col-md-<?php echo $widget_column; ?> col-sm-6 widget-container">
                 <?php
                 clock_widget();
                 ?>
             </div>
-        <?php } ?>
+        <?php ?>
 
         <div class="col-md-<?php echo $widget_column; ?> col-sm-6  widget-container">
             <?php
@@ -43,21 +43,21 @@
             ?> 
         </div>
 
-        <?php if ($show_event) { ?>
+        <?php  ?>
             <div class="col-md-<?php echo $widget_column; ?> col-sm-6  widget-container">
                 <?php
                 events_today_widget();
                 ?> 
             </div>
-        <?php } ?>
+        <?php  ?>
 
-        <?php if ($show_timeline) { ?>
+        <?php  ?>
             <div class="col-md-<?php echo $widget_column; ?> col-sm-6  widget-container">
                 <?php
                 new_posts_widget();
                 ?>  
             </div>
-        <?php } ?>
+        <?php ?>
 
     </div>
 
@@ -122,13 +122,7 @@
 
 
         <div class="col-md-3 widget-container">
-            <?php
-            if ($show_income_vs_expenses) {
-                income_vs_expenses_widget();
-            } else {
-                my_task_stataus_widget();
-            }
-            ?>
+           
         </div>
 
         <?php if ($show_event) { ?>

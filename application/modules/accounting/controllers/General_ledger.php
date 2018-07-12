@@ -30,10 +30,10 @@ class General_ledger extends MY_Controller {
 
         $saldo = $saldo + $sa_debet - $sa_credit;
 
-        $html = "<tr><td colspan='6' align='right'><strong>Saldo Awal Sebelumnya </strong></td>";
-        $html .= "<td align='right'>".number_format($sa_debet)."</td>";
-        $html .= "<td align='right'>".number_format($sa_credit)."</td>";
-        $html .= "<td align='right'>".number_format($saldo)."</td> </tr>";
+        $html = "<tr ><td colspan='5' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_debet)."</td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_credit)."</td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo)."</td> </tr>";
         $where = '';
         if(!empty($start) && !empty($end)){
             $where = " AND date >= '$start' AND  date <= '$end' ";
@@ -55,13 +55,12 @@ class General_ledger extends MY_Controller {
             $html .= "<tr>";
             $html .= "<td>".$db->journal_code."</td>";
             $html .= "<td>".$db->date."</td>";
-            $html .= "<td>".$db->voucher_code."</td>";
             $html .= "<td>".$db->description."</td>";
             $html .= "<td>".$db->account_number."</td>";
             $html .= "<td>".$db->account_name."</td>";
-            $html .= "<td align='right'>".number_format($db->debet)."</td>";
-            $html .= "<td align='right'>".number_format($db->credit)."</td>";
-            $html .= "<td align='right'>".number_format($saldo)."</td></tr>";
+            $html .= "<td align='right' width='100'>".number_format($db->debet)."</td>";
+            $html .= "<td align='right' width='100'>".number_format($db->credit)."</td>";
+            $html .= "<td align='right' width='100'>".number_format($saldo)."</td></tr>";
 
             $jml_deb = $jml_deb + $db->debet;
             $jml_cre = $jml_cre + $db->credit;

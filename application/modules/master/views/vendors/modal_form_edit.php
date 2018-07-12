@@ -4,24 +4,7 @@
 
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">
-            <div class="form-group">
-                <label for="code" class=" col-md-3"> Kode Vendor</label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_input(array(
-                        "id" => "code",
-                        "name" => "code",
-                        "class" => "form-control",
-                        "placeholder" => 'Customers Name',
-                        "value" => $model_info->code,
-                        "readonly" => true,
-                        "autofocus" => true,
-                        "data-rule-required" => true,
-                        "data-msg-required" => lang("field_required"),
-                    ));
-                    ?>
-                </div>
-            </div>
+           
             <div class="form-group">
                 <label for="name" class=" col-md-3">Vendor Name</label>
                 <div class=" col-md-9">
@@ -93,11 +76,10 @@
                     <?php
                     echo form_dropdown(
                     "termin", array(
-                        "30" => "1-30 Hari",
-                        "60" => "1-60 Hari",
-                        "90" => "1-90 Hari",
-                        "120" => "1-120 Hari",
-                        '150' => "1-150 Hari"
+                         "7" => "7 Hari",
+                        "14" => "14 Hari",
+                        "30" => "30 Hari",
+                        "120" => "> 30 Hari"
                         ), $model_info->termin, "class='select2 mini'"
                     );
                     ?>
@@ -133,7 +115,7 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="credit_limit" class=" col-md-3">Credits Limit </label>
                 <div class=" col-md-9">
                     <?php
@@ -147,7 +129,7 @@
                     ));
                     ?>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="memo" class=" col-md-3">Memo</label>
                 <div class=" col-md-9">

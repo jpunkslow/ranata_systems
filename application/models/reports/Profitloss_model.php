@@ -46,7 +46,7 @@ class Profitloss_model extends CI_Model {
 	}
 
 
-	function get_jml_akun($akun) {
+	function get_jml_akun($akun,$start,$end) {
 			$this->db->select('SUM(debet) AS jum_debet, SUM(credit) AS jum_kredit');
 			$this->db->from('transaction_journal');
 			$this->db->where('fid_coa', $akun);
@@ -58,8 +58,8 @@ class Profitloss_model extends CI_Model {
 		// 	$tgl_dari = date('Y') . '-01-01';
 		// 	$tgl_samp = date('Y') . '-12-31';
 		// }
-		// $this->db->where('DATE(tgl) >= ', ''.$tgl_dari.'');
-		// $this->db->where('DATE(tgl) <= ', ''.$tgl_samp.'');
+		$this->db->where('DATE(date) >= ', ''.$start.'');
+		$this->db->where('DATE(date) <= ', ''.$end.'');
 
 		$query = $this->db->get();
 		return $query->row();

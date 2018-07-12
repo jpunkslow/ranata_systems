@@ -25,7 +25,7 @@ class Purchase_Payments_model extends Crud_model {
                                 b.*,
                                 a.total,
                                 c.percentage,
-                                SUM(a.total + ( a.total * ( c.percentage / 100 ) )) AS sub_total 
+                                SUM(a.total + ( a.total * ( c.percentage / 100 ) ) ) AS sub_total 
                             FROM
                                 purchase_invoices_items a,
                                 purchase_invoices b,
@@ -33,13 +33,12 @@ class Purchase_Payments_model extends Crud_model {
                             WHERE
                                 a.fid_invoices = b.id 
                                 AND b.fid_tax = c.id
-                                AND b.fid_cust = $id AND b.paid = 'Not Paid' AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
+                                AND b.fid_cust = $id AND b.paid in('Not Paid','CREDIT') AND b.status = 'posting' AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
         return $data;
     }
-
     function getInvoicesTotal($id){
         $data = $this->db->query("SELECT 
-                                SUM(a.total + ( a.total * ( c.percentage / 100 )) )  AS invoice_subtotal 
+                                SUM(a.total + ( a.total * ( c.percentage / 100 ) ) ) AS invoice_subtotal 
                             FROM
                                 purchase_invoices_items a,
                                 purchase_invoices b,
@@ -47,8 +46,7 @@ class Purchase_Payments_model extends Crud_model {
                             WHERE
                                 a.fid_invoices = $id 
                                 AND b.fid_tax = c.id
-                                AND b.id = $id
-                                AND b.paid = 'Not Paid' AND a.deleted = 0 AND b.deleted = 0  ORDER BY b.id DESC");
+                                AND b.paid in('Not Paid','CREDIT') AND b.status = 'posting' AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
         return $data;
     }
 

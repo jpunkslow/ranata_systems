@@ -27,7 +27,29 @@ class Customers extends MY_Controller {
         $view_data["provinsi_dropdown"] = $this->db->get("ref_provinsi")->result_array();
         $this->load->view('customers/modal_form',$view_data);
     }
+    function get_customer_suggestion() {
+        $key = $this->input->get('q');
+        $suggestion = array();
 
+        $items = $this->Master_Customers_model->get_suggestion($key);
+
+        foreach ($items as $item) {
+            $suggestion[] = array("id" => $item->name, "text" => $item->name);
+        }
+
+        $suggestion[] = array("id" => "+", "text" => "+ " . lang("create_new_customers"));
+
+        echo json_encode($suggestion);
+    }
+
+    function get_info_suggestion() {
+        $item = $this->Master_Customers_model->get_info_suggestion($this->input->post("item_name"));
+        if ($item) {
+            echo json_encode(array("success" => true, "cust" => $item));
+        } else {
+            echo json_encode(array("success" => false));
+        }
+    }
     function getId($id){
 
         if(!empty($id)){
@@ -71,7 +93,7 @@ class Customers extends MY_Controller {
         ));
 
         $data = array(
-            "code" => $this->input->post('code'),
+            "code" => getCodeId('master_customers',"CS"),
             "name" => $this->input->post('name'),
 
             // "company_name" => $this->input->post('company_name'),
@@ -108,9 +130,7 @@ class Customers extends MY_Controller {
 
         $data = array(
 
-            "code" => $this->input->post('code'),
             "name" => $this->input->post('name'),
-            // "company_name" => $this->input->post('company_name'),
             "npwp" => $this->input->post('npwp'),
             "address" => $this->input->post('address'),
             "termin" => $this->input->post('termin'),

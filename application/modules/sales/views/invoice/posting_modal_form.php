@@ -45,7 +45,7 @@
              <?php 
                 echo form_dropdown(
                     "pay_type", array(
-                        "CASH" => "CASH",
+                        "CREDIT" => " - ",
                         "DP" => "DOWN PAYMENT"
                         ), "", "class='select2 mini' id='pay_type'"
                     );

@@ -20,13 +20,13 @@
         $("#master_customers-table").appTable({
             source: '<?php echo_uri("master/customers/list_data") ?>',
             columns: [
-                {title: "Kode Customer", "class": "text-center"},
-                {title: "Nama Customer"},
+                {title: "CODE", "class": "text-center"},
+                {title: "NAME"},
                 {title: "NPWP"},
-                {title: "Address"},
-                {title: "Email"},
-                {title: "Mobile"},
-                {title: "Memo"},
+                {title: "ADDRESS"},
+                {title: "EMAIL"},
+                {title: "MOBILE"},
+                {title: "MEMO"},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
             ],
             printColumns: [0, 1, 2, 3, 4, 5,6,7],

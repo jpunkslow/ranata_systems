@@ -39,6 +39,7 @@
                         "name" => "voucher_code",
                         "value" => $model_info->voucher_code,
                         "class" => "form-control",
+                        "readonly" => true,
                         "data-rule-required" => true,
                         "placeholder" => 'Voucher Number',
                         "data-msg-required" => lang("field_required")

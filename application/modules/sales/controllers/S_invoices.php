@@ -164,7 +164,7 @@ class S_invoices extends MY_Controller {
                     echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
                 
             }else{
-                 echo json_encode(array("success" => false, 'message' => "GEK BENER ".$order_id));
+                 echo json_encode(array("success" => false, 'message' => lang('error_occurred').$order_id));
             }
         } else {
             $save_id = $this->Sales_Invoices_model->save($data);
@@ -236,33 +236,74 @@ class S_invoices extends MY_Controller {
 
 
         try{
+            $hpp = 47;
+            $penjualan = 44;
+
+            if($pay_type == "CREDIT"){
+                $curr = 12;
+                if($currency == "IDR"){
+                    $curr = 12;
+                }
+                if($currency == "USD"){
+                    $curr = 13;
+                }
 
 
-            if($pay_type == "CASH"){
-                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
-                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
 
-                $status_data = array("status" => "posting" ,"PAID" => "PAID");
-                $this->Sales_Invoices_model->save($status_data, $id);
+                // $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                // $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+                // $hpp = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
 
-                  $data = array(
-                        "code" => getMaxId("sales_payments","PAY"),
-                        "fid_cust" => $fid_cust,
-                        "fid_inv" => $id,
-                        "paid" => "PAID",
-                        "pay_date" => $date,
-                        "fid_bank" => $fid_coa,
-                        "currency" => $currency,
-                        "fid_tax" => $this->input->post('fid_tax'),
-                        "amount" => $amount,
-                        "memo" => $description,
-                        "created_at" => get_current_utc_time()
-                    );
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$penjualan,0,$amount);
+                
+
+                $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "residual" => $amount);
+                // $save_id = $this->Sales_Invoices_model->save($status_data, $id);
+
+                  // $data = array(
+                  //       "code" => getMaxId("sales_payments","PAY"),
+                  //       "fid_cust" => $fid_cust,
+                  //       "fid_inv" => $id,
+                  //       "paid" => "CREDIT",
+                  //       "pay_date" => $date,
+                  //       "fid_bank" => $fid_coa,
+                  //       "currency" => $currency,
+                  //       "fid_tax" => $this->input->post('fid_tax'),
+                  //       "residu" => $amount,
+                  //       "memo" => $description,
+                  //       "created_at" => get_current_utc_time()
+                  //   );
 
                     
 
-                    $save_id = $this->Sales_Payments_model->save($data);
+                  //   $this->Sales_Payments_model->save($data);
             }
+            // if($pay_type == "CASH"){
+            //     $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
+            //     $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+
+            //     $status_data = array("status" => "posting" ,"PAID" => "PAID");
+            //     $this->Sales_Invoices_model->save($status_data, $id);
+
+            //       $data = array(
+            //             "code" => getMaxId("sales_payments","PAY"),
+            //             "fid_cust" => $fid_cust,
+            //             "fid_inv" => $id,
+            //             "paid" => "PAID",
+            //             "pay_date" => $date,
+            //             "fid_bank" => $fid_coa,
+            //             "currency" => $currency,
+            //             "fid_tax" => $this->input->post('fid_tax'),
+            //             "amount" => $amount,
+            //             "memo" => $description,
+            //             "created_at" => get_current_utc_time()
+            //         );
+
+                    
+
+            //         $save_id = $this->Sales_Payments_model->save($data);
+            // }
             // if($pay_type == "CREDIT"){
             //     $curr = 12;
             //     if($currency == "IDR"){
@@ -275,27 +316,26 @@ class S_invoices extends MY_Controller {
             //     $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
             // }
             if($pay_type == "DP"){
-                $curr = 12;
+                $piutang_usaha = 12;
                 if($currency == "IDR"){
-                    $curr = 12;
+                    $piutang_usaha = 12;
                 }
                 if($currency == "USD"){
-                    $curr = 13;
+                    $piutang_usaha = 13;
                 }
                 $dp_sum = $amount - $dp;
 
+                $uang_muka_penjualan = 29;
+                $penjualan_barang = 44;
 
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$dp,0);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$piutang_usaha,$dp_sum,0);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$uang_muka_penjualan,0,$dp);
+                // $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$hpp,0,$dp_sum);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$penjualan_barang,0,$dp_sum);
 
-                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
-                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
-                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$dp,0);
-                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$dp_sum,0);
-                $dp_sales = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,29,0,$dp);
-                $sales = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$dp_sum);
-
-                    $status_data = array("status" => "posting" ,"PAID" => "CREDIT");
-                    $this->Sales_Invoices_model->save($status_data, $id);
-
+                    $status_data = array("status" => "posting" ,"PAID" => "CREDIT","amount" => $amount, "residual" => $dp_sum);
+                    
                    $data = array(
                         "code" => getMaxId("sales_payments","PAY"),
                         "fid_cust" => $fid_cust,
@@ -305,7 +345,7 @@ class S_invoices extends MY_Controller {
                         "fid_bank" => $fid_coa,
                         "currency" => $currency,
                         "fid_tax" => $this->input->post('fid_tax'),
-                        "amount" => $amount,
+                        "amount" => $dp,
                         "residu" => $dp_sum,
                         "memo" => $description,
                         "created_at" => get_current_utc_time()
@@ -313,13 +353,15 @@ class S_invoices extends MY_Controller {
 
                     
 
-                    $save_id = $this->Sales_Payments_model->save($data);
+                    $this->Sales_Payments_model->save($data);
 
 
             }
+            $save_id = $this->Sales_Invoices_model->save($status_data, $id);
+
             if ($save_id) {
 
-                echo json_encode(array("success" => true, "data" => $this->_row_data($kas),'message' => lang('record_saved')));
+                echo json_encode(array("success" => true, "data" => $this->_row_data($save_id),'message' => lang('record_saved')));
             } else {
                 echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
             }

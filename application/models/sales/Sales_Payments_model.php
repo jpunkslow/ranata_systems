@@ -33,7 +33,7 @@ class Sales_Payments_model extends Crud_model {
                             WHERE
                                 a.fid_invoices = b.id 
                                 AND b.fid_tax = c.id
-                                AND b.fid_cust = $id AND b.paid in('Not Paid','CREDIT') AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
+                                AND b.fid_cust = $id AND b.paid in('Not Paid','CREDIT') AND b.status = 'posting' AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
         return $data;
     }
 
@@ -47,7 +47,7 @@ class Sales_Payments_model extends Crud_model {
                             WHERE
                                 a.fid_invoices = $id 
                                 AND b.fid_tax = c.id
-                                AND b.paid in('Not Paid','CREDIT') AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
+                                AND b.paid in('Not Paid','CREDIT') AND b.status = 'posting' AND a.deleted = 0 AND b.deleted = 0 GROUP BY b.id DESC");
         return $data;
     }
 

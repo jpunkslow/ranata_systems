@@ -64,7 +64,6 @@
                     <tr>
                         <th>Journal Code</th>
                         <th>Date</th>
-                        <th>Voucher Code</th>
                         <th>Description</th>
                         <th>Account Number</th>
                         <th>Account Name</th>

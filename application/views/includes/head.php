@@ -47,6 +47,7 @@
         "assets/js/magnific-popup/jquery.magnific-popup.min.js",
         "assets/js/notificatoin_handler.js",
         "assets/js/general_helper.js",
+        "assets/js/jquery.maskMoney.js",
         "assets/js/app.min.js",
     ));
     ?>

@@ -3,6 +3,7 @@
 
     <input type="hidden" name="fid_cust" value="<?php echo $model_info->fid_cust; ?>" />
     <input type="hidden" name="fid_inv" value="<?php echo $model_info->id; ?>" />
+     <input type="hidden" name="paid" value="<?php echo $model_info->paid; ?>" />
 
 
     <div class="form-group">
@@ -87,15 +88,33 @@
                         ?>
         </div>
     </div>
+        <?php if($model_info->amount != 0){ ?>
     <div class="form-group">
-        <label for="total" class="col-md-3">TOTAL PAYMENT</label>
+        <label for="total" class="col-md-3">TOTAL AMOUNT</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
                 "id" => "total",
                 "name" => "total",
                 "class" => "form-control",
-                "value" => $model_info_total->invoice_subtotal,
+                "value" => $model_info->amount,
+                "placeholder" => "",
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
+<?php } ?>
+     <div class="form-group">
+        <label for="residual" class="col-md-3">RESIDU PAID</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "residual",
+                "name" => "residual",
+                "class" => "form-control",
+                "value" => ($model_info->residual ? $model_info->residual : 0),
                 "placeholder" => "",
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),

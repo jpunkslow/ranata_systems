@@ -20,4 +20,29 @@ class Master_Customers_model extends Crud_model {
         return $data;
     }
 
+    function get_suggestion($keyword = "") {
+        // $items_table = $this->db->dbprefix('master_items');
+        
+
+        $sql = "SELECT *
+        FROM $this->table
+        WHERE deleted = 0  AND name LIKE '%$keyword%' ";
+        return $this->db->query($sql)->result();
+    }
+
+    function get_info_suggestion($item_name = "") {
+        // $estimate_items_table = $this->db->dbprefix('estimate_items');
+        $table_cust = $this->table;
+
+        $sql = "SELECT *
+        FROM $table_cust
+        WHERE $table_cust.deleted=0 AND $table_cust.name = '$item_name'
+        ORDER BY id DESC LIMIT 1";
+        $result = $this->db->query($sql);
+
+        if ($result->num_rows()) {
+            return $result->row();
+        }
+    }
+
 }

@@ -25,7 +25,7 @@ class P_order extends MY_Controller {
             );
             $data = $this->Purchase_Request_model->get_details($options)->row();
             if($data){
-                $data_cust = $this->Master_Vendors_model->get_details(array("id" => $data->fid_cust))->row();
+                $data_cust = $this->Master_Vendors_model->get_details(array("id" => $data->fid_vendor))->row();
                 
                 echo json_encode(array("success" => true,"data" => $data_cust));    
             }else{

@@ -34,15 +34,17 @@
             source: '<?php echo_uri("purchase/p_payments/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: "NO VOUCHER #"},
+                {title: "VOUCHER CODE #"},
                 {title: "VENDORS"},
                 {title: "STATUS","class": "text-center"},
                 // {title: "KAS"},
-                {title: "TANGGAL"},
+                {title: "DATE"},
                 {title: "MEMO"},
-                {title: "MATA UANG","class": "text-center"},
+                {title: "CURRENCY","class": "text-center"},
+                {title: "PAID", "class": "text-right"},
+                {title: "RESIDU", "class": "text-right"},
                 {title: "TOTAL", "class": "text-right"},
-                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
+                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w50"}
             ],
             printColumns: [0, 1, 2, 3, 4,5,6,7,8],
             xlsColumns: [0, 1, 2, 3, 4,5,6,7,8]

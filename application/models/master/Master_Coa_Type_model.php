@@ -124,6 +124,19 @@ class Master_Coa_Type_model extends Crud_model {
         return $list_data;
     }
 
+     function getAllCoa() {
+        // $where["deleted"] = 0;
+        // $where["id"] = (2,3);
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE  deleted = 0 ORDER BY account_number ASC")->result();
+
+        $result = array();
+        foreach ($list_data as $data) {
+            // $text = "";
+            $result[$data->id] = $data->account_number." - ".$data->account_name ." - ".$data->parent;
+        }
+        return $result;
+    }
+
     function getCoaEntry(){
         $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND deleted = 0 ORDER BY account_number ASC")->result();
 
