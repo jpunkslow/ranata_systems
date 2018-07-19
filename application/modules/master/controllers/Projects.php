@@ -57,6 +57,10 @@ class Projects extends MY_Controller {
 
         $item_data = array(
             "project_name" => $this->input->post('project_name'),
+            "project_description" => $this->input->post('description'),
+            "fid_cust" => $this->input->post('fid_cust'),
+            "owner_name" => $this->input->post('owner_name'),
+            "company_name" => $this->input->post('company_name'),
             "created_at" => get_current_utc_time(),
         );
 
@@ -79,6 +83,10 @@ class Projects extends MY_Controller {
 
          $item_data = array(
             "project_name" => $this->input->post('project_name'),
+            "project_description" => $this->input->post('description'),
+            "fid_cust" => $this->input->post('fid_cust'),
+            "owner_name" => $this->input->post('owner_name'),
+            "company_name" => $this->input->post('company_name'),
             "created_at" => get_current_utc_time(),
         );
 
@@ -140,6 +148,9 @@ class Projects extends MY_Controller {
 
         return array(
             $data->project_name,
+            $data->project_description,
+            $data->owner_name,
+            $data->company_name,
             modal_anchor(get_uri("master/projects/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_item'), "data-post-id" => $data->id))
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("master/projects/delete"), "data-action" => "delete"))
         );

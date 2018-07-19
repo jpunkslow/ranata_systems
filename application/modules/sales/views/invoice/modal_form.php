@@ -95,6 +95,22 @@
         </div>
     </div>
     <div class="form-group">
+        <label for="end_date" class="col-md-3">End Date</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "end_date",
+                "name" => "end_date",
+                "class" => "form-control",
+                "placeholder" => "Y/m/d",
+                "value" => date("Y-m-d"),
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
         <label for="fid_tax" class=" col-md-3"><?php echo lang('tax'); ?></label>
         <div class="col-md-9">
             <?php
@@ -133,6 +149,7 @@
 
         $("#invoices-form .select2").select2();
         setDatePicker("#inv_date");
+        setDatePicker("#end_date");
         // $("#invoices-form").appForm({
         //     onSuccess: function (result) {
         //         $("#invoices-table").appTable({newData: result.data, dataId: result.id});

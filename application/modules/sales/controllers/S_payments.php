@@ -35,7 +35,7 @@ class S_payments extends MY_Controller {
             $view_data["id"] = $id;
             
             $view_data["query"] = $this->Sales_Payments_model->getInvoicesCust($id)->result();
-             $this->load->view("payments/item_modal_form",$view_data);   
+             $this->load->view("payments/paylist",$view_data);   
     }
 
     /* load client add/edit modal */
@@ -84,7 +84,7 @@ class S_payments extends MY_Controller {
         $options = array(
             "id" => $id,
         );
-        $view_data['bank_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCashCoa();
+        $view_data['bank_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop('account_number','100.');
        
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         $view_data['model_info_total'] = $this->Sales_Payments_model->getInvoicesTotal($id)->row();
@@ -109,8 +109,9 @@ class S_payments extends MY_Controller {
         $pay_type = $this->input->post('paid');
 
         $amount = $this->input->post('total');
-        $residual = $this->input->post('residual');
+        $residual = unformat_currency($this->input->post('residual'));
         
+        $coa_sales = $this->input->post('coa_sales');
         
         $code = $this->input->post('voucher');
         $fid_cust = $this->input->post('fid_cust');
@@ -192,7 +193,7 @@ class S_payments extends MY_Controller {
                     $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$fid_bank,$residual,0);
                     $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$uang_muka_penjualan,$sisa,0);
                     $this->_insertTransaction($code,$voucher_code,$pay_date,$type,$memo,$piutang,0,$residual);
-                    $this->_insertTransaction($code,$voucher_code,$pay_type,$type,$memo,$penjualan_barang,0,$sisa);
+                    $this->_insertTransaction($code,$voucher_code,$pay_type,$type,$memo,$coa_sales,0,$sisa);
 
                         $status_data = array("status" => "posting" ,"PAID" => "CREDIT", "residual" => 0);
                         $this->Sales_Invoices_model->save($status_data, $fid_inv);

@@ -35,7 +35,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         <div id="invoice-status-bar">
         	<div class="panel panel-default  p5 no-border m0">
             
-            <span class="ml15">
+            <span class="ml15" style="display: none">
                 <form action="" method="GET" role="form" class="general-form">
                <table class="table table-bordered">
                    <tr>
@@ -43,7 +43,6 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
                        <td><input type="text" class="form-control" name="start" id="start" value="<?php echo $periode_default ?>" autocomplete="off"></td>
                         <td><label>End Date</label></td>
                        <td><input type="text" class="form-control" name="end" id="end" value="<?php echo $periode_now ?>" autocomplete="off"></td>
-                        <td><select name="type" class="form-control"><option value="0">Default</option><option value="1">Monthly</option></select></td>
                         <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
                             <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
@@ -65,12 +64,69 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 
                 <div class="table-responsive mt15 pl15 pr15">
 
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Periode <?php echo format_to_date($periode_default)." - ".format_to_date($periode_now);  ?></p>
+<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Bulanan  Tahun <?php echo date('Y') ?></p>
 	
 	<hr>
 
+	<div class="" style="width: 1000px;overflow: auto;height: 500px">
 
-<h3> Pendapatan </h3>
+		<table class="table table-bordered">
+			<tr>
+				<th width="500" style="text-align:center">AKUN</th>
+				<th width="100" style="text-align:center">JAN</th>
+				<th width="100" style="text-align:center">FEB</th>
+				<th width="100" style="text-align:center">MAR</th>
+				<th width="100" style="text-align:center">APR</th>
+				<th width="100" style="text-align:center">MAY</th>
+				<th width="100" style="text-align:center">JUN</th>
+				<th width="100" style="text-align:center">JUL</th>
+				<th width="100" style="text-align:center">AUG</th>
+				<th width="100" style="text-align:center">SEP</th>
+				<th width="100" style="text-align:center">OCT</th>
+				<th width="100" style="text-align:center">NOV</th>
+				<th width="100" style="text-align:center">DEC</th>
+				<th width="100" style="text-align:center">TOTAL</th>
+			</tr>
+			<tbody>
+			<?php  foreach($laba_rugi_monthly->result() as $row){ 
+					if($row->parent == "Head"){
+						echo '<tr>';
+				
+						echo '<td><strong>'.$row->akun.'</strong></td>';
+						echo '<td colspan="12"></td>';
+
+
+						echo '</tr>';
+					}else{
+					echo '<tr>';
+				
+					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->akun.'</td>';
+					echo '<td width="100" style="text-align:right">'.$row->jan.'</td>';
+					echo '<td style="text-align:right">'.$row->feb.'</td>';
+					echo '<td style="text-align:right">'.$row->mar.'</td>';
+					echo '<td style="text-align:right">'.$row->apr.'</td>';
+					echo '<td style="text-align:right">'.$row->may.'</td>';
+					echo '<td style="text-align:right">'.$row->jun.'</td>';
+					echo '<td style="text-align:right">'.number_format($row->jul).'</td>';
+					echo '<td style="text-align:right">'.$row->aug.'</td>';
+					echo '<td style="text-align:right">'.$row->sep.'</td>';
+					echo '<td style="text-align:right">'.$row->oct.'</td>';
+					echo '<td style="text-align:right">'.$row->nov.'</td>';
+					echo '<td style="text-align:right">'.$row->dec.'</td>';
+					echo '<td style="text-align:right">'.$row->total.'</td>';
+
+
+					echo '</tr>';
+					}
+				} ?>
+
+			</tbody>
+			
+		</table>
+		
+	</div>
+
+<!-- <h3> Pendapatan </h3>
 <table  class="table table-bordered">
 	<tr style="background: lightgrey">
 		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
@@ -200,7 +256,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 		<td colspan="2" class="h_kanan"> Laba Rugi </td>
 		<td class="h_kanan"><?php echo number_format(nsi_round($jml_p - $jml_beban )) ?></td>
 	</tr>
-</table>
+</table> -->
 </div>
 </div>
 <script type="text/javascript">

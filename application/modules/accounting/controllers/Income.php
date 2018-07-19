@@ -26,7 +26,7 @@ class Income extends MY_Controller {
 
         // $view_data['model_info'] = $this->Income_model->get_one($this->input->post('id'));
         // $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
-        $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+        $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number',"100");
 
         
         $this->load->view('income/modal_form',$view_data);
@@ -362,7 +362,7 @@ class Income extends MY_Controller {
         // $options = array(
         //     "id" => $data->id
         // );
-        $kas = array("10001","10002","10003","10004","10005","10006","10007","10008","10008","10010","10011");
+        $kas = array("100.001","100.002","100.003","100.004","100.005","100.006","100.007","100.008","100.008","100.010","100.011");
         // $query = $this->Master_Customers_model->get_details($options)->row();
         $value = $this->Master_Coa_Type_model->get_details(array("id"=> $data->fid_coa))->row();
         $row_data = array(

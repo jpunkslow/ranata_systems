@@ -20,7 +20,11 @@
             source: '<?php echo_uri("master/projects/list_data") ?>',
             order: [[0, 'desc']],
             columns: [
-                {title: 'Nama Proyek'},
+                {title: 'Project Name'},
+                {title: 'Description'},
+                {title: 'Owners'},
+                {title: 'Company'},
+                
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
             ],
             printColumns: [0, 1],

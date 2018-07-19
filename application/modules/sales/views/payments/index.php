@@ -5,7 +5,7 @@
             <div class="title-button-group">
                 <div class="btn-group" role="group">
                     <?php
-                    echo modal_anchor(get_uri("sales/s_payments/add_receipt"), "<i class='fa fa-plus-circle'></i> " . "Add Sales Receipt", array("class" => "btn btn-primary", "title" => "Add Sales Receipt"));
+                    echo modal_anchor(get_uri("sales/s_payments/add_receipt"), "<i class='fa fa-plus-circle'></i> " . "Add Sales Receipt", array("class" => "btn btn-primary", "title" => "Add Sales Receipt","data-modal-lg"=>1));
                 
                 ?>
                 </div>

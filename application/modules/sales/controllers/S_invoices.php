@@ -95,7 +95,8 @@ class S_invoices extends MY_Controller {
 
 
         $view_data = get_s_invoices_making_data($id);
-        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100.');
+        $view_data['coa_sales_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','300.');
        
        
         $view_data['model_info'] = $this->Sales_Invoices_model->get_details($options)->row();
@@ -124,6 +125,7 @@ class S_invoices extends MY_Controller {
             "paid" => "Not Paid",
             "email_to" => $this->input->post('email_to'),
             "inv_date" => $this->input->post('inv_date'),
+            "end_date" => $this->input->post('end_date'),
             "currency" => $this->input->post('currency'),
             "fid_tax" => $this->input->post('fid_tax'),
             "created_at" => get_current_utc_time()
@@ -211,6 +213,14 @@ class S_invoices extends MY_Controller {
         }
     }
 
+    function test($idr){
+        $format = to_currency($idr,"Rp ");
+        echo $format;
+        echo "<br>";
+        echo unformat_currency($format);
+
+    }
+
     function posting_save() {
         $id = $this->input->post('id');
 
@@ -225,85 +235,65 @@ class S_invoices extends MY_Controller {
         $voucher_code = "";
         $date = date("Y-m-d");
         $type = "sales";
+        $coa_sales = $this->input->post("sales_coa");
         $description = $this->input->post("memo");
-        $amount = $this->input->post('amount');
-        $dp = $this->input->post('dp');
+        $amount = unformat_currency($this->input->post('amount'));
+        $subtotal = unformat_currency($this->input->post('subtotal'));
+        $ppn = unformat_currency($this->input->post('ppn'));
+
+        $dp = unformat_currency($this->input->post('dp'));
         $pay_type = $this->input->post('pay_type');
         $fid_coa = $this->input->post('fid_bank');
         $fid_cust = $this->input->post('fid_cust');
         $currency = $this->input->post('currency');
-
+        $curr = 12;
+        if($currency == "IDR"){
+            $curr = 12;
+        }
+        if($currency == "USD"){
+            $curr = 13;
+        }
 
 
         try{
-            $hpp = 47;
-            $penjualan = 44;
+            $ppn_coa = 95;
 
             if($pay_type == "CREDIT"){
-                $curr = 12;
-                if($currency == "IDR"){
-                    $curr = 12;
-                }
-                if($currency == "USD"){
-                    $curr = 13;
-                }
-
-
-
-                // $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
-                // $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
-                // $hpp = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
-
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$penjualan,0,$amount);
                 
 
-                $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "residual" => $amount);
-                // $save_id = $this->Sales_Invoices_model->save($status_data, $id);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
+                
 
-                  // $data = array(
-                  //       "code" => getMaxId("sales_payments","PAY"),
-                  //       "fid_cust" => $fid_cust,
-                  //       "fid_inv" => $id,
-                  //       "paid" => "CREDIT",
-                  //       "pay_date" => $date,
-                  //       "fid_bank" => $fid_coa,
-                  //       "currency" => $currency,
-                  //       "fid_tax" => $this->input->post('fid_tax'),
-                  //       "residu" => $amount,
-                  //       "memo" => $description,
-                  //       "created_at" => get_current_utc_time()
-                  //   );
-
-                    
-
-                  //   $this->Sales_Payments_model->save($data);
+                $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
+            
             }
-            // if($pay_type == "CASH"){
-            //     $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
-            //     $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+            if($pay_type == "CASH"){
+                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
+                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
 
-            //     $status_data = array("status" => "posting" ,"PAID" => "PAID");
-            //     $this->Sales_Invoices_model->save($status_data, $id);
+                $status_data = array("status" => "posting" ,"PAID" => "PAID",'coa_sales'=>$coa_sales,"residual" => 0,"sub_total" => $subtotal,"ppn"=> $ppn,'amount'=>$amount);
 
-            //       $data = array(
-            //             "code" => getMaxId("sales_payments","PAY"),
-            //             "fid_cust" => $fid_cust,
-            //             "fid_inv" => $id,
-            //             "paid" => "PAID",
-            //             "pay_date" => $date,
-            //             "fid_bank" => $fid_coa,
-            //             "currency" => $currency,
-            //             "fid_tax" => $this->input->post('fid_tax'),
-            //             "amount" => $amount,
-            //             "memo" => $description,
-            //             "created_at" => get_current_utc_time()
-            //         );
+                  $data = array(
+                        "code" => getMaxId("sales_payments","PAY"),
+                        "fid_cust" => $fid_cust,
+                        "fid_inv" => $id,
+                        "paid" => "PAID",
+                        "pay_date" => $date,
+                        "fid_bank" => $fid_coa,
+                        "currency" => $currency,
+                        "fid_tax" => $this->input->post('fid_tax'),
+                        "amount" => $amount,
+                        "memo" => $description,
+                        "created_at" => get_current_utc_time()
+                    );
 
                     
 
-            //         $save_id = $this->Sales_Payments_model->save($data);
-            // }
+                    $save_id = $this->Sales_Payments_model->save($data);
+            }
             // if($pay_type == "CREDIT"){
             //     $curr = 12;
             //     if($currency == "IDR"){
@@ -331,10 +321,10 @@ class S_invoices extends MY_Controller {
                 $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$dp,0);
                 $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$piutang_usaha,$dp_sum,0);
                 $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$uang_muka_penjualan,0,$dp);
-                // $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$hpp,0,$dp_sum);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$penjualan_barang,0,$dp_sum);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_sales,0,$dp_sum-$ppn);
 
-                    $status_data = array("status" => "posting" ,"PAID" => "CREDIT","amount" => $amount, "residual" => $dp_sum);
+                    $status_data = array("status" => "posting" ,"coa_sales" => $coa_sales,"PAID" => "CREDIT","amount" => $amount, "residual" => $dp_sum,'sub_total' => $subtotal,'ppn' => $ppn);
                     
                    $data = array(
                         "code" => getMaxId("sales_payments","PAY"),

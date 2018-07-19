@@ -1,15 +1,7 @@
 <div id="page-content" class="m20 clearfix">
     <div class="panel panel-default">
-        <div class="page-title clearfix">
-            <h1>Customers Receipt</h1>
-            <div class="title-button-group">
-                <div class="btn-group" role="group">
-                </div>
-               
-            </div>
-        </div>
+        
         <?php echo form_open(get_uri("sales/order/add"), array("id" => "invoices-form", "class" => "general-form", "role" => "form")); ?>
-            <hr>
         <div class="col-xs-12 clearfix" style="font-size:14px;">
             
             <div class="form-group ">
@@ -33,10 +25,13 @@
                 <thead>
                     <tr>
                         <th>INVOICES ID #</th>
-                        <th class="text-center">PAID</th>
-                        <th class="text-center">TANGGAL</th>
-                        <th class="text-center">TOTAL</th>
-                        <th class="text-center"></th>
+                        <th class="text-center">STATUS PAYMENT</th>
+                        
+                        <th class="text-center" width="100">INVOICE DATE</th>
+                        <th class="text-center" width="100">EXPIRED DATE</th>
+                        <th class="text-center">AMOUNT</th>
+
+                        <th class="text-center"><i class="fa fa-money"></i></th>
                     </tr> 
                 </thead> 
                 <tbody id="invoices-table" >

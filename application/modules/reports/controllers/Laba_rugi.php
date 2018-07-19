@@ -31,10 +31,17 @@ class Laba_rugi extends MY_Controller {
 		$view_data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
 		$view_data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
 
-		if(!empty($_GET['print'])){
+        $view_data['laba_rugi_monthly'] = $this->Profitloss_model->getMonthly();
+
+		if(isset($_GET['print'])){
             
             prepare_report_pdf($view_data,"laba_rugi/pdf","download");
-        }else{
+        }
+        if(isset($_GET['type']) == 1){
+            $this->template->rander('laba_rugi/monthly',$view_data);
+        }
+
+        else{
 			$this->template->rander('laba_rugi/index', $view_data, TRUE);
 		}
 		// $this->load->view('themes/layout_utama_v', $this->data);

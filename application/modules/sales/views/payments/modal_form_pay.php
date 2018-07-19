@@ -4,6 +4,7 @@
     <input type="hidden" name="fid_cust" value="<?php echo $model_info->fid_cust; ?>" />
     <input type="hidden" name="fid_inv" value="<?php echo $model_info->id; ?>" />
     <input type="hidden" name="paid" value="<?php echo $model_info->paid; ?>" />
+    <input type="hidden" name="coa_sales" value="<?php  echo $model_info->coa_sales; ?>">
 
 
 
@@ -65,7 +66,7 @@
             ?>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" style="display: none;">
         <label for="fid_tax" class=" col-md-3"><?php echo lang('tax'); ?></label>
         <div class="col-md-9">
             <?php
@@ -116,7 +117,7 @@
                 "id" => "residual",
                 "name" => "residual",
                 "class" => "form-control",
-                "value" => $model_info->residual,
+                "value" => to_currency($model_info->residual,"Rp "),
                 "placeholder" => "",
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
@@ -167,6 +168,7 @@
 
         $("#order-form .select2").select2();
         setDatePicker("#inv_date");
+        setDatePicker("#pay_date");
         $("#order-form").appForm({
             onSuccess: function (result) {
                 if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {

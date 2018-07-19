@@ -87,7 +87,7 @@ class P_invoices extends MY_Controller {
 
 
         $view_data = get_p_invoices_making_data($id);
-        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100');
        
        
         $view_data['model_info'] = $this->Purchase_Invoices_model->get_details($options)->row();

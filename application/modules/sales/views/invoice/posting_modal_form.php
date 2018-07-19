@@ -45,7 +45,8 @@
              <?php 
                 echo form_dropdown(
                     "pay_type", array(
-                        "CREDIT" => " - ",
+                        "CASH" => "CASH",
+                        "CREDIT" => "CREDIT",
                         "DP" => "DOWN PAYMENT"
                         ), "", "class='select2 mini' id='pay_type'"
                     );
@@ -61,6 +62,49 @@
             ?>
         </div>
     </div>
+    <div class="form-group" id="cash">
+        <label for="sales_coa" class="col-md-3">SALES #REF</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_dropdown("sales_coa", $coa_sales_dropdown, "", "class='select2 tax-select2'");
+            
+            ?>
+        </div>
+    </div>
+     <div class="form-group">
+        <label for="subtotal" class="col-md-3">Subtotal</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "subtotal",
+                "name" => "subtotal",
+                "value" => to_currency($invoice_total_summary->invoice_subtotal,"Rp "),
+                "class" => "form-control",
+                "readonly" => true,
+                "placeholder" => "0",
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required")
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ppn" class="col-md-3">PPN %</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "ppn",
+                "name" => "ppn",
+                "value" => to_currency($invoice_total_summary->invoice_total-$invoice_total_summary->invoice_subtotal,"Rp "),
+                "class" => "form-control",
+                "readonly" => true,
+                "placeholder" => "0",
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required")
+            ));
+            ?>
+        </div>
+    </div>
     <div class="form-group">
         <label for="amount" class="col-md-3">Total Amount</label>
         <div class=" col-md-9">
@@ -68,7 +112,7 @@
             echo form_input(array(
                 "id" => "amount",
                 "name" => "amount",
-                "value" => $invoice_total_summary->invoice_total,
+                "value" => to_currency($invoice_total_summary->invoice_total,"Rp "),
                 "class" => "form-control",
                 "readonly" => true,
                 "placeholder" => "0",
@@ -101,7 +145,8 @@
             echo form_textarea(array(
                 "id" => "memo",
                 "name" => "memo",
-                "class" => "form-control"
+                "class" => "form-control",
+                "value" => "Invoice #".$model_info->code
             ));
             ?>
         </div>
