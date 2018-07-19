@@ -74,7 +74,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="reporting" class=" col-md-3">Reporting</label>
+                <label for="reporting" class=" col-md-3">Laporan</label>
                 <div class=" col-md-9">
                     <?php
                     echo form_dropdown(
@@ -82,6 +82,20 @@
                                     "" => "",
                             "Neraca" => "NERACA",
                             "Laba Rugi" => "LABA RUGI"
+                                ), "", "class='select2 mini'"
+                        );
+                    ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cashflow" class=" col-md-3">Arus Kas</label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_dropdown(
+                                "cashflow", array(
+                                    "" => "",
+                            "Pemasukan" => "PEMASUKAN",
+                            "Pngeluaran" => "PENGELUARAN"
                                 ), "", "class='select2 mini'"
                         );
                     ?>

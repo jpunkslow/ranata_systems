@@ -63,8 +63,9 @@
             <table class="table tree">
                 <thead>
                     <tr>
-                        <th>NO ACCOUNT</th>
+                        
                         <th>ACCOUNT NAME</th>
+                        <th>NO ACCOUNT</th>
                         <th>NORMALLY</th>
                         <th>ACCOUNT TYPE</th>
                         <th>REPORTING</th>

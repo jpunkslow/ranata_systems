@@ -115,6 +115,7 @@ class Coa extends MY_Controller{
             "normally" => $this->input->post('normally'),
             "account_type" => $this->input->post('account_type'),
             "reporting" => $this->input->post('reporting'),
+            "cashflow" => $this->input->post('cashflow'),
             "akun" => $this->input->post('akun'),
             "parental" => $this->input->post('parent'),
             "deleted" => $this->input->post('status')  
@@ -159,6 +160,7 @@ class Coa extends MY_Controller{
             "normally" => $this->input->post('normally'),
             "account_type" => $this->input->post('account_type'),
             "reporting" => $this->input->post('reporting'),
+            "cashflow" => $this->input->post('cashflow'),
             "akun" => $this->input->post('akun'),
             "parental" => $this->input->post('parent'),
             "deleted" => $this->input->post('status')
