@@ -34,6 +34,7 @@ class Laba_rugi extends MY_Controller {
         // $view_data['laba_rugi_monthly'] = $this->Profitloss_model->getMonthly();
 
         $view_data['profitloss_coa'] = $this->Profitloss_model->getMonthlyCoa("400");
+        $view_data['profitloss_hpp'] = $this->Profitloss_model->getMonthlyCoa("5");
         
 		if(isset($_GET['print'])){
             

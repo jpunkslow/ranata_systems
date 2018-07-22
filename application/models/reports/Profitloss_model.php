@@ -120,8 +120,7 @@ class Profitloss_model extends CI_Model {
 								acc_coa_type
 								LEFT JOIN transaction_journal ON acc_coa_type.id = transaction_journal.fid_coa 
 							WHERE
-								acc_coa_type.reporting = 'Laba Rugi'  AND acc_coa_type.deleted = 0 AND acc_coa_type.account_number LIKE '%400%' AND acc_coa_type.account_type = 'Income'
-								GROUP BY acc_coa_type.account_number ORDER BY acc_coa_type.account_number ASC");
+								acc_coa_type.reporting = 'Laba Rugi'  AND acc_coa_type.deleted = 0 AND acc_coa_type.account_number LIKE '$account_number%' GROUP BY acc_coa_type.account_number ORDER BY acc_coa_type.account_number ASC");
 
 		return $query;
 	}

@@ -67,7 +67,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 <p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Bulanan  Tahun <?php echo date('Y') ?></p>
 	
 	<hr>
-	<h3> Pendapatan </h3>
+	<h4> Pendapatan </h4>
 	<div class="" style="width: 1100px;overflow: auto;height: 500px">
 
 		<table class="table table-bordered">
@@ -101,7 +101,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 					}else{
 					echo '<tr>';
 				
-					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->akun.'</td>';
+					echo '<td>'.$row->akun.'</td>';
 					echo '<td width="100" style="text-align:right">'.number_format($row->jan).'</td>';
 					echo '<td style="text-align:right">'.number_format($row->feb).'</td>';
 					echo '<td style="text-align:right">'.number_format($row->mar).'</td>';
@@ -140,7 +140,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 			</tbody>
 			<tfoot>
 				<tr >
-					<th style="text-align:right">JUMLAH (Rp).</th>
+					<th style="text-align:right">JUMLAH PENDAPATAN (Rp).</th>
 					<th style="text-align:right"><?php echo number_format($jan); ?></th>
 					<th style="text-align:right"><?php echo number_format($feb); ?></th>
 					<th style="text-align:right"><?php echo number_format($mar); ?></th>
@@ -154,6 +154,96 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 					<th style="text-align:right"><?php echo number_format($nov); ?></th>
 					<th style="text-align:right"><?php echo number_format($dec); ?></th>
 					<th style="text-align:right"><?php echo number_format($total); ?></th>
+				</tr>
+			</tfoot>
+			
+		</table>
+		
+	<h4> Harga Pokok Penjualan </h4>
+		<table class="table table-bordered">
+			<tr>
+				<th width="500" style="text-align:center">AKUN</th>
+				<th width="100" style="text-align:center">JAN</th>
+				<th width="100" style="text-align:center">FEB</th>
+				<th width="100" style="text-align:center">MAR</th>
+				<th width="100" style="text-align:center">APR</th>
+				<th width="100" style="text-align:center">MAY</th>
+				<th width="100" style="text-align:center">JUN</th>
+				<th width="100" style="text-align:center">JUL</th>
+				<th width="100" style="text-align:center">AUG</th>
+				<th width="100" style="text-align:center">SEP</th>
+				<th width="100" style="text-align:center">OCT</th>
+				<th width="100" style="text-align:center">NOV</th>
+				<th width="100" style="text-align:center">DEC</th>
+				<th width="100" style="text-align:center">TOTAL</th>
+			</tr>
+			<tbody>
+			<?php $jan_hpp = 0;$feb_hpp = 0;$mar_hpp = 0;$apr_hpp = 0;$may_hpp = 0;$jun_hpp = 0;$jul_hpp = 0;$aug_hpp = 0;$sep_hpp = 0;$oct_hpp = 0;$nov_hpp = 0;$dec_hpp = 0;$total_hpp = 0;?>
+			<?php  foreach($profitloss_hpp->result() as $rowhpp){ 
+					if($rowhpp->parent == "Head"){
+						// echo '<tr>';
+				
+						// echo '<td><strong>'.$row->akun.'</strong></td>';
+						// echo '<td colspan="12"></td>';
+
+
+						// echo '</tr>';
+					}else{
+					echo '<tr>';
+				
+					echo '<td>'.$rowhpp->akun.'</td>';
+					echo '<td width="100" style="text-align:right">'.number_format($rowhpp->jan).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->feb).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->mar).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->apr).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->may).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->jun).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->jul).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->aug).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->sep).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->oct).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->nov).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->dec).'</td>';
+					echo '<td style="text-align:right">'.number_format($rowhpp->total).'</td>';
+
+
+					echo '</tr>';
+
+					$jan_hpp += $rowhpp->jan;
+					$feb_hpp += $rowhpp->feb;
+					$mar_hpp += $rowhpp->mar;
+					$apr_hpp += $rowhpp->apr;
+					$may_hpp += $rowhpp->may;
+					$jun_hpp += $rowhpp->jun;
+					$jul_hpp += $rowhpp->jul;
+					$aug_hpp += $rowhpp->aug;
+					$sep_hpp += $rowhpp->sep;
+					$oct_hpp += $rowhpp->oct;
+					$nov_hpp += $rowhpp->nov;
+					$dec_hpp += $rowhpp->dec;
+					$total_hpp += $rowhpp->total;
+					
+					}
+
+				} ?>
+
+			</tbody>
+			<tfoot>
+				<tr >
+					<th style="text-align:right">JUMLAH BEBAN PENJUALAN (Rp).</th>
+					<th style="text-align:right"><?php echo number_format($jan_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($feb_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($mar_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($apr_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($may_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($jun_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($jul_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($aug_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($sep_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($oct_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($nov_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($dec_hpp); ?></th>
+					<th style="text-align:right"><?php echo number_format($total_hpp); ?></th>
 				</tr>
 			</tfoot>
 			
