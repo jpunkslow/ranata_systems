@@ -31,8 +31,10 @@ class Laba_rugi extends MY_Controller {
 		$view_data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
 		$view_data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
 
-        $view_data['laba_rugi_monthly'] = $this->Profitloss_model->getMonthly();
+        // $view_data['laba_rugi_monthly'] = $this->Profitloss_model->getMonthly();
 
+        $view_data['profitloss_coa'] = $this->Profitloss_model->getMonthlyCoa("400");
+        
 		if(isset($_GET['print'])){
             
             prepare_report_pdf($view_data,"laba_rugi/pdf","download");

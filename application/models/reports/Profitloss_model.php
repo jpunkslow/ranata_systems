@@ -96,6 +96,35 @@ class Profitloss_model extends CI_Model {
 
 		return $query;
 	}
+	function getMonthlyCoa($account_number){
+		$query = $this->db->query("SELECT
+								acc_coa_type.id,
+								acc_coa_type.account_number,
+								acc_coa_type.account_name as akun,
+								acc_coa_type.parent,
+								acc_coa_type.parental,
+								SUM( IF ( MONTH ( date ) = 1, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS jan, 
+								SUM( IF ( MONTH ( date ) = 2, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS feb,
+								SUM( IF ( MONTH ( date ) = 3, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS mar,
+								SUM( IF ( MONTH ( date ) = 4, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS apr,
+								SUM( IF ( MONTH ( date ) = 5, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS may,
+								SUM( IF ( MONTH ( date ) = 6, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS jun,
+								SUM( IF ( MONTH ( date ) = 7, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS jul,
+								SUM( IF ( MONTH ( date ) = 8, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS aug,
+								SUM( IF ( MONTH ( date ) = 9, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS sep,
+								SUM( IF ( MONTH ( date ) = 10, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS oct,
+								SUM( IF ( MONTH ( date ) = 11, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS nov,
+								SUM( IF ( MONTH ( date ) = 12, transaction_journal.debet + transaction_journal.credit, 0 ) ) AS 'dec',
+								SUM(transaction_journal.debet + transaction_journal.credit) as total
+							FROM
+								acc_coa_type
+								LEFT JOIN transaction_journal ON acc_coa_type.id = transaction_journal.fid_coa 
+							WHERE
+								acc_coa_type.reporting = 'Laba Rugi'  AND acc_coa_type.deleted = 0 AND acc_coa_type.account_number LIKE '%400%' AND acc_coa_type.account_type = 'Income'
+								GROUP BY acc_coa_type.account_number ORDER BY acc_coa_type.account_number ASC");
+
+		return $query;
+	}
 
 
 	function get_jml_akun($akun,$start,$end) {

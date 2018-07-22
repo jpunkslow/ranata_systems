@@ -30,7 +30,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 }
 ?>
 <div id="page-content" class="clearfix">
-    <div style="max-width: 1000px; margin: auto;">
+    <div style=" margin: 10px;">
         
         <div id="invoice-status-bar">
         	<div class="panel panel-default  p5 no-border m0">
@@ -67,8 +67,8 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 <p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Bulanan  Tahun <?php echo date('Y') ?></p>
 	
 	<hr>
-
-	<div class="" style="width: 1000px;overflow: auto;height: 500px">
+	<h3> Pendapatan </h3>
+	<div class="" style="width: 1100px;overflow: auto;height: 500px">
 
 		<table class="table table-bordered">
 			<tr>
@@ -88,175 +88,79 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 				<th width="100" style="text-align:center">TOTAL</th>
 			</tr>
 			<tbody>
-			<?php  foreach($laba_rugi_monthly->result() as $row){ 
+			<?php $jan = 0;$feb = 0;$mar = 0;$apr = 0;$may = 0;$jun = 0;$jul = 0;$aug = 0;$sep = 0;$oct = 0;$nov = 0;$dec = 0;$total = 0;?>
+			<?php  foreach($profitloss_coa->result() as $row){ 
 					if($row->parent == "Head"){
-						echo '<tr>';
+						// echo '<tr>';
 				
-						echo '<td><strong>'.$row->akun.'</strong></td>';
-						echo '<td colspan="12"></td>';
+						// echo '<td><strong>'.$row->akun.'</strong></td>';
+						// echo '<td colspan="12"></td>';
 
 
-						echo '</tr>';
+						// echo '</tr>';
 					}else{
 					echo '<tr>';
 				
 					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->akun.'</td>';
-					echo '<td width="100" style="text-align:right">'.$row->jan.'</td>';
-					echo '<td style="text-align:right">'.$row->feb.'</td>';
-					echo '<td style="text-align:right">'.$row->mar.'</td>';
-					echo '<td style="text-align:right">'.$row->apr.'</td>';
-					echo '<td style="text-align:right">'.$row->may.'</td>';
-					echo '<td style="text-align:right">'.$row->jun.'</td>';
+					echo '<td width="100" style="text-align:right">'.number_format($row->jan).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->feb).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->mar).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->apr).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->may).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->jun).'</td>';
 					echo '<td style="text-align:right">'.number_format($row->jul).'</td>';
-					echo '<td style="text-align:right">'.$row->aug.'</td>';
-					echo '<td style="text-align:right">'.$row->sep.'</td>';
-					echo '<td style="text-align:right">'.$row->oct.'</td>';
-					echo '<td style="text-align:right">'.$row->nov.'</td>';
-					echo '<td style="text-align:right">'.$row->dec.'</td>';
-					echo '<td style="text-align:right">'.$row->total.'</td>';
+					echo '<td style="text-align:right">'.number_format($row->aug).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->sep).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->oct).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->nov).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->dec).'</td>';
+					echo '<td style="text-align:right">'.number_format($row->total).'</td>';
 
 
 					echo '</tr>';
+
+					$jan += $row->jan;
+					$feb += $row->feb;
+					$mar += $row->mar;
+					$apr += $row->apr;
+					$may += $row->may;
+					$jun += $row->jun;
+					$jul += $row->jul;
+					$aug += $row->aug;
+					$sep += $row->sep;
+					$oct += $row->oct;
+					$nov += $row->nov;
+					$dec += $row->dec;
+					$total += $row->total;
+					
 					}
+
 				} ?>
 
 			</tbody>
+			<tfoot>
+				<tr >
+					<th style="text-align:right">JUMLAH (Rp).</th>
+					<th style="text-align:right"><?php echo number_format($jan); ?></th>
+					<th style="text-align:right"><?php echo number_format($feb); ?></th>
+					<th style="text-align:right"><?php echo number_format($mar); ?></th>
+					<th style="text-align:right"><?php echo number_format($apr); ?></th>
+					<th style="text-align:right"><?php echo number_format($may); ?></th>
+					<th style="text-align:right"><?php echo number_format($jun); ?></th>
+					<th style="text-align:right"><?php echo number_format($jul); ?></th>
+					<th style="text-align:right"><?php echo number_format($aug); ?></th>
+					<th style="text-align:right"><?php echo number_format($sep); ?></th>
+					<th style="text-align:right"><?php echo number_format($oct); ?></th>
+					<th style="text-align:right"><?php echo number_format($nov); ?></th>
+					<th style="text-align:right"><?php echo number_format($dec); ?></th>
+					<th style="text-align:right"><?php echo number_format($total); ?></th>
+				</tr>
+			</tfoot>
 			
 		</table>
 		
 	</div>
 
-<!-- <h3> Pendapatan </h3>
-<table  class="table table-bordered">
-	<tr style="background: lightgrey">
-		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
-		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<th style="width:20%; vertical-align: middle; text-align:center"> Jumlah  </th>
-	</tr>
-	
-
-	<?php
-	$no_dapat = 1;
-	$jml_dapat = 0;
-	foreach ($data_dapat as $row) {
-		echo '
-				<tr>
-					<td class="h_tengah"> '.$no_dapat.' </td>
-		';
-		$jml_akun = $this->Profitloss_model->get_jml_akun($row->id,$periode_default,$periode_now);
-		$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
-		echo '<td>'.$row->account_name.'</td>
-				<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
-		$jml_dapat += $jumlah;
-		echo '</tr>';
-		$no_dapat++;
-	}
-	?>
-	<tr style="background: lightgrey">
-		<td colspan="2" class="h_kanan"> Jumlah Pendapatan</td>
-		<td class="h_kanan"><?php $jml_p = $jml_dapat;
-		echo number_format(nsi_round($jml_p))   ?></td>
-	</tr>
-</table>
-
-
-<h3> Pendapatan non Operasional </h3>
-<table  class="table table-bordered">
-	<tr style="background: lightgrey">
-		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
-		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<th style="width:20%; vertical-align: middle; text-align:center"> Jumlah  </th>
-	</tr>
-	
-
-	<?php
-	$no_dapat = 1;
-	$jml_dapat = 0;
-	foreach ($dapat_non_op as $row) {
-		echo '
-				<tr>
-					<td class="h_tengah"> '.$no_dapat.' </td>
-		';
-		$jml_akun = $this->Profitloss_model->get_jml_akun($row->id,$periode_default,$periode_now);
-		$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
-		echo '<td>'.$row->account_name.'</td>
-				<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
-		$jml_dapat += $jumlah;
-		echo '</tr>';
-		$no_dapat++;
-	}
-	?>
-	<tr style="background: lightgrey">
-		<td colspan="2" class="h_kanan"> Jumlah Pendapatan</td>
-		<td class="h_kanan"><?php $jml_p = $jml_dapat;
-		echo number_format(nsi_round($jml_p))   ?></td>
-	</tr>
-</table>
-
-
-<h3> Biaya dan Beban </h3>
-<table  class="table table-bordered">
-	<tr style="background: lightgrey">
-		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
-		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<th style="width:20%; vertical-align: middle; text-align:center"> Jumlah  </th>
-	</tr>
-	<?php 
-		$no=1;
-		$jml_beban = 0;
-		foreach ($data_biaya as $rows) {
-			$jml_akun = $this->Profitloss_model->get_jml_akun($rows->id,$periode_default,$periode_now);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
-			$jml_beban += $jumlah;
-
-			echo '<tr>
-						<td class="h_tengah">'.$no++.'</td>
-						<td>'.$rows->account_name.'</td>
-						<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>
-					</tr>';
-		}
-	?>
-			<tr style="background: lightgrey">
-				<td colspan="2" class="h_kanan"> Jumlah Biaya</td>
-				<td class="h_kanan"> <?php echo number_format($jml_beban) ?></td>
-			</tr>
-</table>
-
-<h3> Biaya non Operasional </h3>
-<table  class="table table-bordered">
-	<tr style="background: lightgrey">
-		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
-		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<th style="width:20%; vertical-align: middle; text-align:center"> Jumlah  </th>
-	</tr>
-	<?php 
-		$no=1;
-		$jml_beban = 0;
-		foreach ($data_biaya_other as $rows) {
-			$jml_akun = $this->Profitloss_model->get_jml_akun($rows->id,$periode_default,$periode_now);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
-			$jml_beban += $jumlah;
-
-			echo '<tr>
-						<td class="h_tengah">'.$no++.'</td>
-						<td>'.$rows->account_name.'</td>
-						<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>
-					</tr>';
-		}
-	?>
-			<tr style="background: lightgrey">
-				<td colspan="2" class="h_kanan"> Jumlah Biaya</td>
-				<td class="h_kanan"> <?php echo number_format($jml_beban) ?></td>
-			</tr>
-</table>
-
-
-<table width="100%" class="table">
-	<tr style="background-color: lightgrey;">
-		<td colspan="2" class="h_kanan"> Laba Rugi </td>
-		<td class="h_kanan"><?php echo number_format(nsi_round($jml_p - $jml_beban )) ?></td>
-	</tr>
-</table> -->
 </div>
 </div>
 <script type="text/javascript">
