@@ -26,5 +26,14 @@ class Template {
         
         $ci->load->view('layout/index_front', $view_data);
     }
+     public function render_view($view, $data = array()) {
+        $ci = get_instance();
+
+        $view_data['content_view'] = $view;
+        
+        $view_data = array_merge($view_data, $data);
+        
+        $ci->load->view('layout/indexblank', $view_data);
+    }
 
 }

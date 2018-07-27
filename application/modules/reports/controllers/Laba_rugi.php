@@ -27,6 +27,7 @@ class Laba_rugi extends MY_Controller {
         }
 		
 		$view_data['data_dapat'] = $this->Profitloss_model->get_data_akun_dapat();
+        $view_data['data_beban_pokok'] = $this->Profitloss_model->getBebanPokokPenjualan();
 		$view_data['dapat_non_op'] = $this->Profitloss_model->getPendNonOp();
 		$view_data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
 		$view_data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
@@ -38,15 +39,15 @@ class Laba_rugi extends MY_Controller {
         
 		if(isset($_GET['print'])){
             
-            prepare_report_pdf($view_data,"laba_rugi/pdf","download");
+            $this->template->render_view("laba_rugi/xls",$view_data, TRUE);
         }
-        if(isset($_GET['type']) == 1){
+        /*if(isset($_GET['type']) == 1){
             $this->template->rander('laba_rugi/monthly',$view_data);
         }
 
-        else{
+        else{*/
 			$this->template->rander('laba_rugi/index', $view_data, TRUE);
-		}
+		//}
 		// $this->load->view('themes/layout_utama_v', $this->data);
     }
 }

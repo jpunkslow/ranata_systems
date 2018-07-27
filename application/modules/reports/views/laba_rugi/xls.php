@@ -1,34 +1,12 @@
 <!-- Styler -->
-<style type="text/css">
-.panel * {
-	font-family: "Arial","​Helvetica","​sans-serif";
-}
-.fa {
-	font-family: "FontAwesome";
-}
-.datagrid-header-row * {
-	font-weight: bold;
-}
-.messager-window * a:focus, .messager-window * span:focus {
-	color: blue;
-	font-weight: bold;
-}
-.daterangepicker * {
-	font-family: "Source Sans Pro","Arial","​Helvetica","​sans-serif";
-	box-sizing: border-box;
-}
-.glyphicon	{font-family: "Glyphicons Halflings"}
-.h_kanan{
-	text-align: right;
-}
-.tbl {background-color:#000;}
-.tbl td,th,caption{background-color:#fff}
-h3{
-	font-size: 16px;
-	font-weight: bold;
-}
-</style>
 <?php 
+header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
+header("Content-type:   application/x-msexcel; charset=utf-8");
+header("Content-Disposition: attachment; filename=laba_rugi.xls"); 
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("Cache-Control: private",false);
+
 $periode_default = date("Y")."-01-01";
 $periode_now = date("Y-m-d");
 if(!empty($_GET['start']) && !empty($_GET['end'])){
@@ -74,8 +52,6 @@ $ararymonth=array(
 <p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
 	
 	
-	<hr>
-
 
 <table  border="1" class="tbl">
 <tr><td colspan="<?php echo (($loop-$month)+2)?>"><b>Pendapatan</b> </td></tr>

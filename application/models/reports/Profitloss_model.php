@@ -25,6 +25,16 @@ class Profitloss_model extends CI_Model {
 		}
 	}
 
+	function getBebanPokokPenjualan(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Cost Of Good Sold' AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+	}
+
 	function get_data_akun_biaya() {
 		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND `account_type` = 'Expenses' AND parent is NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
@@ -140,6 +150,33 @@ class Profitloss_model extends CI_Model {
 		// }
 		$this->db->where('DATE(date) >= ', ''.$start.'');
 		$this->db->where('DATE(date) <= ', ''.$end.'');
+
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+
+	function get_jml_akun_month($akun,$month,$year) {
+		$start=$year.'-'.$month.'-01';
+		$end=$year.'-'.$month.'-31';
+
+			$this->db->select('SUM(debet) AS jum_debet, SUM(credit) AS jum_kredit');
+			$this->db->from('transaction_journal');
+			$this->db->join('acc_coa_type','transaction_journal.fid_coa=acc_coa_type.id');
+			$this->db->where('DATE(date) >= ', ''.$start.'');
+			$this->db->where('DATE(date) <= ', ''.$end.'');
+			$this->db->where('(fid_coa='.$akun.' or parental='.$akun.')');
+			//$this->db->or_where('parental', $akun);
+			//$this->db->where('fid_coa', $akun)
+
+		// 	if(isset($_REQUEST['tgl_dari']) && isset($_REQUEST['tgl_samp'])) {
+		// 	$tgl_dari = $_REQUEST['tgl_dari'];
+		// 	$tgl_samp = $_REQUEST['tgl_samp'];
+		// } else {
+		// 	$tgl_dari = date('Y') . '-01-01';
+		// 	$tgl_samp = date('Y') . '-12-31';
+		// }
+		
 
 		$query = $this->db->get();
 		return $query->row();
