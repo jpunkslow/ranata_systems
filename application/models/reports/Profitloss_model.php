@@ -156,7 +156,7 @@ class Profitloss_model extends CI_Model {
 	}
 
 
-	function get_jml_akun_month($akun,$month,$year) {
+	function get_jml_akun_month($akun,$month,$year,$project=false) {
 		$start=$year.'-'.$month.'-01';
 		$end=$year.'-'.$month.'-31';
 
@@ -166,6 +166,9 @@ class Profitloss_model extends CI_Model {
 			$this->db->where('DATE(date) >= ', ''.$start.'');
 			$this->db->where('DATE(date) <= ', ''.$end.'');
 			$this->db->where('(fid_coa='.$akun.' or parental='.$akun.')');
+			if($project!=false){
+				$this->db->where('project_id ', ''.$project.'');
+			}
 			//$this->db->or_where('parental', $akun);
 			//$this->db->where('fid_coa', $akun)
 

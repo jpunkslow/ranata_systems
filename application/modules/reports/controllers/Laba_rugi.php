@@ -10,6 +10,7 @@ class Laba_rugi extends MY_Controller {
 
         //check permission to access this module
         $this->load->model('reports/Profitloss_model');
+        $this->load->model('master/Master_Project_model');
     }
 
     /* load clients list view */
@@ -31,6 +32,8 @@ class Laba_rugi extends MY_Controller {
 		$view_data['dapat_non_op'] = $this->Profitloss_model->getPendNonOp();
 		$view_data['data_biaya'] = $this->Profitloss_model->get_data_akun_biaya();
 		$view_data['data_biaya_other'] = $this->Profitloss_model->get_data_akun_biaya_other();
+
+        $view_data['data_project'] = $this->Master_Project_model->get_details();
 
         // $view_data['laba_rugi_monthly'] = $this->Profitloss_model->getMonthly();
 
