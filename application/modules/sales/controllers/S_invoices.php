@@ -95,8 +95,8 @@ class S_invoices extends MY_Controller {
 
 
         $view_data = get_s_invoices_making_data($id);
-        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100.');
-        $view_data['coa_sales_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','300.');
+        $view_data['bank_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100');
+        $view_data['coa_sales_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','300');
        
        
         $view_data['model_info'] = $this->Sales_Invoices_model->get_details($options)->row();

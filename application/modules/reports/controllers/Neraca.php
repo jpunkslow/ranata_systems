@@ -10,6 +10,7 @@ class Neraca extends MY_Controller {
 
         //check permission to access this module
         $this->load->model('reports/Accounting_model');
+        $this->load->model('reports/Neraca_model');
     }
 
     /* load clients list view */
@@ -25,6 +26,22 @@ class Neraca extends MY_Controller {
 
 
     	$this->template->rander("reports/r_neraca",$view_data); 
+
+
+    }
+
+
+    function laporan() {
+
+
+        $view_data['aktiva'] = $this->Accounting_model->getJenisKas();
+
+        $view_data['getAkun'] = $this->Accounting_model->getAkun();
+
+        $view_data['getCoa'] = $this->Accounting_model->getCoaHead();
+
+
+        $this->template->rander("reports/r_neraca",$view_data); 
 
 
     }

@@ -68,8 +68,8 @@
                         <th>NO ACCOUNT</th>
                         <th>NORMALLY</th>
                         <th>ACCOUNT TYPE</th>
-                        <th>REPORTING</th>
-                        <th>IN/OUT</th>
+                        <!--<th>REPORTING</th>
+                        <th>IN/OUT</th>-->
                         <th class="text-center"><i class="fa fa-cogs "></i></th>
                     </tr>
 
@@ -83,8 +83,8 @@
                     <td><?php echo $row->account_number; ?></td>
                     <td><?php echo $row->normally; ?></td>
                     <td><?php echo $row->account_type; ?></td>
-                    <td><?php echo $row->reporting; ?></td>
-                    <td><?php echo $row->akun; ?></td>
+                    <!--<td><?php echo $row->reporting; ?></td>
+                    <td><?php echo $row->akun; ?></td>-->
                     <td><?php echo modal_anchor(get_uri("master/coa/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "btn btn-sm btn-default", "title" => lang('edit'), "data-post-id" => $row->id)); ?></td>
                     
                 </tr>
@@ -96,8 +96,8 @@
                     <td><?php echo $row->account_number; ?></td>
                     <td><?php echo $row->normally; ?></td>
                     <td><?php echo $row->account_type; ?></td>
-                    <td><?php echo $row->reporting; ?></td>
-                    <td><?php echo $row->akun; ?></td>
+                    <!--<td><?php echo $row->reporting; ?></td>
+                    <td><?php echo $row->akun; ?></td>-->
                      <td><?php echo modal_anchor(get_uri("master/coa/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "btn btn-sm btn-default", "title" => lang('edit'), "data-post-id" => $row->id)); ?></td>
                    
                     

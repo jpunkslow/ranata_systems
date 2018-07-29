@@ -48,13 +48,18 @@
                     <?php
                     echo form_dropdown(
                                 "account_type", array(
-                            "Aktiva" => "Aktiva",
-                            "Passiva" => "Passiva",
-                            'Income' => "Income",
-                            'Cost Of Good Sold' => "Cost Of Good Sold",
-                            'Expenses' => "Expenses",
-                            'Other Income' => "Other Income",
-                            'Other Expenses' => "Other Expenses"
+                            "Aktiva Lancar"=>"Aktiva Lancar",
+                            "Aktiva Tetap"=>"Aktiva Tetap",
+                            "Aktiva Tetap Tidak Berwujud"=>"Aktiva Tetap Tidak Berwujud",
+                            "Hutang Lancar"=>"Hutang Lancar",
+                            "Hutang Jangka Panjang"=>"Hutang Jangka Panjang",
+                            "Modal"=>"Modal",
+                            "Pendapatan"=>"Pendapatan",                            
+                            'Harga Pokok Penjualan' => "Harga Pokok Penjualan",
+                            'Beban Penjualan' => "Beban Penjualan",
+                            'Beban Administrasi Umum' => "Beban Administrasi Umum",
+                            'Pendapatan Lain-lain ' => "Pendapatan Lain-lain",
+                            'Beban Lain-lain' => "Beban Lain-lain"
                                 ), "", "class='select2 mini'"
                         );
                     ?>
@@ -73,7 +78,7 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: none">
                 <label for="reporting" class=" col-md-3">Laporan</label>
                 <div class=" col-md-9">
                     <?php
@@ -87,7 +92,7 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: none">
                 <label for="cashflow" class=" col-md-3">Arus Kas</label>
                 <div class=" col-md-9">
                     <?php
@@ -101,7 +106,7 @@
                     ?>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display: none">
                 <label for="akun" class=" col-md-3">ACCOUNT</label>
                 <div class=" col-md-9">
                     <?php
