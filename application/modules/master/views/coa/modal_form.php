@@ -51,6 +51,7 @@
                             "Aktiva Lancar"=>"Aktiva Lancar",
                             "Aktiva Tetap"=>"Aktiva Tetap",
                             "Aktiva Tetap Tidak Berwujud"=>"Aktiva Tetap Tidak Berwujud",
+                            "Aktiva Tidak Lancar Lainnya"=>"Aktiva Tidak Lancar Lainnya",
                             "Hutang Lancar"=>"Hutang Lancar",
                             "Hutang Jangka Panjang"=>"Hutang Jangka Panjang",
                             "Modal"=>"Modal",

@@ -192,7 +192,6 @@ $ararymonth=array(
 			$no_dapat++;
 		
 	}
-	//print_r($jml_dapat);exit();
 	?>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"> <b>Jumlah Pendapatan</b></td>

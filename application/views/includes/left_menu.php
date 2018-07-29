@@ -39,7 +39,7 @@
             $acc_submenu[] = array("name" => "Profit Loss Total", "slug"=>"labarugi_total","url" => "reports/labarugi_total");
             // $rpt_submenu[] = array("name" => "Profit Loss Project", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
             
-            $acc_submenu[] = array("name" => "Balance Sheet","slug"=>"balance_sheet", "url" => "reports/balance_sheet");
+            $acc_submenu[] = array("name" => "Balance Sheet","slug"=>"balance_sheet", "url" => "reports/neraca");
             $acc_submenu[] = array("name" => "Aging Receivable", "slug"=>"aging_receivable","url" => "reports/aging_receivable");
             $acc_submenu[] = array("name" => "Aging Payable", "slug"=>"aging_payable","url" => "reports/aging_payable");
             $acc_submenu[] = array("name" => "Sales Reports", "slug"=>"r_sales","url" => "reports/r_sales");

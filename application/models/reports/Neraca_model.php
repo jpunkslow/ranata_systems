@@ -6,7 +6,7 @@ class Neraca_model extends CI_Model {
 	
 
 	function get_data_akun_dapat() {
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Income' AND parent IS NULL ORDER BY account_number ASC");
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Income' AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -15,8 +15,8 @@ class Neraca_model extends CI_Model {
 		}
 
 	}
-	function getPendNonOp(){
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Other Income' AND parent IS NULL ORDER BY account_number ASC");
+	function getCurrentAssets(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Aktiva Lancar' AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -25,8 +25,8 @@ class Neraca_model extends CI_Model {
 		}
 	}
 
-	function getBebanPokokPenjualan(){
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Cost Of Good Sold' AND parent IS NULL ORDER BY account_number ASC");
+	function getCurrentNonAssets(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in('Aktiva Tetap','Aktiva Tidak Lancar Lainnya') AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -35,8 +35,8 @@ class Neraca_model extends CI_Model {
 		}
 	}
 
-	function get_data_akun_biaya() {
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND `account_type` = 'Expenses' AND parent is NULL ORDER BY account_number ASC");
+	function getCurrentLiabilities(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in('Hutang Lancar') AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -45,8 +45,8 @@ class Neraca_model extends CI_Model {
 		}
 	}
 
-	function get_data_akun_biaya_other() {
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND `account_type` = 'Other Expenses' AND parent is NULL ORDER BY account_number ASC");
+	function getLongTermPayable(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in('Hutang Jangka Panjang') AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -54,6 +54,20 @@ class Neraca_model extends CI_Model {
 			return array();
 		}
 	}
+
+	function getEquity(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in('Modal') AND parent IS NOT NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+	}
+
+	
+
+	
 
 	
 }

@@ -11,39 +11,104 @@ class Neraca extends MY_Controller {
         //check permission to access this module
         $this->load->model('reports/Accounting_model');
         $this->load->model('reports/Neraca_model');
+        $this->load->model('reports/Profitloss_model');
     }
 
     /* load clients list view */
 
     function index() {
 
+            $periode_default = date("Y")."-01-01";
+            $periode_now = date("Y-m-d");
+            if(!empty($_GET['start']) && !empty($_GET['end'])){
+                $periode_default = $_GET['start'];
+                $periode_now = $_GET['end'];
+            }
 
-    	$view_data['getJenisKas'] = $this->Accounting_model->getJenisKas();
+            $month=1;
+            $year=date('Y');
+            $type=$month;
+            $project=false;
 
-    	$view_data['getAkun'] = $this->Accounting_model->getAkun();
+            if(!empty($_GET['month'])){
+                $month = $_GET['month'];
+            }
+            if(!empty($_GET['year'])){
+                $year = $_GET['year'];
+            }
+            if(!empty($_GET['type'])){
+                $type = $_GET['type'];
+            }
 
-        $view_data['getCoa'] = $this->Accounting_model->getCoaHead();
+            if(!empty($_GET['project'])){
+                $project = $_GET['project'];
+            }
+            if($project=='')$project=false;
+
+            if($type==1){
+                $type=$month;
+            }
+            $loop=$type+$month;
+            if($loop>12)$loop=12;
+            $ararymonth=array(
+                        '',
+                        'Januari',
+                        'Februari',
+                        'Maret',
+                        'April',
+                        'Mei',
+                        'Juni',
+                        'Juli',
+                        'Augustus',
+                        'September',
+                        'Oktober',
+                        'November',
+                        'Desember',
+                    );
 
 
-    	$this->template->rander("reports/r_neraca",$view_data); 
+        $view_data['month']=$month;
+        $view_data['type']=$type;
+        $view_data['year']=$year;
+        $view_data['project']=$project;
+        $view_data['ararymonth']=$ararymonth;
+        $view_data['loop']=$loop;
+
+
+        $view_data['getCurrentAssets'] = $this->Neraca_model->getCurrentAssets();
+
+        $view_data['getCurrentNonAssets'] = $this->Neraca_model->getCurrentNonAssets();
+
+        $view_data['getCurrentLiabilities'] = $this->Neraca_model->getCurrentLiabilities();
+
+        $view_data['getLongTermPayable'] = $this->Neraca_model->getLongTermPayable();
+
+        $getDataEquity=$this->Neraca_model->getEquity();
+        
+
+
+        $view_data['getEquity'] = $getDataEquity;
+        //print_r($getDataEquity);exit();
+
+
+        //$view_data['data_project'] = $this->Master_Project_model->get_details();
+
+
+    if(isset($_GET['print'])){
+            
+            $this->template->render_view("neraca/xls",$view_data, TRUE);
+        }
+        /*if(isset($_GET['type']) == 1){
+            $this->template->rander('laba_rugi/monthly',$view_data);
+        }
+
+        else{*/
+            $this->template->rander('neraca/index', $view_data, TRUE);
 
 
     }
 
 
-    function laporan() {
-
-
-        $view_data['aktiva'] = $this->Accounting_model->getJenisKas();
-
-        $view_data['getAkun'] = $this->Accounting_model->getAkun();
-
-        $view_data['getCoa'] = $this->Accounting_model->getCoaHead();
-
-
-        $this->template->rander("reports/r_neraca",$view_data); 
-
-
-    }
+    
 
 }
