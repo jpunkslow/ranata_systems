@@ -253,20 +253,22 @@ class Quotation extends MY_Controller {
         ));
 
         $invoice_id = $this->input->post('quotation_id');
-
+        $idItem= $this->input->post('invoice_item_title');
+        $getTitle=$this->db->query('select title from master_items where id="'.$idItem.'"')->row();
         $id = $this->input->post('id');
         $rate = unformat_currency($this->input->post('invoice_item_rate'));
         $quantity = unformat_currency($this->input->post('invoice_item_quantity'));
 
         $invoice_item_data = array(
             "fid_quotation" => $invoice_id,
-            "title" => $this->input->post('invoice_item_title'),
+            "title" =>$getTitle->title,
             "description" => $this->input->post('description'),
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
             "total" => $rate * $quantity,
+            "fid_items" => $idItem
         );
 
         $invoice_item_id = $this->Sales_QuotationItems_model->save($invoice_item_data, $id);
@@ -362,7 +364,7 @@ class Quotation extends MY_Controller {
         $items = $this->Sales_QuotationItems_model->get_item_suggestion($key);
 
         foreach ($items as $item) {
-            $suggestion[] = array("id" => $item->title, "text" => $item->title, "price" => $item->price , "category" => $item->category,"unit_type" => $item->unit_type);
+            $suggestion[] = array("id" => $item->id, "text" => $item->title, "price" => $item->price , "category" => $item->category,"unit_type" => $item->unit_type);
         }
 
         $suggestion[] = array("id" => "+", "text" => "+ " . lang("create_new_item"));

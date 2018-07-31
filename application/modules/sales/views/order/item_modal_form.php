@@ -8,9 +8,9 @@
         <div class="col-md-9">
             <?php
             echo form_input(array(
-                "id" => "invoice_item_title",
+               "id" => "invoice_item_title",
                 "name" => "invoice_item_title",
-                "value" => $model_info->title,
+                "value" => $model_info->id,
                 "class" => "form-control validate-hidden",
                 "placeholder" => lang('select_or_create_new_item'),
                 "data-rule-required" => true,

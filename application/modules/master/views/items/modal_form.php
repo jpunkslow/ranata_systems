@@ -61,6 +61,24 @@
                         ?>
         </div>
     </div>
+
+     <div class="form-group">
+        <label for="category" class=" col-md-3">Sales Journal</label>
+        <div class="col-md-9">
+             <?php
+                   echo form_dropdown("sales_journal", $sales_journal, "", "class='select2 validate-hidden' id='fid_quot' ");
+                    ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="category" class=" col-md-3">HPP Journal</label>
+        <div class="col-md-9">
+             <?php
+                   echo form_dropdown("hpp_journal", $hpp_journal, "", "class='select2 validate-hidden' id='fid_quot' ");
+                    ?>
+        </div>
+    </div>
     
 </div>
 

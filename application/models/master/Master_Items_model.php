@@ -17,8 +17,11 @@ class Master_Items_model extends Crud_model {
             $where .= " AND id=$id";
         }
 
-        $sql = "SELECT *
+        $sql = "SELECT *,
+        (select account_name from acc_coa_type where id=master_items.sales_journal) as sales_journal_name,
+        (select account_name from acc_coa_type where id=master_items.hpp_journal) as hpp_journal_name
         FROM $this->table
+
         WHERE deleted=0 $where";
         return $this->db->query($sql);
     }

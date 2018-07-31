@@ -62,7 +62,7 @@
             ?>
         </div>
     </div>
-    <div class="form-group" id="cash">
+    <!--<div class="form-group" id="cash">
         <label for="sales_coa" class="col-md-3">SALES #REF</label>
         <div class=" col-md-9">
             <?php
@@ -70,7 +70,7 @@
             
             ?>
         </div>
-    </div>
+    </div>-->
      <div class="form-group">
         <label for="subtotal" class="col-md-3">Subtotal</label>
         <div class=" col-md-9">
@@ -174,6 +174,9 @@
                 }
             }
         });
+
+        
+        
         $("#pay_type").select2().on("change", function () {
             var client_id = $(this).val();
             if ($(this).val()) {

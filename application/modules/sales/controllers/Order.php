@@ -396,6 +396,8 @@ class Order extends MY_Controller {
         $id = $this->input->post('id');
         $rate = unformat_currency($this->input->post('invoice_item_rate'));
         $quantity = unformat_currency($this->input->post('invoice_item_quantity'));
+        $idItem= $this->input->post('invoice_item_title');
+        $getTitle=$this->db->query('select title from master_items where id="'.$idItem.'"')->row();
 
         $invoice_item_data = array(
             "fid_order" => $invoice_id,
@@ -406,8 +408,8 @@ class Order extends MY_Controller {
             "unit_type" => $this->input->post('unit_type'),
             "basic_price" => unformat_currency($this->input->post('invoice_item_basic')),
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
-
             "total" => $rate * $quantity,
+            "fid_items" => $idItem
         );
 
         $invoice_item_id = $this->Sales_OrderItems_model->save($invoice_item_data, $id);
@@ -446,6 +448,7 @@ class Order extends MY_Controller {
 
                 $item["data"] = array(
                     "fid_order" => $order_id,
+                    "fid_item" => $row->fid_item,
                     "title" => $row->title,
                     "description" => $row->description,
                     "category" => $row->category,
@@ -578,7 +581,7 @@ class Order extends MY_Controller {
         $items = $this->Sales_OrderItems_model->get_item_suggestion($key);
 
         foreach ($items as $item) {
-            $suggestion[] = array("id" => $item->title, "text" => $item->title, "price" => $item->price , "category" => $item->category,"unit_type" => $item->unit_type);
+            $suggestion[] = array("id" => $item->id, "text" => $item->title, "price" => $item->price , "category" => $item->category,"unit_type" => $item->unit_type);
         }
 
         $suggestion[] = array("id" => "+", "text" => "+ " . lang("create_new_item"));

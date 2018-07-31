@@ -10,7 +10,7 @@
             echo form_input(array(
                 "id" => "invoice_item_title",
                 "name" => "invoice_item_title",
-                "value" => $model_info->title,
+                "value" => $model_info->id,
                 "class" => "form-control validate-hidden",
                 "placeholder" => lang('select_or_create_new_item'),
                 "data-rule-required" => true,
@@ -36,7 +36,7 @@
             ?>
         </div>
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
         <label for="category" class=" col-md-3">Kategori Produk</label>
         <div class="col-md-9">
              <?php 
@@ -64,7 +64,7 @@
                     );
                         ?>
         </div>
-    </div>
+    </div>-->
     <div class="form-group">
         <label for="invoice_item_quantity" class=" col-md-3"><?php echo lang('quantity'); ?></label>
         <div class="col-md-9">

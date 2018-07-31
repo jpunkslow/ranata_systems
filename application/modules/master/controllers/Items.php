@@ -8,12 +8,13 @@ class Items extends MY_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('master/Master_Items_model');
+        $this->load->model('master/Master_Coa_Type_model');
     }
 
 
     //load note list view
     function index() {
-
+       
         $this->template->rander("items/index");
     }
 
@@ -22,7 +23,10 @@ class Items extends MY_Controller {
     function modal_form() {
 
 
-        $this->load->view('items/modal_form');
+        $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
+        $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
+
+        $this->load->view('items/modal_form', $view_data);
     }
 
     function modal_form_edit() {
@@ -30,6 +34,9 @@ class Items extends MY_Controller {
         validate_submitted_data(array(
             "id" => "numeric"
         ));
+
+         $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
+        $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
 
         $view_data['model_info'] = $this->Master_Items_model->get_one($this->input->post('id'));
 
@@ -45,8 +52,9 @@ class Items extends MY_Controller {
             "title" => $this->input->post('title'),
             "code" => $this->input->post('code'),
             "category" => $this->input->post('category'),
-            // "unit_type" => $this->input->post('unit_type'),
-            "price" => $this->input->post('price')
+            "sales_journal" => $this->input->post('sales_journal'),
+            "hpp_journal" => $this->input->post('hpp_journal'),
+            "unit_type" => $this->input->post('unit_type')
         );
 
         $item_id = $this->Master_Items_model->save($item_data);
@@ -70,6 +78,8 @@ class Items extends MY_Controller {
             "title" => $this->input->post('title'),
             "code" => $this->input->post('code'),
             "category" => $this->input->post('category'),
+            "sales_journal" => $this->input->post('sales_journal'),
+            "hpp_journal" => $this->input->post('hpp_journal'),
             "unit_type" => $this->input->post('unit_type')
 
             // "price" => $this->input->post('price')
@@ -136,6 +146,8 @@ class Items extends MY_Controller {
             // $data->code,
             $data->category,
             $data->unit_type,
+            $data->sales_journal_name,
+            $data->hpp_journal_name,
             modal_anchor(get_uri("master/items/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_item'), "data-post-id" => $data->id))
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("master/items/delete"), "data-action" => "delete"))
         );

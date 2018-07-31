@@ -244,7 +244,9 @@ class S_invoices extends MY_Controller {
         $dp = unformat_currency($this->input->post('dp'));
         $pay_type = $this->input->post('pay_type');
         $fid_coa = $this->input->post('fid_bank');
-        $fid_cust = $this->input->post('fid_cust');
+        //$fid_cust = $this->input->post('fid_cust');
+
+        
         $currency = $this->input->post('currency');
         $curr = 12;
         if($currency == "IDR"){
@@ -272,7 +274,10 @@ class S_invoices extends MY_Controller {
             }
             if($pay_type == "CASH"){
                 $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
-                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$amount);
+                
+                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$subtotal);
+                
+                $lawanppn =$this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
 
                 $status_data = array("status" => "posting" ,"PAID" => "PAID",'coa_sales'=>$coa_sales,"residual" => 0,"sub_total" => $subtotal,"ppn"=> $ppn,'amount'=>$amount);
 
@@ -292,7 +297,7 @@ class S_invoices extends MY_Controller {
 
                     
 
-                    $save_id = $this->Sales_Payments_model->save($data);
+                    //$save_id = $this->Sales_Payments_model->save($data);
             }
             // if($pay_type == "CREDIT"){
             //     $curr = 12;
