@@ -25,6 +25,7 @@
                 {title: 'Type'},
                 {title: 'Sales Journal'},
                 {title: 'HPP Journal'},
+                {title: 'HPP Lawan'},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
             ],
             printColumns: [0, 1, 2, 3, 4],

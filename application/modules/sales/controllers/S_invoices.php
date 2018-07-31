@@ -244,7 +244,7 @@ class S_invoices extends MY_Controller {
         $dp = unformat_currency($this->input->post('dp'));
         $pay_type = $this->input->post('pay_type');
         $fid_coa = $this->input->post('fid_bank');
-        //$fid_cust = $this->input->post('fid_cust');
+        $fid_cust = $this->input->post('fid_cust');
 
         
         $currency = $this->input->post('currency');
@@ -268,7 +268,7 @@ class S_invoices extends MY_Controller {
                 
                 $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
                 
-
+               
                 $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
             
             }
@@ -278,6 +278,7 @@ class S_invoices extends MY_Controller {
                 $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$subtotal);
                 
                 $lawanppn =$this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+
 
                 $status_data = array("status" => "posting" ,"PAID" => "PAID",'coa_sales'=>$coa_sales,"residual" => 0,"sub_total" => $subtotal,"ppn"=> $ppn,'amount'=>$amount);
 
@@ -355,6 +356,13 @@ class S_invoices extends MY_Controller {
             $save_id = $this->Sales_Invoices_model->save($status_data, $id);
 
             if ($save_id) {
+
+                $query = $this->Sales_InvoicesItems_model->get_hpp($save_id);
+                foreach($query->result() as $row){
+                    $this->_insertTransaction($code,$voucher_code,$date,$type,$row->title,$row->hpp_journal,$row->basic_price,0);
+                    $this->_insertTransaction($code,$voucher_code,$date,$type,$row->title,$row->lawan_hpp,0,$row->basic_price);
+
+                }
 
                 echo json_encode(array("success" => true, "data" => $this->_row_data($save_id),'message' => lang('record_saved')));
             } else {
@@ -557,7 +565,7 @@ class S_invoices extends MY_Controller {
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
-            
+            "fid_items" => $this->input->post('fid_item'),
             "basic_price" => unformat_currency($this->input->post('invoice_item_basic')),
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
 
@@ -577,6 +585,7 @@ class S_invoices extends MY_Controller {
                     "rate" => unformat_currency($this->input->post('invoice_item_rate'))
                 );
                 $this->Master_Items_model->save($library_item_data);
+
             }
 
             $options = array("id" => $invoice_item_id);

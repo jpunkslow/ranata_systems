@@ -49,4 +49,13 @@ class Sales_InvoicesItems_model extends Crud_model {
             return $result->row();
         }
     }
+
+    function get_hpp($id){
+        
+        $sql = "SELECT *,(select hpp_journal from master_items where id=sales_invoices_items.fid_items) as hpp_journal,
+        (select lawan_hpp from master_items where id=sales_invoices_items.fid_items) as lawan_hpp
+        FROM sales_invoices_items
+        WHERE deleted=0 AND fid_invoices = '$id' ";
+        return $this->db->query($sql);
+    }
 }

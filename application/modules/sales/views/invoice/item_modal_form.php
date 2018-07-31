@@ -49,6 +49,7 @@
                         ?>
         </div>
     </div> -->
+    <input type="hidden" name="fid_item" id="fid_item">
     <div class="form-group">
         <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
@@ -108,6 +109,7 @@
                 "class" => "form-control",
                 "placeholder" => lang('quantity'),
                 "data-rule-required" => true,
+                "type" => 'number',
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
@@ -123,7 +125,8 @@
                 "name" => "invoice_item_basic",
                 "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price) : "",
                 "class" => "form-control",
-                "placeholder" => lang('rate')
+                "placeholder" => "0",
+                // "type" => 'number'
             ));
             ?>
         </div>
@@ -139,6 +142,7 @@
                 "class" => "form-control",
                 "placeholder" => "0",
                 "data-rule-required" => true,
+                // "type" => 'number',
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
@@ -219,6 +223,7 @@
 
                                 $("#invoice_unit_type").val(response.item_info.unit_type);
                                 $("#invoice_item_quantity").val("1");
+                                $("#fid_item").val(response.item_info.id);
 
                                 $("#invoice_item_basic").val(response.item_info.price);
                         }

@@ -79,6 +79,14 @@
                     ?>
         </div>
     </div>
+     <div class="form-group">
+        <label for="category" class=" col-md-3">HPP Journal Lawan</label>
+        <div class="col-md-9">
+             <?php
+                   echo form_dropdown("lawan_hpp", $lawan_hpp, "", "class='select2 validate-hidden' id='fid_quot' ");
+                    ?>
+        </div>
+    </div>
     
 </div>
 

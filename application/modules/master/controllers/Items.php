@@ -25,6 +25,7 @@ class Items extends MY_Controller {
 
         $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
         $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
+        $view_data['lawan_hpp'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','150');
 
         $this->load->view('items/modal_form', $view_data);
     }
@@ -37,7 +38,7 @@ class Items extends MY_Controller {
 
          $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
         $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
-
+         $view_data['lawan_hpp'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','150');
         $view_data['model_info'] = $this->Master_Items_model->get_one($this->input->post('id'));
 
         $this->load->view('items/modal_form_edit', $view_data);
@@ -148,6 +149,7 @@ class Items extends MY_Controller {
             $data->unit_type,
             $data->sales_journal_name,
             $data->hpp_journal_name,
+            $data->hpp_journal_lawan,
             modal_anchor(get_uri("master/items/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_item'), "data-post-id" => $data->id))
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("master/items/delete"), "data-action" => "delete"))
         );
