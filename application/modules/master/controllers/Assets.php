@@ -76,7 +76,6 @@ class Assets extends MY_Controller {
             "asset_residu" => $this->input->post('asset_residu'),
             "activa_pricing" => $this->input->post('activa_pricing'),
             "depreciated_method" => "Garis_Lurus",
-            "activa_account" => $this->input->post('activa_account'),
             "activa_depreciate_account" => $this->input->post('activa_depreciate_account'),
             "activa_expense_depre_account" => $this->input->post('activa_expense_depre_account'),
             "created_at" => get_current_utc_time(),
@@ -106,14 +105,13 @@ class Assets extends MY_Controller {
 
         $item_data = array(
             "activa_code" => $this->input->post('activa_code'),
-            
+
             "asset_name" => $this->input->post('asset_name'),
             "activa_type" => $this->input->post('activa_type'),
             "activa_age" => $this->input->post('activa_age'),
             "asset_residu" => $this->input->post('asset_residu'),
             "activa_pricing" => $this->input->post('activa_pricing'),
             // "depreciated_method" => $this->input->post('depreciated_method'),
-            "activa_account" => $this->input->post('activa_account'),
             "activa_depreciate_account" => $this->input->post('activa_depreciate_account'),
             "activa_expense_depre_account" => $this->input->post('activa_expense_depre_account'),
             "get_date" => $this->input->post('get_date')
