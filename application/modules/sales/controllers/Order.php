@@ -132,6 +132,7 @@ class Order extends MY_Controller {
                         "category" => $row->category,
                         "quantity" => $row->quantity,
                         "unit_type" => $row->unit_type,
+                        "fid_items" => $row->fid_items,
                         "rate" => $row->rate,
                         "total" => $row->total
                     );

@@ -55,18 +55,26 @@
                     <?php
                             echo form_dropdown(
                                 "account_type", array(
+                            "Kas/Bank" => "Kas/Bank",
+                            "Akun Piutang" => "Akun Piutang",
+                            "Akun Hutang" => "Akun Hutang",
                             "Aktiva Lancar"=>"Aktiva Lancar",
+                            "Aktiva Lancar Lainnya" => "Aktiva Lancar Lainnya",
                             "Aktiva Tetap"=>"Aktiva Tetap",
                             "Aktiva Tetap Tidak Berwujud"=>"Aktiva Tetap Tidak Berwujud",
                             "Aktiva Tidak Lancar Lainnya"=>"Aktiva Tidak Lancar Lainnya",
+                            "Aktiva Lainnya" => "Aktiva Lainnya",
+                            "Akumulasi Penyusutan" => "Akumulasi Penyusutan",
                             "Hutang Lancar"=>"Hutang Lancar",
                             "Hutang Jangka Panjang"=>"Hutang Jangka Panjang",
-                            "Modal"=>"Modal",
-                            "Pendapatan"=>"Pendapatan",                            
+                            "Ekuitas" => "Ekuitas",
+                            "Persediaan" => "Persediaan",
+                            "Pendapatan"=>"Pendapatan",  
+                            'Pendapatan Lain-lain ' => "Pendapatan Lain-lain",                          
                             'Harga Pokok Penjualan' => "Harga Pokok Penjualan",
+                            "Beban" => "Beban",
                             'Beban Penjualan' => "Beban Penjualan",
                             'Beban Administrasi Umum' => "Beban Administrasi Umum",
-                            'Pendapatan Lain-lain ' => "Pendapatan Lain-lain",
                             'Beban Lain-lain' => "Beban Lain-lain"
                                 ), $model_info->account_type, "class='select2 mini'"
                         );

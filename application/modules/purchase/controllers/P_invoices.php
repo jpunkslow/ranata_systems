@@ -273,7 +273,7 @@ class P_invoices extends MY_Controller {
            
 
             if($pay_type == "CREDIT"){
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_persediaan,$amount,0);
+                $this->_insertTransaction($project,$code,$voucher_code,$date,$type,$description,$coa_persediaan,$amount,0);
                 $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_hutang_usaha,0,$amount);
 
                 $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "residual" => $amount);

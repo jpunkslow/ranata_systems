@@ -49,6 +49,8 @@ class S_invoices extends MY_Controller {
         $view_data['model_info'] = $this->Sales_Invoices_model->get_one($this->input->post('id'));
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         $view_data['order_dropdown'] = array("" => "-") + $this->Sales_Order_model->get_dropdown_list(array("code"));
+        $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name"));
+
 
         $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
 
@@ -119,6 +121,7 @@ class S_invoices extends MY_Controller {
             "code" => $this->input->post('code'),
             "fid_cust" => $this->input->post('fid_cust'),
             "fid_order" => $this->input->post('fid_order'),
+            "fid_project" => $this->input->post('fid_project'),
             "inv_address" => $this->input->post('inv_address'),
             "delivery_address" => $this->input->post('delivery_address'),
             "status" => 'draft',
@@ -149,6 +152,7 @@ class S_invoices extends MY_Controller {
                         "quantity" => $row->quantity,
                         "unit_type" => $row->unit_type,
                         "basic_price" => $row->basic_price,
+                        "fid_items" => $row->fid_items,
                         "rate" => $row->rate,
                         "total" => $row->total
                     );
@@ -197,6 +201,7 @@ class S_invoices extends MY_Controller {
             // "status" => $this->input->post('status'),
 
             "fid_order" => $this->input->post('fid_order'),
+            "fid_project" => $this->input->post('fid_project'),
             "email_to" => $this->input->post('email_to'),
             "inv_date" => $this->input->post('inv_date'),
             "fid_tax" => $this->input->post('fid_tax'),
@@ -245,6 +250,7 @@ class S_invoices extends MY_Controller {
         $pay_type = $this->input->post('pay_type');
         $fid_coa = $this->input->post('fid_bank');
         $fid_cust = $this->input->post('fid_cust');
+        $fid_project = $this->input->post('fid_project');
 
         
         $currency = $this->input->post('currency');
@@ -263,21 +269,21 @@ class S_invoices extends MY_Controller {
             if($pay_type == "CREDIT"){
                 
 
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$curr,$amount,0);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
                 
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
                 
                
                 $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
             
             }
             if($pay_type == "CASH"){
-                $kas = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
+                $kas = $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
                 
-                $lawan = $this->_insertTransaction($code,$voucher_code,$date,$type,$description,44,0,$subtotal);
+                $lawan = $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,44,0,$subtotal);
                 
-                $lawanppn =$this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                $lawanppn =$this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
 
 
                 $status_data = array("status" => "posting" ,"PAID" => "PAID",'coa_sales'=>$coa_sales,"residual" => 0,"sub_total" => $subtotal,"ppn"=> $ppn,'amount'=>$amount);
@@ -324,11 +330,11 @@ class S_invoices extends MY_Controller {
                 $uang_muka_penjualan = 29;
                 $penjualan_barang = 44;
 
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$dp,0);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$piutang_usaha,$dp_sum,0);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$uang_muka_penjualan,0,$dp);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
-                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_sales,0,$dp_sum-$ppn);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$fid_coa,$dp,0);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$piutang_usaha,$dp_sum,0);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$uang_muka_penjualan,0,$dp);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$coa_sales,0,$dp_sum-$ppn);
 
                     $status_data = array("status" => "posting" ,"coa_sales" => $coa_sales,"PAID" => "CREDIT","amount" => $amount, "residual" => $dp_sum,'sub_total' => $subtotal,'ppn' => $ppn);
                     
@@ -359,8 +365,8 @@ class S_invoices extends MY_Controller {
 
                 $query = $this->Sales_InvoicesItems_model->get_hpp($save_id);
                 foreach($query->result() as $row){
-                    $this->_insertTransaction($code,$voucher_code,$date,$type,$row->title,$row->hpp_journal,$row->basic_price,0);
-                    $this->_insertTransaction($code,$voucher_code,$date,$type,$row->title,$row->lawan_hpp,0,$row->basic_price);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->hpp_journal,$row->basic_price,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->lawan_hpp,0,$row->basic_price);
 
                 }
 
@@ -378,7 +384,7 @@ class S_invoices extends MY_Controller {
         
     }
 
-    private function _insertTransaction($code,$voucher_code,$date,$type,$description,$fid_coa,$debet,$credit){
+    private function _insertTransaction($project = 0,$code,$voucher_code,$date,$type,$description,$fid_coa,$debet,$credit){
 
         $kas = array(
                 "journal_code" => $code,
@@ -388,6 +394,8 @@ class S_invoices extends MY_Controller {
                 "description" => $description,
                 "fid_coa" => $fid_coa,
                 "fid_header" => "",
+
+                "project_id" => $project,
                 "debet" => $debet,
                 "credit" => $credit,
                 "username" => "admin"

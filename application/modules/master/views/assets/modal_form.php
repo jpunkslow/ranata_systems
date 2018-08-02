@@ -24,6 +24,20 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="asset_name" class=" col-md-3">Assets Name </label>
+                <div class=" col-md-9">
+                    <?php
+                    echo form_input(array(
+                        "id" => "asset_name",
+                        "name" => "asset_name",
+                        "class" => "form-control",
+                        "data-rule-required" => true,
+                        "placeholder" => "Asset Name"
+                    ));
+                    ?>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="activa_type" class=" col-md-3">Assets Type</label>
                 <div class=" col-md-9">
                     <?php
@@ -98,15 +112,7 @@
                     ?>
                 </div>
             </div> -->
-            <div class="form-group">
-                <label for="activa_account" class=" col-md-3">Assets Account </label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_dropdown("activa_account", $coa_dropdown, "", "class='select2 validate-hidden' id='activa_account' ");
             
-                    ?>
-                </div>
-            </div>
             <div class="form-group">
                 <label for="activa_depreciate_account" class=" col-md-3">Activa Depreciated Account</label>
                 <div class=" col-md-9">

@@ -20,6 +20,15 @@
             ?>
         </div>
     </div>
+     <div class="form-group">
+        <input type="hidden" name="order_id" value="<?php echo $model_info->id ?>">
+        <label for="fid_order" class=" col-md-3">REF PROJECT  #</label>
+            <div class=" col-md-9">
+                <?php
+                   echo form_dropdown("fid_project", $project_dropdown, $model_info->fid_project, "class='select2 validate-hidden' id='fid_project' ");
+                    ?>
+            </div>
+    </div>  
     <div class="form-group">
         <input type="hidden" name="order_id" value="<?php echo $model_info->id ?>">
         <label for="fid_order" class=" col-md-3">REF ORDER  #</label>

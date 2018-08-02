@@ -3,6 +3,7 @@
 
      <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
      <input type="hidden" name="fid_cust" value="<?php echo $model_info->fid_cust; ?>" />
+     <input type="hidden" name="fid_project" value="<?php echo $model_info->fid_project; ?>" />
 
      <input type="hidden" name="fid_tax" value="<?php echo $model_info->fid_tax; ?>" />
 

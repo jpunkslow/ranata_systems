@@ -35,9 +35,9 @@ class Assets extends MY_Controller {
     /* load item modal */
 
     function modal_form() {
-        $view_data['activa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","16000");
-        $view_data['expenses_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_type","Expenses");
-        $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","15000");
+        $view_data['activa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","161");
+        $view_data['expenses_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","600");
+        $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","100");
 
         $this->load->view('assets/modal_form',$view_data);
     }
@@ -48,9 +48,9 @@ class Assets extends MY_Controller {
         validate_submitted_data(array(
             "id" => "numeric"
         ));
-         $view_data['activa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","16000");
-        $view_data['expenses_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_type","Expenses");
-        $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","15000");
+         $view_data['activa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","161");
+        $view_data['expenses_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","600");
+        $view_data['coa_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop("account_number","100");
 
         $view_data['model_info'] = $this->Master_Assets_model->get_one($this->input->post('id'));
 
@@ -69,6 +69,8 @@ class Assets extends MY_Controller {
 
         $item_data = array(
             "activa_code" => $this->input->post('activa_code'),
+            "asset_name" => $this->input->post('asset_name'),
+            
             "activa_type" => $this->input->post('activa_type'),
             "activa_age" => $this->input->post('activa_age'),
             "asset_residu" => $this->input->post('asset_residu'),
@@ -104,6 +106,8 @@ class Assets extends MY_Controller {
 
         $item_data = array(
             "activa_code" => $this->input->post('activa_code'),
+            
+            "asset_name" => $this->input->post('asset_name'),
             "activa_type" => $this->input->post('activa_type'),
             "activa_age" => $this->input->post('activa_age'),
             "asset_residu" => $this->input->post('asset_residu'),
@@ -188,7 +192,8 @@ class Assets extends MY_Controller {
         return array(
             $data->activa_code,
             str_replace("_", " ", $data->activa_type),
-            $activa_acc->account_number." - ".$activa_acc->account_name,
+            // $activa_acc->account_number." - ".$activa_acc->account_name,
+            $data->asset_name,
             format_to_date($data->get_date,true),
          
             $data->activa_age." Year",

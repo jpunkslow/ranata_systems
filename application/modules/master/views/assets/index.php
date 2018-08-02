@@ -27,7 +27,7 @@
             columns: [
                 {title: "CODE"},
                 {title: "TYPE"},
-                {title: "ACTIVA NAME"},
+                {title: "ASSET NAME"},
                 {title: "GET DATE"},
                 {title: "AGE"},
                 {title: "COST"},
