@@ -10,6 +10,7 @@ class Cashflow extends MY_Controller {
 
         //check permission to access this module
         $this->load->model('reports/Accounting_model');
+        $this->load->model("reports/Cashflow_model");
         
     }
 
@@ -18,14 +19,14 @@ class Cashflow extends MY_Controller {
     function index() {
 
 
-    	$view_data['getJenisKas'] = $this->Accounting_model->getJenisKas();
+        $view_data['data_dapat'] = $this->Cashflow_model->get_data_akun_dapat();
+        $view_data['data_beban_pokok'] = $this->Cashflow_model->getBebanPokokPenjualan();
 
-    	$view_data['getAkun'] = $this->Accounting_model->getAkun();
+        
+        
 
-        $view_data['getCoa'] = $this->Accounting_model->getCoaHead();
 
-
-    	$this->template->rander("reports/r_neraca",$view_data); 
+    	$this->template->rander("cashflow/rpt_cashflow",$view_data); 
 
 
     }
