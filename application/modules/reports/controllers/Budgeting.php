@@ -27,7 +27,8 @@ class Budgeting extends MY_Controller {
     function save(){
 
         if(!$this->input->post()){
-            echo "FAIL";
+            // echo "FAIL";
+            header("Location:" .base_url('reports/budgeting?_og=error'));
 
         }
 

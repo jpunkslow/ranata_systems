@@ -21,6 +21,8 @@
 
 	
 </style>
+<!-- <script type="text/javascript" src="<?php echo base_url('assets/js/tableFixer/jquery-2.1.3.js') ?>"></script> -->
+<script type="text/javascript" src="<?php echo base_url('assets/js/tableFixer/tableHeadFixer.js') ?>"></script>
 <?php 
 $periode_default = date("Y")."-01-01";
 $periode_now = date("Y-m-d");
@@ -34,7 +36,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         
         <div id="invoice-status-bar">
         	<div class="panel panel-default  p5 no-border m0">
-        		<?php if($_GET["_og"] == "success"){
+        		<?php if(!empty($_GET["_og"]) == "success"){
         			echo '<div class="alert alert-success">
         			Data Berhasil di Simpan !
         		</div>';
@@ -69,15 +71,14 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 
                 <div class="table-responsive mt15 pl15 pr15">
 
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Form Input Budgeting <br>  Tahun <?php echo date('Y') ?></p>
 	
 	<hr>
-	<div class="" style="width: 1100px;overflow: auto;height: 500px">
+	<div class="" style="height: height:950px" >
 
 		
 	<form method="post" id="budgeting-form" action="<?php echo base_url('reports/budgeting/save') ?>" >
-	<h4> Form </h4>
-		<table class="table table-bordered">
+	<h4> Form Input Budgeting  Tahun <?php echo date('Y') ?> </h4>
+		<table class="table table-bordered" id="fixTable">
 			<tr>
 				<th width="500" style="text-align:center">AKUN</th>
 				<th width="100" style="text-align:center">JAN</th>
@@ -136,30 +137,9 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 <script type="text/javascript">
 var uri = '<?php echo base_url('reports/budgeting/save') ?>';
 $(document).ready(function () {
-	$("#submit").submit(function(event){
-
-		var formData = $("form").serialize();
-
-		$.ajax({
-			type 	:'POST',
-			url 	: uri,
-			data 	: formData,
-			dataType : json,
-			encode : true
-		}).done(function(data){
-			console.log(data);
-		});
-
-		 event.preventDefault();
-	});
+	$("#fixTable").tableHeadFixer({"left" : 1}); 
+	
 
 
-	 // $("#budgeting-form").appForm({
-  //           onSuccess: function (result) {
-  //                   window.location = "<?php echo site_url('reports/budgeting'); ?>/" + result.id;
-                
-  //           }
-            
-  //       });
 });
 </script>
