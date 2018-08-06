@@ -34,6 +34,7 @@ class Budgeting extends MY_Controller {
 
 
         $input = $this->input->post();
+        $periode = date("Y");
         $data = array();
         if($input){
 
@@ -51,7 +52,10 @@ class Budgeting extends MY_Controller {
                 $data['november'] = unformat_currency($input['november'][$i]);
                 $data['desember'] = unformat_currency($input['desember'][$i]);
 
+
+
                 $this->db->where('id',$input['id'][$i]);
+                $this->db->where('periode',$periode);
                 $this->db->update("labarugi_budgeting",$data);
             }
 

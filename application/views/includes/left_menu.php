@@ -44,6 +44,8 @@
             $acc_submenu[] = array("name" => "Aging Payable", "slug"=>"aging_payable","url" => "reports/aging_payable");
             $acc_submenu[] = array("name" => "Sales Reports", "slug"=>"r_sales","url" => "reports/r_sales");
             $acc_submenu[] = array("name" => "Cash Flow Reports", "slug"=>"cashflow","url" => "reports/cashflow");
+            $acc_submenu[] = array("name" => "Budgeting", "slug"=>"budgeting","url" => "reports/budgeting");
+
 
             $sidebar_menu[] = array("name" => "Accounting Reports","slug"=>"accounting", "url" => "#", "class" => "fa-bar-chart", "submenu" => $acc_submenu);
 

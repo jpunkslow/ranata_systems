@@ -18,7 +18,9 @@
 	box-sizing: border-box;
 }
 .glyphicon	{font-family: "Glyphicons Halflings"}
-
+input[type=text]{
+	height: 20px
+}
 	
 </style>
 <!-- <script type="text/javascript" src="<?php echo base_url('assets/js/tableFixer/jquery-2.1.3.js') ?>"></script> -->
@@ -34,50 +36,27 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 <div id="page-content" class="clearfix">
     <div style=" margin: 10px;">
         
-        <div id="invoice-status-bar">
-        	<div class="panel panel-default  p5 no-border m0">
-        		<?php if(!empty($_GET["_og"]) == "success"){
-        			echo '<div class="alert alert-success">
-        			Data Berhasil di Simpan !
-        		</div>';
-        		} ?>
-            
-            <span class="ml15" style="display: none">
-                <form action="" method="GET" role="form" class="general-form">
-               <table class="table table-bordered">
-                   <tr>
-                       <td><label>Start Date</label></td>
-                       <td><input type="text" class="form-control" placeholder="0" style="text-align:right;width:150px" class="form-control" name="start" id="start" value="<?php echo $periode_default ?>" autocomplete="off"></td>
-                        <td><label>End Date</label></td>
-                       <td><input type="text" class="form-control" placeholder="0" style="text-align:right;width:150px" class="form-control" name="end" id="end" value="<?php echo $periode_now ?>" autocomplete="off"></td>
-                        <td>
-                            <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
-
-                        </td>
-                   </tr>
-               </table>
-               </form>
-                </span>
-
-            </div>
-        </div>
 
         
 
         <div class="mt15">
             <div class="panel panel-default p15 b-t">
-                
+                <?php if(!empty($_GET["_og"]) == "success"){
+        			echo '<div class="alert alert-success">
+        			Data Berhasil di Simpan !
+        		</div>';
+        		} ?>
+            
 
-                <div class="table-responsive mt15 pl15 pr15">
+                <div class="">
 
 	
 	<hr>
-	<div class="" style="height: height:950px" >
+	<div class=""  >
 
 		
 	<form method="post" id="budgeting-form" action="<?php echo base_url('reports/budgeting/save') ?>" >
-	<h4> Form Input Budgeting  Tahun <?php echo date('Y') ?> </h4>
+	<h4> Form Input Budgeting  Tahun <?php echo date("Y"); ?> </h4>
 		<table class="table table-bordered" id="fixTable">
 			<tr>
 				<th width="500" style="text-align:center">AKUN</th>
@@ -142,4 +121,8 @@ $(document).ready(function () {
 
 
 });
+function myFunction() {
+    var x = document.getElementById("periode").value;
+    window.location.reload();
+}
 </script>
