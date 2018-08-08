@@ -285,14 +285,17 @@ class S_invoices extends MY_Controller {
                 
                 $lawanppn =$this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
                  $query = $this->Sales_InvoicesItems_model->get_hpp($id);
+                 $query_hpp = $this->Sales_InvoicesItems_model->get_hpp($id);
                 foreach($query->result() as $row){
-                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,$row->total,0);
-                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal_lawan,0,$row->total);
+                    // $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,$row->total,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,0,$row->total);
 
-                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$row->title,$row->hpp_journal,$row->basic_price,0);
-                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$row->title,$row->lawan_hpp,0,$row->basic_price);
+                    
+                }
 
-
+                foreach ($query_hpp->result() as $key) {
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
                 }
 
                 $status_data = array("status" => "posting" ,"PAID" => "PAID",'coa_sales'=>$coa_sales,"residual" => 0,"sub_total" => $subtotal,"ppn"=> $ppn,'amount'=>$amount);
