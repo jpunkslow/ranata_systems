@@ -91,7 +91,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="inv_date" class="col-md-3">Tanggal Invoice</label>
+        <label for="inv_date" class="col-md-3">Invoice Date</label>
         <div class=" col-md-9">
             <?php
             echo form_input(array(
@@ -100,6 +100,22 @@
                 "class" => "form-control",
                 "value" => $model_info->inv_date,
                 "placeholder" => "Y/m/d",
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="end_date" class="col-md-3">End Date</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "end_date",
+                "name" => "end_date",
+                "class" => "form-control",
+                "placeholder" => "Y/m/d",
+                "value" => date("Y-m-d"),
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));
