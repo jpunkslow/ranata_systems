@@ -253,22 +253,24 @@ class Quotation extends MY_Controller {
         ));
 
         $invoice_id = $this->input->post('quotation_id');
-        $idItem= $this->input->post('invoice_item_title');
-        $getTitle=$this->db->query('select title from master_items where id="'.$idItem.'"')->row();
+        // $idItem= $this->input->post('invoice_item_title');
         $id = $this->input->post('id');
+        
+        // $getTitle=$this->db->query('select title from master_items where id="'.$id.'"')->row();
         $rate = unformat_currency($this->input->post('invoice_item_rate'));
         $quantity = unformat_currency($this->input->post('invoice_item_quantity'));
 
         $invoice_item_data = array(
             "fid_quotation" => $invoice_id,
-            "title" =>$getTitle->title,
+            "title" => $this->input->post('title'),
             "description" => $this->input->post('description'),
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
+            "basic_price" => unformat_currency($this->input->post('invoice_item_basic')),
             "total" => $rate * $quantity,
-            "fid_items" => $idItem
+            "fid_items" => $this->input->post('fid_item')
         );
 
         $invoice_item_id = $this->Sales_QuotationItems_model->save($invoice_item_data, $id);
@@ -373,7 +375,7 @@ class Quotation extends MY_Controller {
     }
 
     function get_item_info_suggestion() {
-        $item = $this->Sales_QuotationItems_model->get_item_info_suggestion($this->input->post("item_name"));
+        $item = $this->Sales_QuotationItems_model->get_item_info_suggestion($this->input->post("id"));
         if ($item) {
             echo json_encode(array("success" => true, "item_info" => $item));
         } else {

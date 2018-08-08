@@ -24,7 +24,7 @@
         <label for="description" class=" col-md-3">Description</label>
         <div class="col-md-9">
             <?php
-            echo form_textarea(array(
+            echo form_input(array(
                 "id" => "description",
                 "name" => "description",
                 "value" => $model_info->description,
@@ -129,7 +129,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('#invoice_item_basic').maskMoney(
+            {precision:0 
+        });
+        $('#invoice_item_rate').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[name=invoice_item_rate]').change(function() {
+            var value = $(this).val();
+            
+        });
         $("#invoice-item-form .select2").select2();
         $("#invoice-item-form").appForm({
             onSuccess: function (result) {

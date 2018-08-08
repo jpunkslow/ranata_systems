@@ -10,7 +10,7 @@
             echo form_input(array(
                 "id" => "invoice_item_title",
                 "name" => "invoice_item_title",
-                "value" => $model_info->id,
+                "value" => $model_info->title,
                 "class" => "form-control validate-hidden",
                 "placeholder" => lang('select_or_create_new_item'),
                 "data-rule-required" => true,
@@ -36,7 +36,41 @@
             ?>
         </div>
     </div>
+    <input type="hidden" name="title" id="title" value="<?php echo $model_info->title ?>" >
+    <input type="hidden" name="fid_item" id="fid_item" value="<?php echo $model_info->title ?>">
+     <div class="form-group">
+        <label for="category" class=" col-md-3">Category</label>
+        <div class="col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "invoice_item_category",
+                "name" => "category",
+                "value" => $model_info->category,
+                "class" => "form-control",
+                "readonly" => true,
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
     
+    <div class="form-group">
+        <label for="unit_type" class=" col-md-3">Type</label>
+        <div class="col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "invoice_unit_type",
+                "name" => "unit_type",
+                "value" => $model_info->unit_type,
+                "class" => "form-control",
+                "readonly" => true,
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
     <div class="form-group">
         <label for="invoice_item_quantity" class=" col-md-3"><?php echo lang('quantity'); ?></label>
         <div class="col-md-9">
@@ -53,9 +87,23 @@
             ?>
         </div>
     </div>
-    
     <div class="form-group">
-        <label for="invoice_item_rate" class=" col-md-3">Price</label>
+        <label for="invoice_item_basic" class=" col-md-3">Basic Price</label>
+        <div class="col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "invoice_item_basic",
+                "name" => "invoice_item_basic",
+                "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price) : "",
+                "class" => "form-control",
+                "placeholder" => "0",
+                // "type" => 'number'
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="invoice_item_rate" class=" col-md-3">Sell Price</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -63,8 +111,9 @@
                 "name" => "invoice_item_rate",
                 "value" => $model_info->rate ? to_decimal_format($model_info->rate) : "",
                 "class" => "form-control",
-                "placeholder" => lang('rate'),
+                "placeholder" => "0",
                 "data-rule-required" => true,
+                // "type" => 'number',
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
@@ -80,6 +129,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+         $('#invoice_item_basic').maskMoney(
+            {precision:0 
+        });
+        $('#invoice_item_rate').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[name=invoice_item_rate]').change(function() {
+            var value = $(this).val();
+            
+        });
 
         $("#quotation-item-form .select2").select2();
         $("#quotation-item-form").appForm({
@@ -131,7 +191,7 @@
                 $("#add_new_item_to_library").val(""); //reset the flag to add new item in library
                 $.ajax({
                     url: "<?php echo get_uri("sales/quotation/get_item_info_suggestion"); ?>",
-                    data: {item_name: e.val},
+                    data: {id: e.val},
                     cache: false,
                     type: 'POST',
                     dataType: "json",
@@ -140,13 +200,14 @@
                         //auto fill the description, unit type and rate fields.
                         if (response && response.success) {
 
-                                $("#invoice_item_description").val(response.item_info.category);
+                                $("#fid_item").val(response.item_info.id);
+                                $("#title").val(response.item_info.title);
                             
-
+                                $("#invoice_item_category").val(response.item_info.category);
+                            
                                 $("#invoice_unit_type").val(response.item_info.unit_type);
                                 $("#invoice_item_quantity").val("1");
 
-                                $("#invoice_item_rate").val(response.item_info.price);
                         }
                     }
                 });

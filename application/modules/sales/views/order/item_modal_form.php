@@ -10,7 +10,7 @@
             echo form_input(array(
                "id" => "invoice_item_title",
                 "name" => "invoice_item_title",
-                "value" => $model_info->id,
+                "value" => $model_info->title,
                 "class" => "form-control validate-hidden",
                 "placeholder" => lang('select_or_create_new_item'),
                 "data-rule-required" => true,
@@ -24,7 +24,7 @@
         <label for="description" class=" col-md-3">Description</label>
         <div class="col-md-9">
             <?php
-            echo form_textarea(array(
+            echo form_input(array(
                 "id" => "description",
                 "name" => "description",
                 "value" => $model_info->description,
@@ -36,19 +36,9 @@
             ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="category" class=" col-md-3">Kategori Produk</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "category", array(
-                        "Akomodasi" => "Akomodasi",
-                        "Transport" => "Transport"
-                        ), $model_info->category, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
+       <input type="hidden" name="title" id="title" value="<?php echo $model_info->title ?>" >
+    <input type="hidden" name="fid_item" id="fid_item" >
+
     <div class="form-group">
         <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
@@ -65,22 +55,7 @@
             ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="unit_type" class=" col-md-3">Tipe Produk</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "unit_type", array(
-                        "Domestic" => "Domestic",
-                        "International" => "International",
-                        "Umrah" => "Umrah",
-                        "Maize" => "Maize",
-                        "lainnya" => "Lain - lain"
-                        ), $model_info->unit_type, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
+    
     <div class="form-group">
         <label for="unit_type" class=" col-md-3">Type</label>
         <div class="col-md-9">
@@ -219,7 +194,7 @@
                 $("#add_new_item_to_library").val(""); //reset the flag to add new item in library
                 $.ajax({
                     url: "<?php echo get_uri("sales/order/get_item_info_suggestion"); ?>",
-                    data: {item_name: e.val},
+                    data: {id: e.val},
                     cache: false,
                     type: 'POST',
                     dataType: "json",
@@ -227,14 +202,15 @@
 
                         //auto fill the description, unit type and rate fields.
                         if (response && response.success) {
-
+                                $("#fid_item").val(response.item_info.id);
+                                $("#title").val(response.item_info.title);
+                            
                                 $("#invoice_item_category").val(response.item_info.category);
                             
 
                                 $("#invoice_unit_type").val(response.item_info.unit_type);
                                 $("#invoice_item_quantity").val("1");
 
-                                $("#invoice_item_basic").val(response.item_info.price);
                         }
                     }
                 });

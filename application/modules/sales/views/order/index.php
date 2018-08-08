@@ -25,7 +25,7 @@
             source: '<?php echo_uri("sales/order/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: "INVOICE ORDER #"},
+                {title: "ORDER CODE #"},
                 {title: "CUSTOMERS"},
                 // {title: "REF QUOT"},
                 {title: "STATUS"},

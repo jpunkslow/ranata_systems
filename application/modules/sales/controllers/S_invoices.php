@@ -281,10 +281,19 @@ class S_invoices extends MY_Controller {
             if($pay_type == "CASH"){
                 $kas = $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
                 
-                $lawan = $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,44,0,$subtotal);
+                // $lawan = $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,44,0,$subtotal);
                 
                 $lawanppn =$this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                 $query = $this->Sales_InvoicesItems_model->get_hpp($id);
+                foreach($query->result() as $row){
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,$row->total,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal_lawan,0,$row->total);
 
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$row->title,$row->hpp_journal,$row->basic_price,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$row->title,$row->lawan_hpp,0,$row->basic_price);
+
+
+                }
 
                 $status_data = array("status" => "posting" ,"PAID" => "PAID",'coa_sales'=>$coa_sales,"residual" => 0,"sub_total" => $subtotal,"ppn"=> $ppn,'amount'=>$amount);
 
@@ -363,12 +372,7 @@ class S_invoices extends MY_Controller {
 
             if ($save_id) {
 
-                $query = $this->Sales_InvoicesItems_model->get_hpp($save_id);
-                foreach($query->result() as $row){
-                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->hpp_journal,$row->basic_price,0);
-                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->lawan_hpp,0,$row->basic_price);
-
-                }
+               
 
                 echo json_encode(array("success" => true, "data" => $this->_row_data($save_id),'message' => lang('record_saved')));
             } else {

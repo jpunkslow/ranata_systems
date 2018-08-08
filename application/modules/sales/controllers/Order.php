@@ -134,6 +134,7 @@ class Order extends MY_Controller {
                         "unit_type" => $row->unit_type,
                         "fid_items" => $row->fid_items,
                         "rate" => $row->rate,
+                        "basic_price" => $row->basic_price,
                         "total" => $row->total
                     );
 
@@ -402,7 +403,8 @@ class Order extends MY_Controller {
 
         $invoice_item_data = array(
             "fid_order" => $invoice_id,
-            "title" => $this->input->post('invoice_item_title'),
+            "title" => $this->input->post('title'),
+
             "description" => $this->input->post('description'),
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
@@ -591,7 +593,7 @@ class Order extends MY_Controller {
     }
 
     function get_item_info_suggestion() {
-        $item = $this->Sales_OrderItems_model->get_item_info_suggestion($this->input->post("item_name"));
+        $item = $this->Sales_OrderItems_model->get_item_info_suggestion($this->input->post("id"));
         if ($item) {
             echo json_encode(array("success" => true, "item_info" => $item));
         } else {

@@ -35,13 +35,13 @@ class Sales_OrderItems_model extends Crud_model {
         return $this->db->query($sql)->result();
     }
 
-    function get_item_info_suggestion($item_name = "") {
+    function get_item_info_suggestion($id = "") {
         // $estimate_items_table = $this->db->dbprefix('estimate_items');
         $invoice_items_table = $this->db->dbprefix('master_items');
 
         $sql = "SELECT *
         FROM $invoice_items_table
-        WHERE $invoice_items_table.deleted=0 AND $invoice_items_table.title = '$item_name'
+        WHERE $invoice_items_table.deleted=0 AND $invoice_items_table.id = '$id'
         ORDER BY id DESC LIMIT 1";
         $result = $this->db->query($sql);
 
