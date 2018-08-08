@@ -78,7 +78,7 @@ class Master_Coa_Type_model extends Crud_model {
         $get = substr($like, 0,4);
         $where = "";
         if($field != ""){
-            $where = " AND $field LIKE '%$get%'";
+            $where = " AND $field LIKE '$get%'";
         }
         $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL $where  AND deleted = 0")->result();
         $result = array();

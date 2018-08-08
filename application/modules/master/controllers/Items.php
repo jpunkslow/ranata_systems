@@ -24,6 +24,7 @@ class Items extends MY_Controller {
 
 
         $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
+        $view_data['sales_journal_lawan'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100');
         $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
         $view_data['lawan_hpp'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','150');
 
@@ -37,6 +38,8 @@ class Items extends MY_Controller {
         ));
 
          $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
+         $view_data['sales_journal_lawan'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100');
+        
         $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
          $view_data['lawan_hpp'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','150');
         $view_data['model_info'] = $this->Master_Items_model->get_one($this->input->post('id'));
@@ -54,6 +57,7 @@ class Items extends MY_Controller {
             "code" => $this->input->post('code'),
             "category" => $this->input->post('category'),
             "sales_journal" => $this->input->post('sales_journal'),
+            "sales_journal_lawan" => $this->input->post('sales_journal_lawan'),
             "hpp_journal" => $this->input->post('hpp_journal'),
             "unit_type" => $this->input->post('unit_type')
         );
@@ -80,6 +84,8 @@ class Items extends MY_Controller {
             "code" => $this->input->post('code'),
             "category" => $this->input->post('category'),
             "sales_journal" => $this->input->post('sales_journal'),
+            "sales_journal_lawan" => $this->input->post('sales_journal_lawan'),
+            
             "hpp_journal" => $this->input->post('hpp_journal'),
             "unit_type" => $this->input->post('unit_type')
 
@@ -148,6 +154,7 @@ class Items extends MY_Controller {
             $data->category,
             $data->unit_type,
             $data->sales_journal_name,
+            $data->sales_journal_lawan_name,
             $data->hpp_journal_name,
             $data->hpp_journal_lawan,
             modal_anchor(get_uri("master/items/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_item'), "data-post-id" => $data->id))

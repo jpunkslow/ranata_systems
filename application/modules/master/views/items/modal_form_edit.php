@@ -72,7 +72,14 @@
                     ?>
         </div>
     </div>
-
+    <div class="form-group">
+        <label for="sales_journal_lawan" class=" col-md-3">Sales Journal Lawan</label>
+        <div class="col-md-9">
+             <?php
+                   echo form_dropdown("sales_journal_lawan", $sales_journal_lawan, $model_info->sales_journal_lawan, "class='select2 validate-hidden' id='fid_quot' ");
+                    ?>
+        </div>
+    </div>
     <div class="form-group">
         <label for="category" class=" col-md-3">HPP Journal</label>
         <div class="col-md-9">

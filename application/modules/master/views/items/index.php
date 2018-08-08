@@ -24,6 +24,7 @@
                 {title: 'Category'},
                 {title: 'Type'},
                 {title: 'Sales Journal'},
+                {title: 'Sales Journal Lawan'},
                 {title: 'HPP Journal'},
                 {title: 'HPP Lawan'},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w100"}
