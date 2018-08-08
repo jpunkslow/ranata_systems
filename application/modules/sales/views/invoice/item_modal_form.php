@@ -36,19 +36,6 @@
             ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="category" class=" col-md-3">Kategori Produk</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "category", array(
-                        "Akomodasi" => "Akomodasi",
-                        "Transport" => "Transport"
-                        ), $model_info->category, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
     <input type="hidden" name="fid_item" id="fid_item">
     <div class="form-group">
         <label for="category" class=" col-md-3">Category</label>
@@ -66,22 +53,6 @@
             ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="unit_type" class=" col-md-3">Tipe Produk</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "unit_type", array(
-                        "Domestic" => "Domestic",
-                        "International" => "International",
-                        "Umrah" => "Umrah",
-                        "Maize" => "Maize",
-                        "lainnya" => "Lain - lain"
-                        ), $model_info->unit_type, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
     <div class="form-group">
         <label for="unit_type" class=" col-md-3">Type</label>
         <div class="col-md-9">

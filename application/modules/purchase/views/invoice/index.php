@@ -25,7 +25,7 @@
             source: '<?php echo_uri("purchase/p_invoices/list_data") ?>',
             // invoices: [[1, "asc"]],
             columns: [
-                {title: "INVOICES #"},
+                {title: "INVOICES CODE #"},
                 {title: "VENDOR"},
                 {title: "STATUS"},
                 {title: "TUJUAN"},

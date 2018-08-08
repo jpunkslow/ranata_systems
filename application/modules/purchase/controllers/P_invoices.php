@@ -144,11 +144,11 @@ class P_invoices extends MY_Controller {
                         "rate" => $row->rate,
                         "total" => $row->total
                     );
+                    $save_data = $this->Purchase_InvoicesItems_model->save($item["data"]);
 
                 }
 
-                $save_data = $this->Purchase_InvoicesItems_model->save($item["data"]);
-
+                
                     $query = array("fid_order" => $order_id);
                     $exe = $this->Purchase_Invoices_model->save($query,$save_id); 
                

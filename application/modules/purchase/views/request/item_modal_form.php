@@ -36,33 +36,37 @@
             ?>
         </div>
     </div>
+    <input type="hidden" name="fid_item" id="fid_item">
     <div class="form-group">
-        <label for="category" class=" col-md-3">Kategori Produk</label>
+        <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "category", array(
-                        "Akomodasi" => "Akomodasi",
-                        "Transport" => "Transport"
-                        ), $model_info->category, "class='select2 mini'"
-                    );
-                        ?>
+            <?php
+            echo form_input(array(
+                "id" => "invoice_item_category",
+                "name" => "category",
+                "value" => $model_info->category,
+                "class" => "form-control",
+                "readonly" => true,
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
         </div>
     </div>
     <div class="form-group">
-        <label for="unit_type" class=" col-md-3">Tipe Produk</label>
+        <label for="unit_type" class=" col-md-3">Type</label>
         <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "unit_type", array(
-                        "Domestic" => "Domestic",
-                        "International" => "International",
-                        "Umrah" => "Umrah",
-                        "Maize" => "Maize",
-                        "lainnya" => "Lain - lain"
-                        ), $model_info->unit_type, "class='select2 mini'"
-                    );
-                        ?>
+            <?php
+            echo form_input(array(
+                "id" => "invoice_unit_type",
+                "name" => "unit_type",
+                "value" => $model_info->unit_type,
+                "class" => "form-control",
+                "readonly" => true,
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
         </div>
     </div>
     <div class="form-group">
@@ -172,6 +176,10 @@
                             
 
                                 $("#invoice_unit_type").val(response.item_info.unit_type);
+                                $("#invoice_item_category").val(response.item_info.category);
+                                
+                                $("#invoice_unit_type").val(response.item_info.unit_type);
+                                
                                 $("#invoice_item_quantity").val("1");
 
                                 $("#invoice_item_rate").val(response.item_info.price);

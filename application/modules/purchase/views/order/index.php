@@ -25,7 +25,7 @@
             source: '<?php echo_uri("purchase/p_order/list_data") ?>',
             // order: [[1, "asc"]],
             columns: [
-                {title: "INVOICE ORDER #"},
+                {title: "ORDER CODE #"},
                 {title: "VENDORS"},
                 {title: "STATUS"},
                 {title: "TUJUAN"},
