@@ -151,7 +151,7 @@ class Expenses extends MY_Controller {
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
             "fid_header" => $data_id,
-            "debet" => $this->input->post("debet"),
+            "debet" => unformat_currency($this->input->post("debet")),
             "credit" => 0,
             "username" => "admin",
             "created_at" => get_current_utc_time()
@@ -184,7 +184,7 @@ class Expenses extends MY_Controller {
         $data = array(
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
-            "debet" => $this->input->post("debet")        
+            "debet" => unformat_currency($this->input->post("debet"))        
         );
 
 
@@ -261,12 +261,14 @@ class Expenses extends MY_Controller {
         $id = $this->input->post('id');
         if ($this->input->post('undo')) {
             if ($this->Expenses_header_model->delete($id, true)) {
+
                 echo json_encode(array("success" => true, "data" => $this->_row_data($id), "message" => lang('record_undone')));
             } else {
                 echo json_encode(array("success" => false, lang('error_occurred')));
             }
         } else {
             if ($this->Expenses_header_model->delete($id)) {
+                $this->Expenses_header_model->triggerDelete($id);
                 echo json_encode(array("success" => true, 'message' => lang('record_deleted')));
             } else {
                 echo json_encode(array("success" => false, 'message' => lang('record_cannot_be_deleted')));
@@ -338,7 +340,7 @@ class Expenses extends MY_Controller {
         );
 
         	$row_data[] = anchor(get_uri("accounting/expenses/entry/").$data->id.'/'.$data->fid_coa, "<i class='fa fa-plus'></i>", array("class" => "edit", "title" => "Add Entry", "data-post-id" => $data->id)).modal_anchor(get_uri("accounting/expenses/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_expenses'), "data-post-id" => $data->id))
-                . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/expenses/delete"), "data-action" => "delete_entry"));
+                . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/expenses/delete"), "data-action" => "delete"));
         
         return $row_data;
     }

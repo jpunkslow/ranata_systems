@@ -15,27 +15,14 @@
                 "class" => "form-control validate-hidden",
                 "placeholder" => lang('title'),
                 "autofocus" => true,
+                "autocomplete" => "off",
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
         </div>
     </div>
-   <!--  <div class="form-group">
-        <label for="code" class="col-md-3">Tax Code</label>
-        <div class=" col-md-9">
-            <?php
-            echo form_input(array(
-                "id" => "code",
-                "name" => "code",
-                "value" => $model_info->code,
-                "class" => "form-control",
-                "placeholder" => "Kode Pajak Produk"
-            ));
-            ?>
-        </div>
-    </div> -->
-    <div class="form-group">
+      <div class="form-group">
         <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
              <?php 

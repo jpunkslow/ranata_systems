@@ -18,6 +18,11 @@ class Items extends MY_Controller {
         $this->template->rander("items/index");
     }
 
+    function test(){
+        $item_info = $this->Master_Items_model->get_details()->result();
+        print_r($item_info);
+    }
+
     /* load item modal */
 
     function modal_form() {
@@ -59,12 +64,14 @@ class Items extends MY_Controller {
             "sales_journal" => $this->input->post('sales_journal'),
             "sales_journal_lawan" => $this->input->post('sales_journal_lawan'),
             "hpp_journal" => $this->input->post('hpp_journal'),
+            "lawan_hpp" => $this->input->post('lawan_hpp'),
             "unit_type" => $this->input->post('unit_type')
         );
 
         $item_id = $this->Master_Items_model->save($item_data);
         if ($item_id) {
-            $item_info = $this->Master_Items_model->get_details()->row();
+
+            $item_info = $this->Master_Items_model->get_details(array("id"=>$item_id))->row();
             echo json_encode(array("success" => true, "id" => $item_info->id, "data" => $this->_make_item_row($item_info), 'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
@@ -87,6 +94,7 @@ class Items extends MY_Controller {
             "sales_journal_lawan" => $this->input->post('sales_journal_lawan'),
             
             "hpp_journal" => $this->input->post('hpp_journal'),
+            "lawan_hpp" => $this->input->post('lawan_hpp'),
             "unit_type" => $this->input->post('unit_type')
 
             // "price" => $this->input->post('price')

@@ -64,6 +64,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#credit').maskMoney(
+            {precision:0 
+        });
+        $('#credit').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[name=credit]').change(function() {
+            var value = $(this).val();
+            
+        });
 
         RELOAD_VIEW_AFTER_UPDATE = false; //go to invoice page
         $("#master_coa-form .select2").select2();

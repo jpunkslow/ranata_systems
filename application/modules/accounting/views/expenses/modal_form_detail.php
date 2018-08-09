@@ -62,7 +62,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('#debet').maskMoney(
+            {precision:0 
+        });
+        $('#debet').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[name=debet]').change(function() {
+            var value = $(this).val();
+            
+        });
         RELOAD_VIEW_AFTER_UPDATE = false; //go to invoice page
         $("#master_coa-form .select2").select2();
         setDatePicker("#date");

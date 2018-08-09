@@ -152,7 +152,7 @@ class Income extends MY_Controller {
             "fid_coa" => $this->input->post('fid_coa'),
             "fid_header" => $data_id,
             "debet" => 0,
-            "credit" => $this->input->post("credit"),
+            "credit" => unformat_currency($this->input->post("credit")),
             "username" => "admin",
             "created_at" => get_current_utc_time()
         );
@@ -184,7 +184,7 @@ class Income extends MY_Controller {
         $data = array(
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
-            "credit" => $this->input->post("credit")        
+            "credit" => unformat_currency($this->input->post("credit"))        
         );
 
 
@@ -330,7 +330,7 @@ class Income extends MY_Controller {
         );
 
             $row_data[] = anchor(get_uri("accounting/income/entry/").$data->id.'/'.$data->fid_coa, "<i class='fa fa-plus'></i>", array("class" => "edit", "title" => "Add Entry", "data-post-id" => $data->id)).modal_anchor(get_uri("accounting/income/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id))
-                . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/income/delete"), "data-action" => "delete_entry"));
+                . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/income/delete"), "data-action" => "delete"));
         
         return $row_data;
     }
