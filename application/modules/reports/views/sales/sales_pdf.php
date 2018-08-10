@@ -1,38 +1,29 @@
+<style type="text/css">
+.panel * {
+    font-family: "Arial","​Helvetica","​sans-serif";
+}
+</style>
+<?php
+    load_css(array(
+        "assets/css/invoice.css",
+
+        "assets/bootstrap/css/bootstrap.min.css",
+        "assets/css/style.css"
+    ));
+    ?>
 <div id="page-content" class="clearfix">
     <div style="max-width: 1000px; margin: auto;">
         
-        <div id="invoice-status-bar" class="panel panel-default  p5 no-border m0">
-
-        	<form action="" method="GET" role="form" class="general-form">
-               <table class="table table-bordered">
-                   <tr>
-                        <td>
-                        	<input type="text" class="form-control" id="start_date" name="start" autocomplete="off" placeholder="START DATE" value="<?php echo $_GET['start'] ?>">
-                        </td>
-
-                       
-                        	
-						<td>
-							<input type="text" class="form-control" id="end_date" name="end" autocomplete="off" placeholder="END DATE" value="<?php echo $_GET['end'] ?>">
-                        </td>
-                        <td>
-                            <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
-
-                        </td>
-                   </tr>
-               </table>
-               </form>
-        </div>
+        
 
         <div class="mt15">
             <div class="panel panel-default p15 b-t">
             	<div>
-            		<center><h3>Laporan Penjualan per Produk</h3>
+            		<span style="text-align: center"><h3>Laporan Penjualan per Produk</h3>
 
 					<p><strong><?php echo $date_range ?></strong></p>
-					</center>
-            		<table class="table table-bordered">
+					</span>
+            		<table border="1">
             			<tr>
             				<th>Nama Produk</th>
             				<th style="text-align: center;">Tipe</th>
@@ -67,11 +58,3 @@
     </div>
 </div>
 
-<script type="text/javascript">
-	$(document).ready(function () {
-
-        setDatePicker("#start_date");
-        setDatePicker("#end_date");
-
-    });
-</script>

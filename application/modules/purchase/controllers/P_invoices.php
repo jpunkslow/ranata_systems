@@ -119,6 +119,8 @@ class P_invoices extends MY_Controller {
             "paid" => "Not Paid",
             "email_to" => $this->input->post('email_to'),
             "inv_date" => $this->input->post('inv_date'),
+            "end_date" => $this->input->post('end_date'),
+            
             "currency" => $this->input->post('currency'),
             "fid_tax" => $this->input->post('fid_tax'),
             "created_at" => get_current_utc_time()
@@ -186,10 +188,10 @@ class P_invoices extends MY_Controller {
             "code" => $this->input->post('code'),
             "fid_cust" => $this->input->post('fid_cust'),
 
-            "fid_order" => $this->input->post('fid_order'),
+            // "fid_order" => $this->input->post('fid_order'),
             "inv_address" => $this->input->post('inv_address'),
             "delivery_address" => $this->input->post('delivery_address'),
-            // "status" => $this->input->post('status'),
+            "end_date" => $this->input->post('end_date'),
             "email_to" => $this->input->post('email_to'),
             "inv_date" => $this->input->post('inv_date'),
             "fid_tax" => $this->input->post('fid_tax'),
@@ -200,40 +202,9 @@ class P_invoices extends MY_Controller {
         $save_id = $this->Purchase_Invoices_model->save($data, $customers_id);
         if ($save_id) {
 
-           $check = $this->db->query("SELECT * FROM purchase_order_items WHERE fid_order = '$order_id'")->result();
-
-            if($check){
-                foreach($check as $row){
-
-                    $item["data"] = array(
-                        "fid_invoices" => $save_id,
-                        "title" => $row->title,
-                        "description" => $row->description,
-                        "category" => $row->category,
-                        "quantity" => $row->quantity,
-                        "unit_type" => $row->unit_type,
-                        "rate" => $row->rate,
-                        "total" => $row->total
-                    );
-
-                }
-
-                $save_data = $this->Purchase_InvoicesItems_model->save($item["data"]);
-
-                if($save_data){
-                    $query = array("fid_order" => $order_id);
-                    $exe = $this->Purchase_Invoices_model->save($query,$save_id); 
+          
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
                
-                    $options = array("id" => $save_data);
-                    $item_info = $this->Purchase_InvoicesItems_model->get_details($options)->row();
-                    // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
-                    echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
-                }else{
-                    echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-                }
-            }else{
-                 echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
-            }
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
         }

@@ -991,6 +991,48 @@ if (!function_exists('prepare_report_pdf')) {
 
 }
 
+if (!function_exists('print_pdf')) {
+
+    function print_pdf($views,$data, $mode = "download") {
+        $ci = get_instance();
+        $ci->load->library('pdf');
+        $ci->pdf->setPrintHeader(false);
+        $ci->pdf->setPrintFooter(false);
+        $ci->pdf->SetCellPadding(1.5);
+        $ci->pdf->setImageScale(1.42);
+        $ci->pdf->AddPage();
+        $ci->pdf->SetFontSize(10);
+
+        if ($data) {
+
+            $data["mode"] = $mode;
+
+            $html = $ci->load->view($views, $data, true);
+
+            if ($mode != "html") {
+                $ci->pdf->writeHTML($html, true, false, true, false, '');
+            }
+
+            $pdf_file_name =  "report".date("Y-m-d").".pdf.";
+
+            if ($mode === "download") {
+                $ci->pdf->Output($pdf_file_name, "D");
+            } else if ($mode === "send_email") {
+                $temp_download_path = getcwd() . "/" . get_setting("temp_file_path") . $pdf_file_name;
+                $ci->pdf->Output($temp_download_path, "F");
+                return $temp_download_path;
+            } else if ($mode === "view") {
+                $ci->pdf->Output($pdf_file_name, "I");
+            } else if ($mode === "html") {
+                return $html;
+            }
+        }
+    }
+
+}
+
+
+
 if (!function_exists('prepare_s_invoice_pdf')) {
 
     function prepare_s_invoice_pdf($invoice_data, $mode = "download") {
@@ -1564,4 +1606,18 @@ if(!function_exists("terbilang")){
       elseif ($x < 1000000000)
         return terbilang($x / 1000000) . " juta" . terbilang($x % 1000000);
     }
+}
+
+function getCustInfo($id){
+    $ci = get_instance();
+    $ci->db->where("id",$id);
+    $data = $ci->db->get('master_customers')->row();
+    return $data->name." - " .$data->company_name;
+}
+
+function getVendorInfo($id){
+    $ci = get_instance();
+    $ci->db->where("id",$id);
+    $data = $ci->db->get('master_vendor')->row();
+    return $data->name." - " .$data->company_name;
 }

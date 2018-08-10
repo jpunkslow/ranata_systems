@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Aging_receivable extends MY_Controller {
+class Aging_payable extends MY_Controller {
 
     function __construct() {
         parent::__construct();
@@ -22,7 +22,7 @@ class Aging_receivable extends MY_Controller {
             $start = $_GET['start'];
             $end = $_GET['end'];
         }else{
-            header("Location:".base_url()."reports/aging_receivable?start=".$start."&end=".$end);
+            header("Location:".base_url()."reports/aging_payable?start=".$start."&end=".$end);
         }
 
         $view_data['date_range'] = format_to_date($start)." - ".format_to_date($end);
@@ -30,18 +30,18 @@ class Aging_receivable extends MY_Controller {
             *,
             '7day' AS type 
         FROM
-            sales_invoices 
+            purchase_invoices 
         WHERE
             end_date >= now( ) 
-            AND end_date <= date_add( now( ), INTERVAL + 7 DAY ) UNION SELECT *, '7-14day' AS type FROM sales_invoices WHERE end_date > date_add( now( ), INTERVAL + 7 DAY ) 
-            AND end_date <= date_add( now( ), INTERVAL + 14 DAY ) UNION SELECT *, '14-30day' AS type FROM sales_invoices WHERE end_date > date_add( now( ), INTERVAL + 14 DAY ) 
-            AND end_date <= date_add( now( ), INTERVAL + 30 DAY ) ");
+            AND end_date <= date_add( now( ), INTERVAL + 7 DAY ) UNION SELECT *, '7-14day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 7 DAY ) 
+            AND end_date <= date_add( now( ), INTERVAL + 14 DAY ) UNION SELECT *, '14-30day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 14 DAY ) 
+            AND end_date <= date_add( now( ), INTERVAL + 30 DAY )");
         if(isset($_GET['print'])){
-            print_pdf("sales/aging_pdf",$view_data);
+            print_pdf("purchase/aging_pdf",$view_data);
         }else{
         
 
-            $this->template->rander("sales/aging",$view_data);
+            $this->template->rander("purchase/aging",$view_data);
         }
 
         

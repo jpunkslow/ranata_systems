@@ -26,14 +26,19 @@ class R_sales extends MY_Controller {
      	}
 
      	$view_data['date_range'] = format_to_date($start)." - ".format_to_date($end);
-
-
      	$view_data['sales_report'] = $this->db->query("select *,
 (select sum(total) as total from sales_invoices_items a join sales_invoices b on a.fid_invoices=b.id where b.status = 'posting' AND a.deleted = 0 AND a.fid_items=master_items.id AND ('".$start."')<=b.end_date AND ('".$end."')>=b.end_date)  as total,
 (select sum(quantity) as qty from sales_invoices_items a join sales_invoices b on a.fid_invoices=b.id where b.status = 'posting' AND a.deleted = 0 AND a.fid_items=master_items.id AND ('".$start."')<=b.end_date AND ('".$end."')>=b.end_date)  as qty
 from master_items WHERE master_items.deleted = 0 ");
+     	if(isset($_GET['print'])){
+     		print_pdf("sales/sales_pdf",$view_data);
+     	}else{
+     	
 
-     	$this->template->rander("sales/report",$view_data);
+     		$this->template->rander("sales/sales_product",$view_data);
+     	}
+
+     	
      }
 
 

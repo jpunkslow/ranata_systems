@@ -20,7 +20,7 @@
             ?>
         </div>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <input type="hidden" name="order_id" value="<?php echo $model_info->id ?>">
         <label for="fid_order" class=" col-md-3">REF ORDER#</label>
             <div class=" col-md-9">
@@ -28,7 +28,7 @@
                    echo form_dropdown("fid_order", $order_dropdown, $model_info->fid_order, "class='select2 validate-hidden' id='fid_order' ");
                     ?>
             </div>
-    </div>  
+    </div>   -->
     <div class="form-group">
         <label for="fid_cust" class="col-md-3">Vendor</label>
         <div class=" col-md-9">
@@ -90,6 +90,22 @@
                 "name" => "inv_date",
                 "class" => "form-control",
                 "value" => $model_info->inv_date,
+                "placeholder" => "Y/m/d",
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="end_date" class="col-md-3">End Date</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "end_date",
+                "name" => "end_date",
+                "class" => "form-control",
+                "value" => $model_info->end_date,
                 "placeholder" => "Y/m/d",
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),

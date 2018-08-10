@@ -143,6 +143,7 @@ class S_invoices extends MY_Controller {
             $check = $this->db->query("SELECT * FROM sales_order_items WHERE fid_order = '$order_id' AND deleted = 0")->result();
 
             if($check){
+                $total_harga = 0;
                 foreach($check as $row){
 
                     $item["data"] = array(
@@ -157,12 +158,13 @@ class S_invoices extends MY_Controller {
                         "rate" => $row->rate,
                         "total" => $row->total
                     );
+                    $total_harga +=$row->total;
 
                     $save_data = $this->Sales_InvoicesItems_model->save($item["data"]);
                 }
 
 
-                    $query = array("fid_order" => $order_id);
+                    $query = array("fid_order" => $order_id,"amount" => $total_harga);
                     $exe = $this->Sales_Invoices_model->save($query,$save_id); 
                
                     $options = array("id" => $save_data);
