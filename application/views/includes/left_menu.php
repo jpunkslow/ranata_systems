@@ -36,7 +36,7 @@
 
 
             $acc_submenu[] = array("name" => "Profit and Loss", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
-            $acc_submenu[] = array("name" => "Profit Loss Total", "slug"=>"labarugi_total","url" => "reports/labarugi_total");
+            // $acc_submenu[] = array("name" => "Profit Loss Total", "slug"=>"labarugi_total","url" => "reports/labarugi_total");
             // $rpt_submenu[] = array("name" => "Profit Loss Project", "slug"=>"laba_rugi","url" => "reports/laba_rugi");
             
             $acc_submenu[] = array("name" => "Balance Sheet","slug"=>"balance_sheet", "url" => "reports/neraca");

@@ -115,7 +115,7 @@
                 "name" => "end_date",
                 "class" => "form-control",
                 "placeholder" => "Y/m/d",
-                "value" => date("Y-m-d"),
+                 "value" => $model_info->end_date,
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));

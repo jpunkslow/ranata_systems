@@ -77,59 +77,59 @@ $ararymonth=array(
         	<div class="panel panel-default  p5 no-border m0">
             
             <span class="ml15">
-                <form action="" method="GET" role="form" class="general-form">
-               <table class="table table-bordered">
-                   <tr>
-                       <!--<td><label>Start Date</label></td>
-                       <td><input type="text" class="form-control" name="start" id="start" value="<?php echo $periode_default ?>" autocomplete="off">
-                       </td>
-                        <td><label>End Date</label></td>
-                       <td><input type="text" class="form-control" name="end" id="end" value="<?php echo $periode_now ?>" autocomplete="off"></td>-->
-                       <td><select class="form-control" name="month" >
-		                <option value="1" <?php if ($month == 1) echo 'selected' ?>>January</option>
-		                <option value="2" <?php if ($month == 2) echo 'selected' ?>>February</option>
-		                <option value="3" <?php if ($month == 3) echo 'selected' ?>>March</option>
-		                <option value="4" <?php if ($month == 4) echo 'selected' ?>>April</option>
-		                <option value="5" <?php if ($month == 5) echo 'selected' ?>>May</option>
-		                <option value="6" <?php if ($month == 6) echo 'selected' ?>>June</option>
-		                <option value="7" <?php if ($month == 7) echo 'selected' ?>>July</option>
-		                <option value="8" <?php if ($month == 8) echo 'selected' ?>>August</option>
-		                <option value="9" <?php if ($month == 9) echo 'selected' ?>>September</option>
-		                <option value="10" <?php if ($month == 10) echo 'selected' ?>>October</option>
-		                <option value="11" <?php if ($month == 11) echo 'selected' ?>>November</option>
-		                <option value="12" <?php if ($month == 12) echo 'selected' ?>>December</option>
-		            </select></td></td>
-                        <td>
-                        	<select class="form-control" name="year">
-                        		<?php for($a=date('Y');$a>=2017;$a--){?>
+	                <form action="" method="GET" role="form" class="general-form">
+	               <table class="table table-bordered">
+	                   <tr>
+	                       <!--<td><label>Start Date</label></td>
+	                       <td><input type="text" class="form-control" name="start" id="start" value="<?php echo $periode_default ?>" autocomplete="off">
+	                       </td>
+	                        <td><label>End Date</label></td>
+	                       <td><input type="text" class="form-control" name="end" id="end" value="<?php echo $periode_now ?>" autocomplete="off"></td>-->
+	                       <td><select class="form-control" name="month" >
+			                <option value="1" <?php if ($month == 1) echo 'selected' ?>>January</option>
+			                <option value="2" <?php if ($month == 2) echo 'selected' ?>>February</option>
+			                <option value="3" <?php if ($month == 3) echo 'selected' ?>>March</option>
+			                <option value="4" <?php if ($month == 4) echo 'selected' ?>>April</option>
+			                <option value="5" <?php if ($month == 5) echo 'selected' ?>>May</option>
+			                <option value="6" <?php if ($month == 6) echo 'selected' ?>>June</option>
+			                <option value="7" <?php if ($month == 7) echo 'selected' ?>>July</option>
+			                <option value="8" <?php if ($month == 8) echo 'selected' ?>>August</option>
+			                <option value="9" <?php if ($month == 9) echo 'selected' ?>>September</option>
+			                <option value="10" <?php if ($month == 10) echo 'selected' ?>>October</option>
+			                <option value="11" <?php if ($month == 11) echo 'selected' ?>>November</option>
+			                <option value="12" <?php if ($month == 12) echo 'selected' ?>>December</option>
+			            </select></td></td>
+	                        <td>
+	                        	<select class="form-control" name="year">
+	                        		<?php for($a=date('Y');$a>=2017;$a--){?>
 
-                        			<option value="<?php echo $a?>"><?php echo $a?></option>
-                        		<?php } ?>
+	                        			<option value="<?php echo $a?>"><?php echo $a?></option>
+	                        		<?php } ?>
 
-                        	</select>
+	                        	</select>
 
-                        </td>
+	                        </td>
 
-                        <td><select name="type" class="form-control"><option value="1" <?php if ($type == 1) echo 'selected' ?>>1 Month</option><option value="3" <?php if ($type == 3) echo 'selected' ?>>3 Month</option><option value="6" <?php if ($type == 6) echo 'selected' ?>>6 Month</option><option value="12" <?php if ($type == 12) echo 'selected' ?>>12 Month</option></select></td>
-                        <td>
-                        	<select class="form-control" name="project">
-                        		<option value="">--Semua Project--</option>
-                        		<?php foreach($data_project->result() as $r){?>
+	                        <td><select name="type" class="form-control"><option value="1" <?php if ($type == 1) echo 'selected' ?>>1 Month</option><option value="3" <?php if ($type == 3) echo 'selected' ?>>3 Month</option><option value="6" <?php if ($type == 6) echo 'selected' ?>>6 Month</option><option value="12" <?php if ($type == 12) echo 'selected' ?>>12 Month</option></select></td>
+	                        <td>
+	                        	<select class="form-control" name="project">
+	                        		<option value="">--Semua Project--</option>
+	                        		<?php foreach($data_project->result() as $r){?>
 
-                        			<option value="<?php echo $r->id?>" <?php if($project==$r->id)echo 'selected';?>><?php echo $r->project_name?>(<?php echo $r->company_name?>)</option>
-                        		<?php } ?>
+	                        			<option value="<?php echo $r->id?>" <?php if($project==$r->id)echo 'selected';?>><?php echo $r->project_name?>(<?php echo $r->company_name?>)</option>
+	                        		<?php } ?>
 
-                        	</select>
+	                        	</select>
 
-                        </td>
-                        <td>
-                            <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
+	                        </td>
+	                        <td>
+	                            <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
+	                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
 
-                        </td>
-                   </tr>
-               </table>
-               </form>
+	                        </td>
+	                   </tr>
+	               </table>
+	               </form>
                 </span>
 
             </div>
