@@ -13,6 +13,14 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="fid_order" class=" col-md-3">REF PROJECT  #</label>
+                    <div class=" col-md-9">
+                        <?php
+                           echo form_dropdown("fid_project", $project_dropdown, "", "class='select2 validate-hidden' id='fid_project' ");
+                            ?>
+                    </div>
+            </div>
+            <div class="form-group">
                 <label for="code" class=" col-md-3">Transaction Code</label>
                 <div class=" col-md-9">
                     <?php

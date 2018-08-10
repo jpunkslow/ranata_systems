@@ -4,6 +4,8 @@
     <input type="hidden" name="journal_code" value="<?php echo $info_header->code ?>">
     <input type="hidden" name="voucher_code" value="<?php echo $info_header->voucher_code ?>">
     <input type="hidden" name="fid_coa_header" value="<?php echo $info_header->fid_coa ?>">
+    <input type="hidden" name="fid_project" value="<?php echo $info_header->fid_project ?>">
+    
     <input type="hidden" name="date" value="<?php echo $info_header->date ?>">
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">

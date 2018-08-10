@@ -2,7 +2,7 @@
 <div class="modal-body clearfix">
     <input type="hidden" name="id" value="<?php echo $model_info->id ?>">
     <input type="hidden" name="fid_header" value="<?php echo $model_info->fid_header ?>">
-<!--     <input type="hidden" name="voucher_code" value="<?php echo $info_header->voucher_code ?>"> -->
+    <input type="hidden" name="fid_project" value="<?php echo $info_header->fid_project ?>">
     <input type="hidden" name="fid_coa_header" value="<?php echo $info_header->fid_coa ?>">
 <!--    <input type="hidden" name="date" value="<?php echo $info_header->date ?>">
  -->   <div class="tab-content mt15">

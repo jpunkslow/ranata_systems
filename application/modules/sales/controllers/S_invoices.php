@@ -132,7 +132,7 @@ class S_invoices extends MY_Controller {
             "end_date" => $this->input->post('end_date'),
             "currency" => $this->input->post('currency'),
             "fid_tax" => $this->input->post('fid_tax'),
-            "created_at" => get_current_utc_time()
+            "created_at" => date("Y-m-d H:i:s")
         );
 
         
@@ -277,7 +277,20 @@ class S_invoices extends MY_Controller {
                 
                 $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
                 
-               
+               $lawanppn =$this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                 $query = $this->Sales_InvoicesItems_model->get_hpp($id);
+                 $query_hpp = $this->Sales_InvoicesItems_model->get_hpp($id);
+                foreach($query->result() as $row){
+                    // $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,$row->total,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,0,$row->total);
+
+                    
+                }
+
+                foreach ($query_hpp->result() as $key) {
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
+                    $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
+                }
                 $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
             
             }
@@ -483,7 +496,7 @@ class S_invoices extends MY_Controller {
 
         );
 
-        if($data->status != "paid"){
+        if($data->status != "posting"){
            $row_data[] = modal_anchor(get_uri("sales/s_invoices/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id))
                 . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/s_invoices/delete"), "data-action" => "delete"));
 
@@ -608,6 +621,17 @@ class S_invoices extends MY_Controller {
 
             $options = array("id" => $invoice_item_id);
             $item_info = $this->Sales_InvoicesItems_model->get_details($options)->row();
+            $pajak = 0;
+            $invoice_sql = "SELECT sales_invoices.*, tax_table.percentage AS tax_percentage, tax_table.title AS tax_name
+            FROM sales_invoices
+            LEFT JOIN (SELECT taxes.* FROM taxes) AS tax_table ON tax_table.id = sales_invoices.fid_tax
+            WHERE sales_invoices.deleted=0 AND sales_invoices.id='$invoice_id'";
+            $invoice = $this->db->query($invoice_sql)->row();
+
+            $item  = $this->db->query("SELECT sum(total) as total from sales_invoices_items WHERE fid_invoices = '$invoice_id'")->row();
+            $pajak = $item->total * ($invoice->tax_percentage / 100);
+            $query = array("amount" => $item->total + $pajak, "sub_total" => $item->total,'ppn' => $pajak);
+                    $exe = $this->Sales_Invoices_model->save($query,$invoice_id); 
             echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_invoices, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_invoices), 'id' => $invoice_item_id, 'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
@@ -667,7 +691,7 @@ class S_invoices extends MY_Controller {
 
         $val = $this->Sales_Invoices_model->get_details(array("id" => $data->fid_invoices))->row();
 
-        if($val->status != "paid"){
+        if($val->status != "posting"){
                     return array(
                         modal_anchor(get_uri("sales/s_invoices/item_modal_form"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_invoice'), "data-post-id" => $data->id)).js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/s_invoices/delete_item"), "data-action" => "delete")),
             $item,

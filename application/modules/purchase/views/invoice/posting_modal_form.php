@@ -45,7 +45,7 @@
              <?php 
                 echo form_dropdown(
                     "pay_type", array(
-                        "CREDIT" => " - ",
+                        "CREDIT" => "CREDIT",
                         "DP" => "DOWN PAYMENT"
                         ), "", "class='select2 mini' id='pay_type'"
                     );
@@ -68,7 +68,7 @@
             echo form_input(array(
                 "id" => "amount",
                 "name" => "amount",
-                "value" => $invoice_total_summary->invoice_total,
+                "value" => number_format($invoice_total_summary->invoice_total),
                 "class" => "form-control",
                 "readonly" => true,
                 "placeholder" => "0",
@@ -116,6 +116,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#invoice_item_rate').maskMoney(
+            {precision:0 
+        });
+        $('#dp').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[name=dp]').change(function() {
+            var value = $(this).val();
+            
+        });
           RELOAD_VIEW_AFTER_UPDATE = false; //go to invoice page
         
         $("#invoices-form .select2").select2();

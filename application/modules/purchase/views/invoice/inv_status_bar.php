@@ -1,7 +1,7 @@
 <div class="panel panel-default  p15 no-border m0">
     <span><?php echo $invoice_status_label; ?></span>
-    <span class="ml15">Customers : <?php 
-        echo (modal_anchor(get_uri("master/customers/view/" . $invoice_info->fid_cust),$client_info->company_name, array("data-post-id" => $invoice_info->fid_cust)));
+    <span class="ml15">Vendors : <?php 
+    echo (modal_anchor(get_uri("master/vendors/view/" . $invoice_info->fid_cust),$client_info->name." - ".$client_info->company_name, array("data-post-id" => $invoice_info->fid_cust,"title" => "Vendors Info")));
         ?>
     </span> 
 

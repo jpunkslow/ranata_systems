@@ -4,15 +4,7 @@
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">
             
-            <!-- <div class="form-group">
-                <label for="fid_coa" class=" col-md-3"> Paid from To</label>
-                <div class=" col-md-9">
-                    <?php
-                    echo form_dropdown("fid_coa", $kas_dropdown, $model_info->fid_coa, "class='select2 validate-hidden' id='fid_coa' ");
-                                                    
-                    ?>
-                </div>
-            </div> -->
+           
             <div class="form-group">
                 <label for="code" class=" col-md-3">Transaction Code</label>
                 <div class=" col-md-9">
@@ -29,6 +21,14 @@
                     ));
                     ?>
                 </div>
+            </div>
+             <div class="form-group">
+                <label for="fid_order" class=" col-md-3">REF PROJECT  #</label>
+                    <div class=" col-md-9">
+                        <?php
+                           echo form_dropdown("fid_project", $project_dropdown, $model_info->fid_project, "class='select2 validate-hidden' id='fid_project' ");
+                            ?>
+                    </div>
             </div>
             <div class="form-group">
                 <label for="voucher_code" class=" col-md-3">Voucher Code</label>

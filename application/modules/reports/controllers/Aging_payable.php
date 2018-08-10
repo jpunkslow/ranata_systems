@@ -35,7 +35,7 @@ class Aging_payable extends MY_Controller {
             end_date >= now( ) 
             AND end_date <= date_add( now( ), INTERVAL + 7 DAY ) UNION SELECT *, '7-14day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 7 DAY ) 
             AND end_date <= date_add( now( ), INTERVAL + 14 DAY ) UNION SELECT *, '14-30day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 14 DAY ) 
-            AND end_date <= date_add( now( ), INTERVAL + 30 DAY )");
+            AND end_date <= date_add( now( ), INTERVAL + 30 DAY ) AND  paid = 'Not Paid' AND inv_date >= ('$start') AND inv_date <= ('$end') ");
         if(isset($_GET['print'])){
             print_pdf("purchase/aging_pdf",$view_data);
         }else{

@@ -213,6 +213,25 @@ class Vendors extends MY_Controller {
         }
     }
 
+    function view($client_id = 0, $tab="") {
+
+        if ($client_id) {
+            $options = array("id" => $client_id);
+            $client_info = $this->Master_Vendors_model->get_details($options)->row();
+            if ($client_info) {
+
+               
+                $view_data['model_info'] = $client_info;
+                
+                $this->load->view("vendors/view", $view_data);
+            } else {
+                show_404();
+            }
+        } else {
+            show_404();
+        }
+    }
+
 
 
 }

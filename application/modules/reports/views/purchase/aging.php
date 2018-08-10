@@ -6,7 +6,7 @@
     ?>
     <div style="max-width: 1000px; margin: auto;">
         
-        <div id="invoice-status-bar" class="panel panel-default  p5 no-border m0" style="display: none">
+        <div id="invoice-status-bar" class="panel panel-default  p5 no-border m0" style="">
 
         	<form action="" method="GET" role="form" class="general-form">
                <table class="table table-bordered">

@@ -123,7 +123,7 @@ class P_invoices extends MY_Controller {
             
             "currency" => $this->input->post('currency'),
             "fid_tax" => $this->input->post('fid_tax'),
-            "created_at" => get_current_utc_time()
+            "created_at" => date("Y-m-d H:i:s")
         );
 
         
@@ -134,6 +134,7 @@ class P_invoices extends MY_Controller {
             $check = $this->db->query("SELECT * FROM purchase_order_items WHERE fid_order = '$order_id' AND deleted = 0")->result();
 
             if($check){
+                $total_harga = 0;
                 foreach($check as $row){
 
                     $item["data"] = array(
@@ -146,12 +147,13 @@ class P_invoices extends MY_Controller {
                         "rate" => $row->rate,
                         "total" => $row->total
                     );
+                    $total_harga += $row->total;
                     $save_data = $this->Purchase_InvoicesItems_model->save($item["data"]);
 
                 }
 
                 
-                    $query = array("fid_order" => $order_id);
+                    $query = array("fid_order" => $order_id,"amount" => $total_harga);
                     $exe = $this->Purchase_Invoices_model->save($query,$save_id); 
                
                     $options = array("id" => $save_data);
@@ -225,8 +227,8 @@ class P_invoices extends MY_Controller {
         $date = date("Y-m-d");
         $type = "purchase";
         $description = $this->input->post("memo");
-        $amount = $this->input->post('amount');
-        $dp = $this->input->post('dp');
+        $amount = unformat_currency($this->input->post('amount'));
+        $dp = unformat_currency($this->input->post('dp'));
         $pay_type = $this->input->post('pay_type');
         $fid_coa = $this->input->post('fid_bank');
         $fid_cust = $this->input->post('fid_cust');
@@ -244,10 +246,10 @@ class P_invoices extends MY_Controller {
            
 
             if($pay_type == "CREDIT"){
-                $this->_insertTransaction($project,$code,$voucher_code,$date,$type,$description,$coa_persediaan,$amount,0);
+                $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_persediaan,$amount,0);
                 $this->_insertTransaction($code,$voucher_code,$date,$type,$description,$coa_hutang_usaha,0,$amount);
 
-                $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "residual" => $amount);
+                $status_data = array("status" => "posting" ,"paid" => "Not Paid", "residual" => $amount);
                 
 
             }
@@ -508,6 +510,17 @@ class P_invoices extends MY_Controller {
 
             $options = array("id" => $invoice_item_id);
             $item_info = $this->Purchase_InvoicesItems_model->get_details($options)->row();
+            $pajak = 0;
+            $invoice_sql = "SELECT purchase_invoices.*, tax_table.percentage AS tax_percentage, tax_table.title AS tax_name
+            FROM purchase_invoices
+            LEFT JOIN (SELECT taxes.* FROM taxes) AS tax_table ON tax_table.id = purchase_invoices.fid_tax
+            WHERE purchase_invoices.deleted=0 AND purchase_invoices.id='$invoice_id'";
+            $invoice = $this->db->query($invoice_sql)->row();
+
+            $item  = $this->db->query("SELECT sum(total) as total from purchase_invoices_items WHERE fid_invoices = '$invoice_id'")->row();
+            $pajak = $item->total * ($invoice->tax_percentage / 100);
+            $query = array("amount" => $item->total + $pajak, "sub_total" => $item->total,'ppn' => $pajak);
+                    $exe = $this->Purchase_Invoices_model->save($query,$invoice_id); 
             echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_invoices, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_invoices), 'id' => $invoice_item_id, 'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));

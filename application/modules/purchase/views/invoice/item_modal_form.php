@@ -24,7 +24,7 @@
         <label for="description" class=" col-md-3">Deskripsi Item</label>
         <div class="col-md-9">
             <?php
-            echo form_textarea(array(
+            echo form_input(array(
                 "id" => "description",
                 "name" => "description",
                 "value" => $model_info->description,
@@ -36,19 +36,7 @@
             ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="category" class=" col-md-3">Kategori Produk</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "category", array(
-                        "Akomodasi" => "Akomodasi",
-                        "Transport" => "Transport"
-                        ), $model_info->category, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
+   
     <div class="form-group">
         <label for="category" class=" col-md-3">Kategori</label>
         <div class="col-md-9">
@@ -65,22 +53,7 @@
             ?>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label for="unit_type" class=" col-md-3">Tipe Produk</label>
-        <div class="col-md-9">
-             <?php 
-                echo form_dropdown(
-                    "unit_type", array(
-                        "Domestic" => "Domestic",
-                        "International" => "International",
-                        "Umrah" => "Umrah",
-                        "Maize" => "Maize",
-                        "lainnya" => "Lain - lain"
-                        ), $model_info->unit_type, "class='select2 mini'"
-                    );
-                        ?>
-        </div>
-    </div> -->
+    
     <div class="form-group">
         <label for="unit_type" class=" col-md-3">Tipe</label>
         <div class="col-md-9">
@@ -114,8 +87,23 @@
         </div>
     </div>
     
+    <!-- <div class="form-group">
+        <label for="invoice_item_basic" class=" col-md-3">Basic Price</label>
+        <div class="col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "invoice_item_basic",
+                "name" => "invoice_item_basic",
+                "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price) : "",
+                "class" => "form-control",
+                "placeholder" => "0",
+                // "type" => 'number'
+            ));
+            ?>
+        </div>
+    </div> -->
     <div class="form-group">
-        <label for="invoice_item_rate" class=" col-md-3">Price</label>
+        <label for="invoice_item_rate" class=" col-md-3">Sell Price</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -123,8 +111,9 @@
                 "name" => "invoice_item_rate",
                 "value" => $model_info->rate ? to_decimal_format($model_info->rate) : "",
                 "class" => "form-control",
-                "placeholder" => lang('rate'),
+                "placeholder" => "0",
                 "data-rule-required" => true,
+                // "type" => 'number',
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
@@ -140,7 +129,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        // $('#invoice_item_basic').maskMoney(
+        //     {precision:0 
+        // });
+        $('#invoice_item_rate').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[name=invoice_item_rate]').change(function() {
+            var value = $(this).val();
+            
+        });
         $("#invoice-item-form .select2").select2();
         $("#invoice-item-form").appForm({
             onSuccess: function (result) {

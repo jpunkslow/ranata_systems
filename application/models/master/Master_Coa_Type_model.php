@@ -72,6 +72,18 @@ class Master_Coa_Type_model extends Crud_model {
         }
         return $result;
     }
+
+    function getCoaKas($kas) {
+        // $where["deleted"] = 0;
+        // $where["id"] = (2,3);
+        $list_data = $this->db->query("SELECT account_number FROM $this->table WHERE account_number LIKE '$kas%' AND parent is NULL AND deleted = 0");
+         $result = array();
+        foreach ($list_data->result() as $data) {
+            // $text = "";
+            $result[$data->account_number] = $data->account_number;
+        }
+        return $result;
+    }
     function getCoaDrop( $field = "",$like = "") {
         // $where["deleted"] = 0;
         // $where["id"] = (2,3);

@@ -27,6 +27,7 @@ class Expenses extends MY_Controller {
         // $view_data['model_info'] = $this->Expenses_model->get_one($this->input->post('id'));
         // $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCoaDrop('account_number',"100");
+        $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name"));
 
         
         $this->load->view('expenses/modal_form',$view_data);
@@ -75,6 +76,7 @@ class Expenses extends MY_Controller {
             "id" => $id,
         );
         $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+        $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name"));
 
         $view_data['model_info'] = $this->Expenses_header_model->get_details($options)->row();
          // $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
@@ -98,6 +100,7 @@ class Expenses extends MY_Controller {
             "code" => $this->input->post('code'),
             "voucher_code" => $this->input->post('voucher_code'),
             "fid_coa" => $this->input->post('fid_coa'),
+            "fid_project" => $this->input->post('fid_project'),
             "date" => $this->input->post('date'),
             "description" => $this->input->post('description'),
             "status" => 1,
@@ -151,6 +154,7 @@ class Expenses extends MY_Controller {
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
             "fid_header" => $data_id,
+            "fid_project" => $this->input->post('fid_project'),
             "debet" => unformat_currency($this->input->post("debet")),
             "credit" => 0,
             "username" => "admin",
@@ -162,7 +166,7 @@ class Expenses extends MY_Controller {
 
         $save_id = $this->Expenses_model->save($data);
         if ($save_id) {
-            $this->_triggerUpdate($data_id,$fid_coa);
+            $this->_triggerUpdate($data_id,$fid_coa,$this->input->post('fid_project'));
             // $data = $this->db->query("SELECT SUM(debet) AS debet,fid_header FROM transaction_journal WHERE fid_header = $data_id AND deleted = 0 ")->row();
             // $this->db->query("UPDATE transaction_journal SET credit = $data->debet WHERE fid_header = $data->fid_header AND fid_coa = '$fid_coa' ");
             
@@ -181,9 +185,11 @@ class Expenses extends MY_Controller {
 
         $fid_header = $this->input->post('fid_header');
         $fid_coa = $this->input->post('fid_coa_header');
+        $fid_project =  $this->input->post('fid_project');
         $data = array(
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
+
             "debet" => unformat_currency($this->input->post("debet"))        
         );
 
@@ -193,6 +199,7 @@ class Expenses extends MY_Controller {
         $save_id = $this->Expenses_model->save($data,$data_id);
         if ($save_id) {
             $this->_triggerUpdate($fid_header,$fid_coa);
+
             // $data = $this->db->query("SELECT SUM(debet) AS debet,fid_header FROM transaction_journal WHERE fid_header = $data_id AND deleted = 0 ")->row();
             // $this->db->query("UPDATE transaction_journal SET credit = $data->debet WHERE fid_header = $data->fid_header AND fid_coa = '$fid_coa' ");
             
@@ -220,6 +227,16 @@ class Expenses extends MY_Controller {
             }
     }
 
+    function _triggerUpdateProject($fid_header,$fid_project = 0){
+        $query = $this->db->query("UPDATE transaction_journal SET project_id = $fid_project WHERE fid_header = $fid_header ");
+                
+        if($query == true){
+            return true;
+        }else{
+            return false;
+        }   
+    }
+
 
     function save() {
         $data_id = $this->input->post('id');
@@ -234,7 +251,7 @@ class Expenses extends MY_Controller {
          $data = array(
             "code" => $this->input->post('code'),
             "voucher_code" => $this->input->post('voucher_code'),
-            // "fid_coa" => $this->input->post('fid_coa'),
+            "fid_project" => $this->input->post('fid_project'),
             "date" => $this->input->post('date'),
             "description" => $this->input->post('description')
         );
@@ -242,7 +259,7 @@ class Expenses extends MY_Controller {
 
         $save_id = $this->Expenses_header_model->save($data,$data_id);
         if ($save_id) {
-
+            $this->_triggerUpdateProject($fid_header,$fid_project);
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $data_id,'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
@@ -372,8 +389,8 @@ class Expenses extends MY_Controller {
         // $options = array(
         //     "id" => $data->id
         // );
-        $kas = array("100.001","100.002","100.003","100.004","100.005","100.006","100.007","100.008","100.008","100.010","100.011");
         // $query = $this->Master_Customers_model->get_details($options)->row();
+        $kas = $this->Master_Coa_Type_model->getCoaKas("100");
         $value = $this->Master_Coa_Type_model->get_details(array("id"=> $data->fid_coa))->row();
         $row_data = array(
             $value->account_name,
@@ -385,6 +402,7 @@ class Expenses extends MY_Controller {
 
 
         );
+        // print_r($kas);
             if(!in_array($value->account_number, $kas)){
             $row_data[] = modal_anchor(get_uri("accounting/expenses/modal_form_detail_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => "Edit Entry", "data-post-id" => $data->id))
                 . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/expenses/delete_detail"), "data-action" => "delete"));
@@ -399,6 +417,8 @@ class Expenses extends MY_Controller {
         if($id){
             // echo $id;
             $this->_triggerUpdate($id,$fid_coa);
+            $project = $this->db->query("SELECT fid_project FROM transaction_journal_header WHERE id = '$id' ")->row();
+            $this->_triggerUpdateProject($id,$project->fid_project);
             
             $view_data['info_header'] = $this->Expenses_header_model->get_details(array("id" => $id))->row();
             // print_r($view_data['info_header']);
