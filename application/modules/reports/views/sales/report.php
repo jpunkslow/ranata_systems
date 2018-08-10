@@ -37,8 +37,8 @@
             				<th>Nama Produk</th>
             				<th style="text-align: center;">Tipe</th>
             				<th style="text-align: center;">Kategori</th>
-            				<th style="text-align: center;">Kuantitas</th>
             				<th style="text-align: center;">Jumlah</th>
+            				<th style="text-align: center;">Total Rupiah</th>
             			</tr>
             			<tbody>
             			<?php $jumlah = 0; $qty = 0; foreach($sales_report->result() as $row){ ?>
