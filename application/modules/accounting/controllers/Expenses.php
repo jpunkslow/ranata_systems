@@ -154,7 +154,7 @@ class Expenses extends MY_Controller {
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
             "fid_header" => $data_id,
-            "fid_project" => $this->input->post('fid_project'),
+            "project_id" => $this->input->post('fid_project'),
             "debet" => unformat_currency($this->input->post("debet")),
             "credit" => 0,
             "username" => "admin",

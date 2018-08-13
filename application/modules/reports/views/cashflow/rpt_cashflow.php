@@ -115,7 +115,7 @@ if(!empty($_GET['year'])){
                     <td></td>
                     <td colspan="2"><b><i>Arus Kas Masuk</i></b></td>
                 </tr>
-
+                <?php $jml_dapat = 0; $jml_keluar = 0; ?>
                 <?php foreach($data_dapat as $row){ 
                 $jml_akun = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
                 $value_masuk = $jml_akun->jum_debet+$jml_akun->jum_kredit;
@@ -125,10 +125,10 @@ if(!empty($_GET['year'])){
                 <tr>
                    <td><?=$row->account_number ?></td>
                    <td><?=$row->account_name ?></td> 
-                   <td><?php number_format(nsi_round($value_masuk))  ?></td>
+                   <td><?php echo number_format(nsi_round($value_masuk))  ?></td>
                    
                 </tr>
-               
+               <?php $jml_dapat += $value_masuk; ?>
 
 
 
@@ -136,7 +136,7 @@ if(!empty($_GET['year'])){
                 <tr>
                     <td></td>
                     <td><b><i>Total Arus Kas Masuk</i></b></td>
-                    <td><?php echo $value_masuk =+ $value_masuk ?></td>
+                    <td><?php echo number_format($jml_dapat); ?></td>
                     
                 </tr>
 
@@ -154,10 +154,27 @@ if(!empty($_GET['year'])){
                 <tr>
                    <td><?=$row->account_number ?></td>
                    <td><?=$row->account_name ?></td> 
-                   <td><?php number_format(nsi_round($value_keluar))  ?></td>
+                   <td><?php echo number_format(nsi_round($value_keluar))  ?></td>
+                
+                </tr>
+                    
+            <?php $jml_keluar += $value_keluar; ?>
+
+            <?php } ?>
+            <?php foreach($beban_operasional as $row){ 
+                $jml_akun_k = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
+                $value_keluar_beban = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit
+                    ?>
+
+                
+                <tr>
+                   <td><?=$row->account_number ?></td>
+                   <td><?=$row->account_name ?></td> 
+                   <td><?php echo number_format(nsi_round($value_keluar_beban))  ?></td>
                 
                 </tr>
                
+               <?php $jml_keluar += $value_keluar_beban; ?>
 
 
 
@@ -165,7 +182,7 @@ if(!empty($_GET['year'])){
              <tr>
                     <td></td>
                     <td><b><i>Total Arus Kas Pengeluaran</i></b></td>
-                    <td><?php echo $value_keluar =+ $value_keluar ?></td>
+                    <td><?php echo number_format($jml_keluar) ?></td>
                     
                 </tr>
 

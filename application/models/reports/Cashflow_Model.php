@@ -31,6 +31,25 @@ class Cashflow_model extends CI_Model {
 			return array();
 		}
 	}
+	function getBebanOperasional(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Beban Administrasi Umum' AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+	}
+
+	function getHutangBeban(){
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Hutang Lancar' AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+	}
 	function get_jml_akun($akun,$month,$year) {
 		$start=$year.'-'.$month.'-01';
 		$end=$year.'-'.$month.'-31';

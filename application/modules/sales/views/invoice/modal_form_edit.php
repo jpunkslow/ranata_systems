@@ -117,6 +117,7 @@
                 "placeholder" => "Y/m/d",
                  "value" => $model_info->end_date,
                 "data-rule-required" => true,
+                "autocomplete" => "off",
                 "data-msg-required" => lang("field_required"),
             ));
             ?>
@@ -174,6 +175,7 @@
         
         $("#invoices-form .select2").select2();
         setDatePicker("#inv_date");
+        setDatePicker("#end_date");
         $("#invoices-form").appForm({
             onSuccess: function (result) {
                 if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {

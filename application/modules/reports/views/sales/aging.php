@@ -46,6 +46,7 @@
             				<th style="text-align: center;">1-7</th>
                             <th style="text-align: center;">7-14</th>
                             <th style="text-align: center;">14-30</th>
+                            <th style="text-align: center;"> > 30</th>
 
             			</tr>
             			<tbody>
@@ -58,6 +59,7 @@
                             <?php $jumlah += $row->amount; if($row->type == "7day"){ echo "<td style='text-align: center;'>".number_format($row->amount)."</td>"; }else{ echo "<td style='text-align: center;'>0</td>"; } ?>
                             <?php if($row->type == "7-14day"){ echo "<td style='text-align: center;'>".number_format($row->amount)."</td>";}else{ echo "<td style='text-align: center;'>0</td>"; } ?>
                             <?php if($row->type == "14-30day"){ echo "<td style='text-align: center;'>".number_format($row->amount)."</td>";}else{ echo "<td style='text-align: center;'>0</td>"; } ?>
+                            <?php if($row->type == ">30day"){ echo "<td style='text-align: center;'>".number_format($row->amount)."</td>";}else{ echo "<td style='text-align: center;'>0</td>"; } ?>
                             
                             
 

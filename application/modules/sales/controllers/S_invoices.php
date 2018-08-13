@@ -207,6 +207,7 @@ class S_invoices extends MY_Controller {
             "fid_project" => $this->input->post('fid_project'),
             "email_to" => $this->input->post('email_to'),
             "inv_date" => $this->input->post('inv_date'),
+            "end_date" => $this->input->post('end_date'),
             "fid_tax" => $this->input->post('fid_tax'),
             "currency" => $this->input->post('currency')
         );

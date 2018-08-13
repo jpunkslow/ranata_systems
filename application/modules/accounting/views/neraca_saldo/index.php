@@ -112,13 +112,13 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         
         	$html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
         	$html .= '<td class="h_kanan">'.number_format($debet->debet).'</td>';
-       		$html .= '<td class="h_kanan">'.number_format($credit->credit).'</td>';
+       		$html .= '<td class="h_kanan">'.number_format(0).'</td>';
         
         }
         // $jml_dapat += $jumlah;
         $html .= '</tr>';
         echo $html;
-        $jml_debet += $debet->debet;
+        $jml_debet += $debet->debet + $credit->credit;
         $jml_credit += $credit->credit;
         $no_dapat++;
     }

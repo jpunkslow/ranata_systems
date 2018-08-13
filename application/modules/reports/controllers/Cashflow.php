@@ -21,6 +21,8 @@ class Cashflow extends MY_Controller {
 
         $view_data['data_dapat'] = $this->Cashflow_model->get_data_akun_dapat();
         $view_data['data_beban_pokok'] = $this->Cashflow_model->getBebanPokokPenjualan();
+        $view_data['hutang'] = $this->Cashflow_model->getHutangBeban();
+        $view_data['beban_operasional'] = $this->Cashflow_model->getBebanOperasional();
 
         
         
