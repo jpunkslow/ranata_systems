@@ -235,14 +235,15 @@ class S_invoices extends MY_Controller {
 
 
         validate_submitted_data(array(
-            "code" => "required"
+            "code" => "required",
+            "paid_date" => "required"
             
         ));
 
         
         $code = $this->input->post("code");
         $voucher_code = "";
-        $date = date("Y-m-d");
+        $date = $this->input->post("paid_date");
         $type = "sales";
         $coa_sales = $this->input->post("sales_coa");
         $description = $this->input->post("memo");

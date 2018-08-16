@@ -115,7 +115,7 @@ if(!empty($_GET['year'])){
                     <td></td>
                     <td colspan="2"><b><i>Arus Kas Masuk</i></b></td>
                 </tr>
-                <?php $jml_dapat = 0; $jml_keluar = 0; ?>
+                <?php $jml_dapat = 0; $jml_keluar = 0; $jml_investasi = 0; $jml_pendanaan = 0; ?>
                 <?php foreach($data_dapat as $row){ 
                 $jml_akun = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
                 $value_masuk = $jml_akun->jum_debet+$jml_akun->jum_kredit;
@@ -125,7 +125,7 @@ if(!empty($_GET['year'])){
                 <tr>
                    <td><?=$row->account_number ?></td>
                    <td><?=$row->account_name ?></td> 
-                   <td><?php echo number_format(nsi_round($value_masuk))  ?></td>
+                   <td style="text-align: right;"><?php echo number_format(nsi_round($value_masuk))  ?></td>
                    
                 </tr>
                <?php $jml_dapat += $value_masuk; ?>
@@ -133,10 +133,27 @@ if(!empty($_GET['year'])){
 
 
             <?php } ?>
+            <?php foreach($data_piutang as $row){ 
+                $jml_akun = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
+                $value_masuk_piutang = $jml_akun->jum_debet+$jml_akun->jum_kredit;
+                    ?>
+
+                
+                <tr>
+                   <td><?=$row->account_number ?></td>
+                   <td><?=$row->account_name ?></td> 
+                   <td style="text-align: right;"><?php echo number_format(nsi_round($value_masuk_piutang))  ?></td>
+                   
+                </tr>
+               <?php $jml_dapat += $value_masuk + $value_masuk_piutang; ?>
+
+
+
+            <?php } ?>
                 <tr>
                     <td></td>
                     <td><b><i>Total Arus Kas Masuk</i></b></td>
-                    <td><?php echo number_format($jml_dapat); ?></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($jml_dapat); ?></td>
                     
                 </tr>
 
@@ -154,7 +171,7 @@ if(!empty($_GET['year'])){
                 <tr>
                    <td><?=$row->account_number ?></td>
                    <td><?=$row->account_name ?></td> 
-                   <td><?php echo number_format(nsi_round($value_keluar))  ?></td>
+                   <td style="text-align: right;"><?php echo number_format(nsi_round($value_keluar))  ?></td>
                 
                 </tr>
                     
@@ -170,19 +187,82 @@ if(!empty($_GET['year'])){
                 <tr>
                    <td><?=$row->account_number ?></td>
                    <td><?=$row->account_name ?></td> 
-                   <td><?php echo number_format(nsi_round($value_keluar_beban))  ?></td>
+                   <td style="text-align: right;"><?php echo number_format(nsi_round($value_keluar_beban))  ?></td>
                 
                 </tr>
                
                <?php $jml_keluar += $value_keluar_beban; ?>
-
+    
 
 
             <?php } ?>
              <tr>
                     <td></td>
                     <td><b><i>Total Arus Kas Pengeluaran</i></b></td>
-                    <td><?php echo number_format($jml_keluar) ?></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($jml_keluar) ?></td>
+                    
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b><i>Arus kas dari aktifitas operasi</i></b></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($jml_dapat - $jml_keluar) ?></td>
+                </tr>
+                 <tr>
+                    <td></td>
+                    <td colspan="2"><b><i>Aktivitas Investasi</i></b></td>
+                </tr>
+                <?php foreach($data_investasi as $row){ 
+                $jml_akun_k = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
+                $value_investasi = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit
+                    ?>
+
+                
+                <tr>
+                   <td><?=$row->account_number ?></td>
+                   <td><?=$row->account_name ?></td> 
+                   <td style="text-align: right;"><?php echo number_format(nsi_round($value_investasi))  ?></td>
+                
+                </tr>
+               
+               <?php $jml_investasi += $value_investasi; ?>
+    
+
+
+            <?php } ?>
+                <tr>
+                    <td></td>
+                    <td><b><i>Arus kas dari aktivitas Investasi</i></b></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($jml_investasi) ?></td>
+                    
+                </tr>
+
+                 <tr>
+                    <td></td>
+                    <td colspan="2"><b><i>Aktivitas Pendanaan</i></b></td>
+                </tr>
+
+                <?php foreach($data_pendanaan as $row){ 
+                $jml_akun_k = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
+                $value_pendanaan = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit
+                    ?>
+
+                
+                <tr>
+                   <td><?=$row->account_number ?></td>
+                   <td><?=$row->account_name ?></td> 
+                   <td style="text-align: right;"><?php echo number_format(nsi_round($value_pendanaan))  ?></td>
+                
+                </tr>
+               
+               <?php $jml_pendanaan += $value_pendanaan; ?>
+    
+
+
+            <?php } ?>
+            <tr>
+                    <td></td>
+                    <td><b><i>Arus kas dari aktivitas pendanaan</i></b></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($jml_pendanaan) ?></td>
                     
                 </tr>
 

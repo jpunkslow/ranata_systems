@@ -96,7 +96,6 @@
                 "name" => "inv_date",
                 "class" => "form-control",
                 "placeholder" => "Y/m/d",
-                "value" => date("Y-m-d"),
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));
@@ -112,7 +111,6 @@
                 "name" => "end_date",
                 "class" => "form-control",
                 "placeholder" => "Y/m/d",
-                "value" => date("Y-m-d"),
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),
             ));

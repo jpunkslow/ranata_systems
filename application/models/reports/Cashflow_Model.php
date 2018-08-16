@@ -3,7 +3,38 @@
 class Cashflow_model extends CI_Model {
 
 	function get_data_akun_dapat() {
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Pendapatan' AND parent IS NULL ORDER BY account_number ASC");
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in ('Pendapatan','Pendapatan Lain-lain') AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+
+	}
+
+	function get_data_akun_piutang() {
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_number LIKE '110%' AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+
+	}
+	function get_data_akun_investasi() {
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_number LIKE '160%' AND parent IS NULL ORDER BY account_number ASC");
+		if($query->num_rows() > 0) {
+			$out = $query->result();
+			return $out;
+		} else {
+			return array();
+		}
+
+	}
+	function get_data_akun_pendanaan() {
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in ('Hutang Lancar','Hutang Jangka Panjang') AND parent IS NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;

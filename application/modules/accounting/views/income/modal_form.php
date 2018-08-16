@@ -37,7 +37,7 @@
                         "id" => "voucher_code",
                         "name" => "voucher_code",
                         "class" => "form-control",
-                        "value" => getCodeId('transaction_journal','BKM-'),
+                        "value" => getCodeId('transaction_journal_header','BKM-'),
                         "data-rule-required" => true,
                         "placeholder" => 'Voucher Number',
                         "data-msg-required" => lang("field_required")

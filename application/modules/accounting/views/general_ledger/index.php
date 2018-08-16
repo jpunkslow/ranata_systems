@@ -1,3 +1,11 @@
+<?php 
+$start = date("Y")."-01-01";
+if(!empty($_GET['start'])){
+    $start = $_GET['start'];
+}
+
+?>
+
 <div id="page-content" class="clearfix">
     <div class="panel panel-default">
         <div class="page-title clearfix">
@@ -20,6 +28,7 @@
                         echo form_input(array(
                             'id' => 'start',
                             'name' => 'start',
+                            "value" => $start,
                             "class" => "form-control",
                             "placeholder" => 'Y-m-d'
                         ));
@@ -82,7 +91,7 @@
 
 <script type="text/javascript">
     function showLedgerBtn(){
-             var client_id = $("#fid_coa").val();
+             var client_id = $("#fid_coa").select2().val();
 
             var start = $("#start").val();
             var end = $("#end").val();

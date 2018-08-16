@@ -16,7 +16,7 @@ class Neraca_model extends CI_Model {
 
 	}
 	function getCurrentAssets(){
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Aktiva Lancar' AND parent IS NOT NULL ORDER BY account_number ASC");
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in ('Aktiva Lancar','Kas/Bank') AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;
@@ -26,7 +26,7 @@ class Neraca_model extends CI_Model {
 	}
 
 	function getCurrentNonAssets(){
-		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in('Aktiva Tetap','Aktiva Tidak Lancar Lainnya') AND parent IS NOT NULL ORDER BY account_number ASC");
+		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in('Aktiva Tetap','Aktiva Tidak Lancar Lainnya','Aktiva Tidak Lancar') AND parent IS NOT NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
 			$out = $query->result();
 			return $out;

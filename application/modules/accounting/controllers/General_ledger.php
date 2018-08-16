@@ -25,6 +25,8 @@ class General_ledger extends MY_Controller {
         
         $saldo = 0;
         $periode = substr($start, 0,4);
+        $start = date("Y")."-01-01";
+        $end = date("Y-m-d");
         $sa_debet = $this->Master_Saldoawal_model->getDebit($id,$periode);
         $sa_credit = $this->Master_Saldoawal_model->getCredit($id,$periode);
 
@@ -39,7 +41,7 @@ class General_ledger extends MY_Controller {
             $where = " AND date >= '$start' AND  date <= '$end' ";
         }
         $where_coa = "";
-        if(!empty($id)){
+        if(!empty($_GET)){
             $where_coa = " AND a.fid_coa = '$id'";
         }
 

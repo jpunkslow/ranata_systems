@@ -63,15 +63,22 @@
             ?>
         </div>
     </div>
-    <!--<div class="form-group" id="cash">
-        <label for="sales_coa" class="col-md-3">SALES #REF</label>
-        <div class=" col-md-9">
+    <div class="form-group">
+        <label for="paid_date" class=" col-md-3">PAID DATE</label>
+        <div class="col-md-9">
             <?php
-            echo form_dropdown("sales_coa", $coa_sales_dropdown, "", "class='select2 tax-select2'");
-            
+            echo form_input(array(
+                "id" => "paid_date",
+                "name" => "paid_date",
+                "class" => "form-control validate-hidden",
+                "autocomplete" => "off",
+                "placeholder" => date("Y-m-d"),
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required"),
+            ));
             ?>
         </div>
-    </div>-->
+    </div>
      <div class="form-group">
         <label for="subtotal" class="col-md-3">Subtotal</label>
         <div class=" col-md-9">
@@ -166,6 +173,7 @@
         
         $("#invoices-form .select2").select2();
         setDatePicker("#inv_date");
+        setDatePicker("#paid_date");
         $("#invoices-form").appForm({
             onSuccess: function (result) {
                 if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {

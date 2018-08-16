@@ -109,16 +109,23 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         
         }else{
         	// $html .= '<td class="h_tengah"> '.$row->account_number.' </td>';
-        
-        	$html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-        	$html .= '<td class="h_kanan">'.number_format($debet->debet).'</td>';
-       		$html .= '<td class="h_kanan">'.number_format(0).'</td>';
+            if($row->account_type == "Kas/Bank"){
+                $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
+            $html .= '<td class="h_kanan">'.number_format($debet->debet - $credit->credit).'</td>';
+            $html .= '<td class="h_kanan">'.number_format(0).'</td>';
+            }else{
+                $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
+                $html .= '<td class="h_kanan">'.number_format($debet->debet).'</td>';
+                $html .= '<td class="h_kanan">'.number_format($credit->credit).'</td>';
+
+
+            }
         
         }
         // $jml_dapat += $jumlah;
         $html .= '</tr>';
         echo $html;
-        $jml_debet += $debet->debet + $credit->credit;
+        $jml_debet += $debet->debet;
         $jml_credit += $credit->credit;
         $no_dapat++;
     }

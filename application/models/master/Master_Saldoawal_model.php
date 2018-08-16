@@ -33,6 +33,7 @@ class Master_Saldoawal_model extends Crud_model {
         }
         return $result;
     }
+    
 
     function getDebit($no,$p){
         $q = "SELECT * FROM master_saldo_awal WHERE fid_coa='$no' AND periode='$p'";

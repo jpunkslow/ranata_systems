@@ -12,6 +12,7 @@ class Neraca extends MY_Controller {
         $this->load->model('reports/Accounting_model');
         $this->load->model('reports/Neraca_model');
         $this->load->model('reports/Profitloss_model');
+        $this->load->model('master/Master_Saldoawal_model');
     }
 
     /* load clients list view */

@@ -84,9 +84,11 @@
                 
 
                 <div class="table-responsive mt15 pl15 pr15">
-
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
-	
+<?php if(empty($_GET['type']) || $_GET["type"] == 1){ ?>
+<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." ".$year?></p>
+<?php }else{ ?>
+	<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
+	<?php } ?>
 	<hr>
 
 
@@ -103,11 +105,19 @@
 	</tr>
 	
 	<?php
+	$periode = $year;
+	// $saldo = 0;
 	$currentAssets='';
 	$no_act_lancar = 1;
 	$jml_act_lancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getCurrentAssets as $row) {
+		 
+        
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+
+        $saldo = $sa_debet + $sa_credit;
 		$currentAssets .='
 				<tr>
 					<td class="h_tengah"> '.$no_act_lancar.' </td>
@@ -116,7 +126,7 @@
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
+			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
 			
 					$currentAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
 						$jml_act_lancar[$i] += $jumlah;
@@ -132,6 +142,11 @@
 	$jml_act_nolancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getCurrentNonAssets as $row) {
+
+		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+
+        $saldo = $sa_debet + $sa_credit;
 		$currentNoAssets .= '
 				<tr>
 					<td class="h_tengah"> '.$no_act_nolancar.' </td>
@@ -140,7 +155,7 @@
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
+			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
 					$currentNoAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
 						$jml_act_nolancar[$i] += $jumlah;
 					
@@ -155,6 +170,10 @@
 	$jml_kwj_lancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getCurrentLiabilities as $row) {
+		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+
+        $saldo =  $sa_debet + $sa_credit;
 		$currentLiabilities .='
 				<tr>
 					<td class="h_tengah"> '.$no_kwj_lancar.' </td>';
@@ -162,7 +181,7 @@
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
+			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit+$saldo;
 		
 					$currentLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
 						$jml_kwj_lancar[$i] += $jumlah;
@@ -179,6 +198,10 @@
 	$jml_kwj_nolancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getLongTermPayable as $row) {
+		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+
+        $saldo = $sa_debet + $sa_credit;
 		$currentNoLiabilities .='
 				<tr>
 					<td class="h_tengah"> '.$no_kwj_nolancar.' </td>
@@ -187,7 +210,7 @@
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
+			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
 					$currentNoLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
 						$jml_kwj_lancar[$i] += $jumlah;
 					
@@ -203,6 +226,10 @@
 	$jml_ekuitas =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getEquity as $row) {
+		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+
+        $saldo = $sa_debet + $sa_credit;
 		$ekuitas .='
 				<tr>
 					<td class="h_tengah"> '.$no_ekuitas.' </td>
@@ -211,7 +238,7 @@
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
+			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit +$saldo;
 				
 						$ekuitas .='<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
 			}
@@ -281,7 +308,7 @@
 	$laba_rugi_ditahan .='</tr>';
 
 	$laba_rugi_berjalan .='<tr >
-		<td>2<td > Laba (Rugi) Ditahan</td>';
+		<td>2<td > Laba (Rugi) Tahun Berjalan</td>';
 		for ($i=$month; $i <=$loop ;$i++) {
 		$laba_rugi_berjalan .='<td class="h_kanan"><b>';
 		$laba_rugi_berjalan .=number_format(nsi_round(0)).'</b></td>';
