@@ -84,7 +84,7 @@ class S_payments extends MY_Controller {
         $options = array(
             "id" => $id,
         );
-        $view_data['bank_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop('account_number','100.');
+        $view_data['bank_dropdown'] = array("" => "-") + $this->Master_Coa_Type_model->getCoaDrop('account_type','Kas/Bank');
        
         $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
         $view_data['model_info_total'] = $this->Sales_Payments_model->getInvoicesTotal($id)->row();
@@ -516,8 +516,8 @@ class S_payments extends MY_Controller {
      //prepare invoice status label 
      private function _get_payments_status_label($invoice_info, $return_html = true) {
         // return get_payments_status_label($data, $return_html);
-        $invoice_status_class = "label-default";
-        $status = "draft";
+        $invoice_status_class = "label-primary";
+        $status = "PAID";
         $now = get_my_local_time("Y-m-d");
         if ($invoice_info->status == "draft" ) {
             $invoice_status_class = "label-warning";
@@ -527,9 +527,9 @@ class S_payments extends MY_Controller {
             $status = "Sudah Terkirim";
 
         }
-        else if ($invoice_info->status == "paid") {
+        else if ($invoice_info->status == "PAID") {
             $invoice_status_class   = "label-primary";
-            $status = "Dibayar";
+            $status = "LUNAS";
 
         }
         $invoice_status = "<span class='label $invoice_status_class large'>" . $status . "</span>";

@@ -84,7 +84,7 @@ $autoload['drivers'] = array();
   |
   |	$autoload['helper'] = array('url', 'file');
  */
-$autoload['helper'] = array('url', 'file', 'form', 'language', 'general', 'date_time', 'app_files', 'widget', 'activity_logs', 'currency');
+$autoload['helper'] = array('url', 'file', 'form', 'language', 'general', 'date_time', 'app_files', 'widget', 'activity_logs', 'currency','reports');
 
 /*
   | -------------------------------------------------------------------
@@ -191,7 +191,9 @@ $autoload['model'] = array(
 
     //LOAD REFERENCE MODEL
     'reference/Ref_category_model',
-    'reference/Ref_utype_model'
+    'reference/Ref_utype_model',
+
+    'widget/Widget_model'
     
 
 );

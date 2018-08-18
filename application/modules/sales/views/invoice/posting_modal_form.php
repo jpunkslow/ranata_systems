@@ -48,7 +48,6 @@
                     "pay_type", array(
                         "CASH" => "CASH",
                         "CREDIT" => "CREDIT",
-                        "DP" => "DOWN PAYMENT"
                         ), "", "class='select2 mini' id='pay_type'"
                     );
                         ?>
@@ -113,7 +112,7 @@
             ?>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="total_amount">
         <label for="amount" class="col-md-3">Total Amount</label>
         <div class=" col-md-9">
             <?php
@@ -130,7 +129,22 @@
             ?>
         </div>
     </div>
-    <div class="form-group" id="dp_field" style="display: none;">
+    <div class="form-group" id="total_amount_cr" style="display: none;">
+        <label for="amount_cr" class="col-md-3">Total Amount Paid</label>
+        <div class=" col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "amount_cr",
+                "name" => "amount_cr",
+                "class" => "form-control",
+                "placeholder" => "0",
+                "data-rule-required" => true,
+                "data-msg-required" => lang("field_required")
+            ));
+            ?>
+        </div>
+    </div>
+    <!-- <div class="form-group" id="dp_field" style="display: none;">
         <label for="dp" class="col-md-3">Down Payment</label>
         <div class=" col-md-9">
             <?php
@@ -145,7 +159,7 @@
             ));
             ?>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label for="memo" class="col-md-3">Memo</label>
         <div class=" col-md-9">
@@ -174,6 +188,16 @@
         $("#invoices-form .select2").select2();
         setDatePicker("#inv_date");
         setDatePicker("#paid_date");
+
+         
+        $('#amount_cr').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[id=amount_cr]').change(function() {
+            var value = $(this).val();
+            
+        });
         $("#invoices-form").appForm({
             onSuccess: function (result) {
                 if (typeof RELOAD_VIEW_AFTER_UPDATE !== "undefined" && RELOAD_VIEW_AFTER_UPDATE) {
@@ -191,10 +215,14 @@
             if ($(this).val()) {
                 if(client_id == "DP"){
                     $("#dp_field").show();
-                }else if(client_id == "CASH"){
+                }
+                if(client_id == "CASH"){
                     $("#cash").show();
-                }else{
-                    $("#dp_field").hide();
+                    $("#total_amount_cr").hide();
+                }if(client_id == "CREDIT"){
+                    // $("#total_amount").hide();
+                    // $("#total_amount_cr").show();
+                       
                 }
             }
         });

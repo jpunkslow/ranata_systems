@@ -87,7 +87,7 @@ class Customers extends MY_Controller {
 
     function add_customers() {
         validate_submitted_data(array(
-            "code" => "required",
+            // "code" => "required",
             "name" => "required"
 
         ));

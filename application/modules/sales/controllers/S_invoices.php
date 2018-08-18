@@ -248,6 +248,7 @@ class S_invoices extends MY_Controller {
         $coa_sales = $this->input->post("sales_coa");
         $description = $this->input->post("memo");
         $amount = unformat_currency($this->input->post('amount'));
+        $amount_cr = unformat_currency($this->input->post('amount_cr'));
         $subtotal = unformat_currency($this->input->post('subtotal'));
         $ppn = unformat_currency($this->input->post('ppn'));
 
@@ -277,9 +278,10 @@ class S_invoices extends MY_Controller {
                 $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$curr,$amount,0);
                 $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
                 
-                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
+               //  $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
                 
-               $lawanppn =$this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+               // $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+
                  $query = $this->Sales_InvoicesItems_model->get_hpp($id);
                  $query_hpp = $this->Sales_InvoicesItems_model->get_hpp($id);
                 foreach($query->result() as $row){
@@ -293,7 +295,7 @@ class S_invoices extends MY_Controller {
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
                 }
-                $status_data = array("status" => "posting" ,"PAID" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
+                $status_data = array("status" => "posting" ,"paid" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
             
             }
             if($pay_type == "CASH"){
@@ -334,7 +336,7 @@ class S_invoices extends MY_Controller {
 
                     
 
-                    //$save_id = $this->Sales_Payments_model->save($data);
+                    $save_id = $this->Sales_Payments_model->save($data);
             }
             // if($pay_type == "CREDIT"){
             //     $curr = 12;

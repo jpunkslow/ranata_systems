@@ -19,10 +19,6 @@
 }
 .glyphicon  {font-family: "Glyphicons Halflings"}
 
-.form-control {
-    height: 20px;
-    padding: 4px;
-}   
 </style>
 <?php 
 $periode_default = date("Y")."-01-01";
@@ -44,7 +40,24 @@ if(!empty($_GET['year'])){
     $year = $_GET['year'];
 }
 
+$start = $year."-01-01";
+$end = $year."-".($month - 1)."-31";
 
+$ararymonth=array(
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Augustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        );
 ?>
 <div id="page-content" class="clearfix">
     <div style="max-width: 1000px; margin: auto;">
@@ -73,7 +86,9 @@ if(!empty($_GET['year'])){
                         <option value="10" <?php if ($month == 10) echo 'selected' ?>>October</option>
                         <option value="11" <?php if ($month == 11) echo 'selected' ?>>November</option>
                         <option value="12" <?php if ($month == 12) echo 'selected' ?>>December</option>
-                    </select></td></td>
+                        </select>
+                    </td>
+                    
                         <td>
                             <select class="form-control" name="year">
                                 <?php for($a=date('Y');$a>=2017;$a--){?>
@@ -96,7 +111,7 @@ if(!empty($_GET['year'])){
 
                 <div class="table-responsive mt15 pl15 pr15">
 
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Arus Kas  <br> Periode Tahun <br> <?php  echo date("Y")?></p>
+<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Arus Kas  <br> Periode <?php echo $ararymonth[$month];?> Tahun  <?php  echo date("Y")?></p>
     
     <hr>
 
@@ -115,10 +130,21 @@ if(!empty($_GET['year'])){
                     <td></td>
                     <td colspan="2"><b><i>Arus Kas Masuk</i></b></td>
                 </tr>
-                <?php $jml_dapat = 0; $jml_keluar = 0; $jml_investasi = 0; $jml_pendanaan = 0; ?>
+                <?php $saldo_awal = $this->db->query("SELECT sum(master_saldo_awal.debet) as saldo from acc_coa_type JOIN master_saldo_awal ON master_saldo_awal.fid_coa = acc_coa_type.id WHERE account_type = 'Kas/Bank' AND periode = '$year' ")->row(); ?>
+                <?php $jml_dapat = 0; $jml_keluar = 0; $jml_investasi = 0; $jml_pendanaan = 0; $saldo_awal_pemasukan = 0; $saldo_awal_pengeluaran = 0; $saldo_awal_investasi = 0; $saldo_awal_pendanaan = 0; ?>
                 <?php foreach($data_dapat as $row){ 
                 $jml_akun = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
+
+                $saldo_awal_query = $this->db->query("SELECT IFNULL(sum(debet) + sum(credit),0) as total from transaction_journal WHERE fid_coa = '$row->id' AND date >= '$start' AND date <= '$end' ")->row();
+                $saldo_awal_pemasukan += $saldo_awal_query->total;
+
+                // echo "SELECT SUM(debet) + SUM(credit) as total from transaction_journal WHERE fid_coa = '$row->id' AND date >= '$start' AND date <= '$end' ";
+                
+
+
                 $value_masuk = $jml_akun->jum_debet+$jml_akun->jum_kredit;
+
+
                     ?>
 
                 
@@ -164,7 +190,10 @@ if(!empty($_GET['year'])){
 
                 <?php foreach($data_beban_pokok as $row){ 
                 $jml_akun_k = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
-                $value_keluar = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit
+                $saldo_awal_query = $this->db->query("SELECT IFNULL(sum(debet) + sum(credit),0) as total from transaction_journal WHERE fid_coa = '$row->id' AND date >= '$start' AND date <= '$end' ")->row();
+                $value_keluar = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit;
+
+                $saldo_awal_pengeluaran += $saldo_awal_query->total;
                     ?>
 
                 
@@ -213,7 +242,10 @@ if(!empty($_GET['year'])){
                 </tr>
                 <?php foreach($data_investasi as $row){ 
                 $jml_akun_k = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
-                $value_investasi = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit
+                $value_investasi = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit;
+
+                $saldo_awal_query = $this->db->query("SELECT IFNULL(sum(debet) + sum(credit),0) as total from transaction_journal WHERE fid_coa = '$row->id' AND date >= '$start' AND date <= '$end' ")->row();
+                 $saldo_awal_investasi += $saldo_awal_query->total;
                     ?>
 
                 
@@ -243,6 +275,8 @@ if(!empty($_GET['year'])){
 
                 <?php foreach($data_pendanaan as $row){ 
                 $jml_akun_k = $this->Cashflow_model->get_jml_akun($row->id,$month,$year);
+                 $saldo_awal_query = $this->db->query("SELECT IFNULL(sum(debet) + sum(credit),0) as total from transaction_journal WHERE fid_coa = '$row->id' AND date >= '$start' AND date <= '$end' ")->row();
+                 $saldo_awal_pendanaan += $saldo_awal_query->total;
                 $value_pendanaan = $jml_akun_k->jum_debet+$jml_akun_k->jum_kredit
                     ?>
 
@@ -266,6 +300,29 @@ if(!empty($_GET['year'])){
                     
                 </tr>
 
+                <tr>
+                    <td></td>
+                    <td><b><i>Kenaikan Kas</i></b></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format(($jml_dapat - $jml_keluar) + $jml_investasi + $jml_pendanaan) ?></td>
+                    
+                </tr>
+
+                <?php 
+                    $kenaikan_kas = ($jml_dapat - $jml_keluar) + $jml_investasi + $jml_pendanaan;
+                    $awal_kas = ($saldo_awal_pemasukan - $saldo_awal_pengeluaran) + $saldo_awal->saldo + $saldo_awal_investasi +$saldo_awal_pendanaan;
+                ?>
+                <tr>
+                    <td></td>
+                    <td><b><i>Saldo Awal Kas</i></b></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($awal_kas); ?></td>
+                    
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><b><i>Saldo Akhir Kas</i></b></td>
+                    <td style="text-align: right;font-weight: bold;"><?php echo number_format($awal_kas+$kenaikan_kas) ?></td>
+                    
+                </tr>
 
             </tbody>
             

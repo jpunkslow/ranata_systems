@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="fid_bank" class="col-md-3">BANK</label>
+        <label for="fid_bank" class="col-md-3">Kas/Bank</label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown("fid_bank", $bank_dropdown, "", "class='select2 tax-select2'");
@@ -83,8 +83,6 @@
                     "currency", array(
                         "IDR" => "IDR",
                         "USD" => "USD",
-                        "EUR" => "EUR",
-                        "JPY" => "JPY"
                         ), $model_info->currency, "class='select2 mini'"
                     );
                         ?>

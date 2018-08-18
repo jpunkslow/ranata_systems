@@ -303,6 +303,7 @@
 		<td>2<td > Laba (Rugi) Ditahan</td>';
 		for ($i=$month; $i <=$loop ;$i++) {
 		$laba_rugi_ditahan .='<td class="h_kanan"><b>';
+		
 		$laba_rugi_ditahan .=number_format(nsi_round(0)).'</b></td>';
 	 }
 	$laba_rugi_ditahan .='</tr>';

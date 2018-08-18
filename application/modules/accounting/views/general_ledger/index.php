@@ -73,7 +73,7 @@ if(!empty($_GET['start'])){
                     <tr>
                         <th>Journal Code</th>
                         <th>Date</th>
-                        <th>Description</th>
+                        <!-- <th>Description</th> -->
                         <th>Account Number</th>
                         <th>Account Name</th>
                         <th>Debet</th>
@@ -121,6 +121,7 @@ if(!empty($_GET['start'])){
        setDatePicker("#start");
        setDatePicker("#end");
        showLedger("","","");
+       showLedgerBtn("","","");
 
        
        function clearFilter(){
@@ -157,18 +158,18 @@ if(!empty($_GET['start'])){
         });
 
 
-         function showLedger(client_id,start,end){
-            $.ajax({
-                    url: "<?php echo get_uri("accounting/general_ledger/getReport") ?>" + "/" + client_id+"/"+start+'/'+end,
-                    dataType: "text",
-                    // data: data,
-                    type:'GET',
-                    success: function (data) {
-                            $("#showLedger").empty();
-                            $("#showLedger").html(data);
-                    }
-                });
-         }
+         // function showLedger(client_id,start,end){
+         //    $.ajax({
+         //            url: "<?php echo get_uri("accounting/general_ledger/getReport") ?>" + "/" + client_id+"/"+start+'/'+end,
+         //            dataType: "text",
+         //            // data: data,
+         //            type:'GET',
+         //            success: function (data) {
+         //                    $("#showLedger").empty();
+         //                    $("#showLedger").html(data);
+         //            }
+         //        });
+         // }
     });
 
     function showLedger(client_id,start,end){
@@ -178,7 +179,7 @@ if(!empty($_GET['start'])){
         $(document).ready(function () {
 
             $.ajax({
-                    url: "<?php echo get_uri("accounting/general_ledger/getReport") ?>" + "/" + client_id+"/"+start+'/'+end,
+                    url: "<?php echo get_uri("accounting/general_ledger/getReport?") ?>" + "id=" + client_id+"&start="+start+'&end='+end,
                     dataType: "text",
                     // data: data,
                     type:'GET',

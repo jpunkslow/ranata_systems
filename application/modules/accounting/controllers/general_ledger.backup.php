@@ -21,34 +21,18 @@ class General_ledger extends MY_Controller {
     }
 
 
-    function getReport(){
-        $id = $_GET['id'];
-        $start = $_GET['start'];
-        $end = $_GET['end'];
+    function getReport($id = 0,$start = "", $end = ""){
+        
         $saldo = 0;
         $periode = substr($start, 0,4);
         $start = date("Y")."-01-01";
         $end = date("Y-m-d");
-        $where_coa = "";
-        $where_coa_id = "";
-
-        if(!empty($id)){
-            $where_coa = "AND fid_coa = '$id'  ";
-
-            $sa_debet = $this->Master_Saldoawal_model->getDebit($id,$periode);
-            $sa_credit = $this->Master_Saldoawal_model->getCredit($id,$periode);
-        // echo "Woi : ".$id;
-        // exit();
-        }else{
-            $where_coa = "";
-            $sa_debet = $this->Master_Saldoawal_model->getDebitAll($periode);
-            $sa_credit = $this->Master_Saldoawal_model->getCreditAll($periode);
-        }
-        
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($id,$periode);
 
         $saldo = $saldo + $sa_debet - $sa_credit;
 
-        $html = "<tr ><td colspan='4' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
+        $html = "<tr ><td colspan='5' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
         $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_debet)."</td>";
         $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_credit)."</td>";
         $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo)."</td> </tr>";
@@ -56,11 +40,21 @@ class General_ledger extends MY_Controller {
         if(!empty($start) && !empty($end)){
             $where = " AND date >= '$start' AND  date <= '$end' ";
         }
+        $where_coa = "";
+        $where_coa_id = "";
+        // if($id == null || $id == 0{
+        //     $where_coa_id = "AND id =  ";
+        // }
         
 
         $jml_deb = 0;
         $jml_cre = 0;
         
+        $query = $this->db->query("SELECT * FROM acc_coa_type WHERE parent is NULL and deleted = 0 ");
+        foreach($query->result() as $row){
+           echo $html =  "<tr><td colspan='8'><strong>".$row->account_name."</strong></td></tr>";
+        
+                $where_coa = " AND a.fid_coa = '$row->id'";
             
             $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
 
@@ -71,7 +65,7 @@ class General_ledger extends MY_Controller {
                 $html .= "<tr>";
                 $html .= "<td>".$db->journal_code."</td>";
                 $html .= "<td>".$db->date."</td>";
-                // $html .= "<td>".$db->description."</td>";
+                $html .= "<td>".$db->description."</td>";
                 $html .= "<td>".$db->account_number."</td>";
                 $html .= "<td>".$db->account_name."</td>";
                 $html .= "<td align='right' width='100'>".number_format($db->debet)."</td>";
@@ -80,10 +74,10 @@ class General_ledger extends MY_Controller {
 
                 $jml_deb = $jml_deb + $db->debet;
                 $jml_cre = $jml_cre + $db->credit;
-        }
+                }
 
                 echo $html;
-        
+        }
 
         
         // echo json_encode(array("success" => true, "data" => $html,'message' => lang('record_saved')));

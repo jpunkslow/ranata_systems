@@ -151,8 +151,8 @@ class Journal_entry extends MY_Controller {
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
             "fid_header" => $data_id,
-            "debet" => $this->input->post("debet"),
-            "credit" => $this->input->post("credit"),
+            "debet" => unformat_currency($this->input->post("debet")),
+            "credit" => unformat_currency($this->input->post("credit")),
             "username" => "admin",
             "created_at" => get_current_utc_time()
         );
@@ -183,8 +183,8 @@ class Journal_entry extends MY_Controller {
         $data = array(
             "description" => $this->input->post('description'),
             "fid_coa" => $this->input->post('fid_coa'),
-            "debet" => $this->input->post("debet") ,
-            "credit" => $this->input->post("credit")        
+            "debet" => unformat_currency($this->input->post("debet")),
+            "credit" => unformat_currency($this->input->post("credit")),      
         );
 
 
@@ -357,7 +357,6 @@ class Journal_entry extends MY_Controller {
         // $options = array(
         //     "id" => $data->id
         // );
-        $kas = array("10001","10002","10003","10004","10005","10006","10007","10008","10008","10010","10011");
         // $query = $this->Master_Customers_model->get_details($options)->row();
         $value = $this->Master_Coa_Type_model->get_details(array("id"=> $data->fid_coa))->row();
         $row_data = array(

@@ -24,8 +24,9 @@
                     echo form_input(array(
                         "id" => "debet",
                         "name" => "debet",
-                        "value" => $model_info->debet,
+                        "value" => number_format($model_info->debet),
                         "class" => "form-control",
+                        "autocomplete" => "off",
                         "placeholder" => '0',
                     ));
                     ?>
@@ -38,8 +39,9 @@
                     echo form_input(array(
                         "id" => "credit",
                         "name" => "credit",
-                        "value" => $model_info->credit,
+                        "value" => number_format($model_info->credit),
                         "class" => "form-control",
+                        "autocomplete" => "off",
                         "placeholder" => '0',
                     ));
                     ?>
@@ -79,6 +81,22 @@
         RELOAD_VIEW_AFTER_UPDATE = false; //go to invoice page
         $("#master_coa-form .select2").select2();
         setDatePicker("#date");
+        $('input[id=debet]').change(function() {
+            var value = $(this).val();
+            
+        });
+         $('#credit').maskMoney(
+            {precision:0 
+        });
+        
+        $('#debet').maskMoney(
+            {precision:0 
+        });
+        
+        $('input[id=credit]').change(function() {
+            var value = $(this).val();
+            
+        });
         $("#master_coa-form").appForm({
             onSuccess: function (result) {
                 

@@ -29,7 +29,7 @@
         // }
         ?>
 
-        <?php   ?>
+        <!-- <?php   ?>
             <div class="col-md-<?php echo $widget_column; ?> col-sm-6 widget-container">
                 <?php
                 clock_widget();
@@ -57,35 +57,28 @@
                 new_posts_widget();
                 ?>  
             </div>
-        <?php ?>
+        <?php ?> -->
 
     </div>
 
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-7">
             <div class="row">
                 <div class="col-md-12 mb20 text-center">
                     <div class="bg-white">
                         <?php
-                        count_project_status_widget();
-                        if ($show_clock_status) {
-                            count_clock_status_widget();
-                        } else {
-                            count_total_time_widget();
-                        }
+                        count_sales_widget();
+                        
                         ?> 
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-12">
                     <?php
-                    if ($show_invoice_statistics) {
                         invoice_statistics_widget();
-                    } else {
-                        project_timesheet_statistics_widget();
-                    }
+                    
                     ?> 
                 </div>
             </div>
@@ -101,19 +94,19 @@
                     }
                     ?>                        
                 </div>
-            </div>
+            </div> -->
 
         </div>
 
-        <div class="col-md-4 widget-container">
-            <div class="panel panel-default">
+        <div class="col-md-5 widget-container">
+            <div class="panel panel-danger">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o"></i>&nbsp;  <?php echo lang("project_timeline"); ?>
+                    <i class="fa fa-clock-o"></i>&nbsp;  Not Paid Sales Invoices
                 </div>
-                <div id="project-timeline-container">
+                <div id="" style="min-height: 250px">
                     <div class="panel-body"> 
                         <?php
-                        activity_logs_widget(array("log_for" => "project", "limit" => 10));
+                        pending_invoices();
                         ?>
                     </div>
                 </div>
@@ -121,33 +114,19 @@
         </div>
 
 
-        <div class="col-md-3 widget-container">
-           
-        </div>
-
-        <?php if ($show_event) { ?>
-            <div class="col-md-3 widget-container">
-                <?php
-                events_widget();
-                ?>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+            <?php aging_receivable_widget(); ?>
+             
             </div>
-        <?php } ?>
-
-        <div class="col-md-3 widget-container">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-book"></i>&nbsp; <?php echo lang("sticky_note"); ?>
-                </div>
-                <div id="upcoming-event-container">
-                    <?php
-                    echo form_textarea(array(
-                        "id" => "sticky-note",
-                        "name" => "note",
-                        "value" => $this->login_user->sticky_note ? $this->login_user->sticky_note : "",
-                        "class" => "sticky-note"
-                    ));
-                    ?>
-                </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            
+            <?php aging_payable_widget(); ?>
             </div>
         </div>
     </div>

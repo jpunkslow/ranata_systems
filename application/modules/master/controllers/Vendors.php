@@ -76,7 +76,7 @@ class Vendors extends MY_Controller {
         
 
         validate_submitted_data(array(
-            "code" => "required",
+            
             "name" => "required",
         ));
 
@@ -90,7 +90,7 @@ class Vendors extends MY_Controller {
             "contact" => $this->input->post('contact'),
             "email" => $this->input->post('email'),
             "mobile_number" => $this->input->post('mobile_number'),
-            "credit_limit" => $this->input->post('credit_limit'),
+            // "credit_limit" => $this->input->post('credit_limit'),
             "memo" => $this->input->post('memo'),
             "created_at" => get_current_utc_time()
         );

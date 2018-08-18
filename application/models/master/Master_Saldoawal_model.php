@@ -36,7 +36,7 @@ class Master_Saldoawal_model extends Crud_model {
     
 
     function getDebit($no,$p){
-        $q = "SELECT * FROM master_saldo_awal WHERE fid_coa='$no' AND periode='$p'";
+        $q = "SELECT SUM(debet) as debet FROM master_saldo_awal WHERE fid_coa='$no' AND periode='$p' AND deleted = 0";
         $data = $this->db->query($q);
         if($data->num_rows() > 0 ){
             foreach($data->result() as $t){
@@ -48,7 +48,31 @@ class Master_Saldoawal_model extends Crud_model {
         return $hasil;
     }
     function getCredit($no,$p){
-        $q = "SELECT * FROM master_saldo_awal WHERE fid_coa='$no' AND periode='$p'";
+        $q = "SELECT sum(credit) as credit FROM master_saldo_awal WHERE fid_coa='$no' AND periode='$p' AND deleted = 0";
+        $data = $this->db->query($q);
+        if($data->num_rows() > 0 ){
+            foreach($data->result() as $t){
+                $hasil = $t->credit;
+            }
+        }else{
+            $hasil = 0;
+        }
+        return $hasil;
+    }
+    function getDebitAll($p){
+        $q = "SELECT SUM(debet) as debet FROM master_saldo_awal WHERE  periode='$p' AND deleted = 0";
+        $data = $this->db->query($q);
+        if($data->num_rows() > 0 ){
+            foreach($data->result() as $t){
+                $hasil = $t->debet;
+            }
+        }else{
+            $hasil = 0;
+        }
+        return $hasil;
+    }
+    function getCreditAll($p){
+        $q = "SELECT sum(credit) as credit FROM master_saldo_awal WHERE periode='$p' AND deleted = 0";
         $data = $this->db->query($q);
         if($data->num_rows() > 0 ){
             foreach($data->result() as $t){

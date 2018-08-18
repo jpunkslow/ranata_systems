@@ -15,6 +15,18 @@ if (!function_exists('clock_widget')) {
 
 }
 
+
+if (!function_exists('sales_today')) {
+
+    function sales_today($return_as_data = false) {
+        $ci = get_instance();
+        $view_data["clock_status"] = $ci->Attendance_model->current_clock_in_record($ci->login_user->id);
+        $ci->load->view("attendance/clock_widget", $view_data, $return_as_data);
+    }
+
+}
+
+
 /**
  * activity logs widget for projects
  * @param array $params
@@ -325,7 +337,7 @@ if (!function_exists('invoice_statistics_widget')) {
         $view_data["payments"] = json_encode($payments_array);
         $view_data["invoices"] = json_encode($invoices_array);
 
-        $ci->load->view("invoices/invoice_statistics_widget", $view_data, $return_as_data);
+        $ci->load->view("widget/sales/invoice_statistics_widget", $view_data, $return_as_data);
     }
 
 }
@@ -493,6 +505,109 @@ if (!function_exists('count_project_status_widget')) {
     }
 
 }
+
+if (!function_exists('count_sales_widget')) {
+
+    function count_sales_widget($user_id = 0, $return_as_data = false) {
+        $ci = get_instance();
+        
+        $info = $ci->db->query("SELECT COUNT(*) as total FROM sales_payments WHERE paid = 'PAID' AND deleted = 0")->row();
+        $amount = $ci->db->query("SELECT SUM(amount) as total FROM sales_payments WHERE paid = 'PAID' AND deleted = 0")->row();
+
+        $invoices = $ci->db->query("SELECT COUNT(*) as total FROM sales_invoices WHERE deleted = 0")->row();
+        $invoices_total = $ci->db->query("SELECT SUM(amount) as total FROM sales_invoices WHERE deleted = 0")->row();
+        $view_data["total"] = $info->total;
+        $view_data["total_amount"] = $amount->total;
+
+        $view_data["inv_total"] = $invoices->total;
+        $view_data["inv_total_amount"] = $invoices_total->total;
+        $ci->load->view("widget/sales/total", $view_data, $return_as_data);
+    }
+
+}
+
+
+if(!function_exists('pending_invoices')){
+
+    function pending_invoices(){
+        $CI = get_instance();
+
+        $invoices = $CI->db->query("SELECT sales_invoices.code,sales_invoices.amount,sales_invoices.end_date,master_customers.name FROM sales_invoices  JOIN master_customers ON master_customers.id = sales_invoices.fid_cust  WHERE sales_invoices.paid = 'Not Paid' AND sales_invoices.status = 'posting' and sales_invoices.deleted = 0 LIMIT 5");
+
+        $view_data['invoices'] = $invoices->result();
+        $CI->load->view("widget/invoices/pending", $view_data);
+    }
+}
+
+
+
+if(!function_exists('aging_receivable_widget')){
+
+    function aging_receivable_widget(){
+        $CI = get_instance();
+
+        $start =  date("Y")."-01-01";
+        $end = date("Y-m-d");
+
+        if(isset($_GET['start']) && isset($_GET['end'])){
+
+            $start = $_GET['start'];
+            $end = $_GET['end'];
+        }
+
+        $view_data['date_range'] = format_to_date($start)." - ".format_to_date($end);
+        $view_data['aging_report'] = $CI->db->query("SELECT
+            *,
+            '7day' AS type 
+        FROM
+            sales_invoices 
+        WHERE
+            end_date >= now( ) AND paid = 'Not Paid'
+            AND end_date <= date_add( now( ), INTERVAL + 7 DAY ) UNION SELECT *, '7-14day' AS type FROM sales_invoices WHERE end_date > date_add( now( ), INTERVAL + 7 DAY ) AND paid = 'Not Paid'
+            AND end_date <= date_add( now( ), INTERVAL + 14 DAY ) UNION SELECT *, '14-30day' AS type FROM sales_invoices WHERE end_date > date_add( now( ), INTERVAL + 14 DAY ) AND paid = 'Not Paid'
+
+            AND end_date <= date_add( now( ), INTERVAL + 30 DAY ) UNION SELECT *, '>30day' AS type FROM sales_invoices WHERE end_date > date_add( now( ), INTERVAL + 30 DAY ) AND paid = 'Not Paid' AND inv_date >= ('$start') AND inv_date <= ('$end') LIMIT 3");
+       
+        
+        $CI->load->view("widget/sales/aging_receivable_widget", $view_data);
+    }
+}
+
+
+if(!function_exists('aging_payable_widget')){
+
+    function aging_payable_widget(){
+        $CI = get_instance();
+
+        $start =  date("Y")."-01-01";
+        $end = date("Y-m-d");
+
+        if(isset($_GET['start']) && isset($_GET['end'])){
+
+            $start = $_GET['start'];
+            $end = $_GET['end'];
+        }
+
+        $view_data['date_range'] = format_to_date($start)." - ".format_to_date($end);
+        $view_data['aging_report'] = $CI->db->query("SELECT
+            *,
+            '7day' AS type 
+        FROM
+            purchase_invoices 
+        WHERE
+            end_date >= now( ) AND paid = 'Not Paid'
+            AND end_date <= date_add( now( ), INTERVAL + 7 DAY ) UNION SELECT *, '7-14day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 7 DAY )  AND paid = 'Not Paid'
+            AND end_date <= date_add( now( ), INTERVAL + 14 DAY ) UNION SELECT *, '14-30day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 14 DAY )  AND paid = 'Not Paid'
+            AND end_date <= date_add( now( ), INTERVAL + 30 DAY ) UNION SELECT *, '>30day' AS type FROM purchase_invoices WHERE end_date > date_add( now( ), INTERVAL + 30 DAY ) AND  paid = 'Not Paid' AND inv_date >= ('$start') AND inv_date <= ('$end') LIMIT 3");
+       
+        
+        $CI->load->view("widget/sales/aging_payable_widget", $view_data);
+    }
+}
+
+
+
+
 
 
 /**
