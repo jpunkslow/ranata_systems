@@ -193,7 +193,9 @@ $autoload['model'] = array(
     'reference/Ref_category_model',
     'reference/Ref_utype_model',
 
-    'widget/Widget_model'
+    'widget/Widget_model',
+
+    'settings/User_model'
     
 
 );
