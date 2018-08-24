@@ -10,47 +10,8 @@ class Dashboard extends MY_Controller {
         if ($this->login_user->user_type === "staff") {
             //check which widgets are viewable to current logged in user
 
-            $show_timeline = get_setting("module_timeline") ? true : false;
-            $show_attendance = get_setting("module_attendance") ? true : false;
-            $show_event = get_setting("module_event") ? true : false;
-            $show_invoice = get_setting("module_invoice") ? true : false;
-            $show_expense = get_setting("module_expense") ? true : false;
-            $show_ticket = get_setting("module_ticket") ? true : false;
 
-            $view_data["show_timeline"] = $show_timeline;
-            $view_data["show_attendance"] = $show_attendance;
-            $view_data["show_event"] = $show_event;
-
-            $access_expense = $this->get_access_info("expense");
-            $access_invoice = $this->get_access_info("invoice");
-
-            $access_ticket = $this->get_access_info("ticket");
-            $access_timecards = $this->get_access_info("attendance");
-
-            $view_data["show_invoice_statistics"] = false;
-            $view_data["show_ticket_status"] = false;
-            $view_data["show_income_vs_expenses"] = false;
-            $view_data["show_clock_status"] = false;
-
-            //check module availability and access permission to show any widget
-
-            if ($show_invoice && $show_expense && $access_expense->access_type === "all" && $access_invoice->access_type === "all") {
-                $view_data["show_income_vs_expenses"] = true;
-            }
-
-            if ($show_invoice && $access_invoice->access_type === "all") {
-                $view_data["show_invoice_statistics"] = true;
-            }
-
-            if ($show_ticket && $access_ticket->access_type === "all") {
-                $view_data["show_ticket_status"] = true;
-            }
-
-            if ($show_attendance && $access_timecards->access_type === "all") {
-                $view_data["show_clock_status"] = true;
-            }
-
-            $this->template->rander("dashboard/index", $view_data);
+            $this->template->rander("dashboard/index");
         } else {
             //client's dashboard    
 

@@ -1,1 +1,0 @@
-<?php echo format_to_date($value, false); ?>

@@ -19,10 +19,7 @@
                 </button>
             </li>
 
-            <?php $this->load->view("projects/star/topbar_icon"); ?>
-            <?php $this->load->view("clients/star/topbar_icon"); ?>
 
-            <?php echo my_open_timers(); ?>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li class="">

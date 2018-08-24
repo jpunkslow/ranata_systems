@@ -67,7 +67,7 @@
             $sidebar_menu[] = array("name" => "Input Master", "slug"=>"","url" => "#", "class" => "fa-list", "submenu" => $master_submenu);
             // ----- END MENU MASTER
 
-            $sidebar_menu[] = array("name" => "Settings", "slug"=>"settings","url" => "settings/general", "class" => "fa-cogs");
+            $sidebar_menu[] = array("name" => "Settings", "slug"=> "general","url" => "settings/general", "class" => "fa-cogs");
 
             foreach ($sidebar_menu as $main_menu) {
                 $submenu = get_array_value($main_menu, "submenu");

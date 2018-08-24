@@ -310,74 +310,11 @@ class Employees extends MY_Controller {
             $user_info = $this->Users_model->get_details($options)->row();
             if ($user_info) {
 
-                //check which tabs are viewable for current logged in user
-                $view_data['show_timeline'] = get_setting("module_timeline") ? true : false;
-
-                $can_update_team_members_info = $this->can_update_team_members_info($id);
-
-                $view_data['show_general_info'] = $can_update_team_members_info;
-                $view_data['show_job_info'] = false;
-
-                $view_data['show_account_settings'] = false;
-
-                $show_attendance = false;
-                $show_leave = false;
-
-                $expense_access_info = $this->get_access_info("expense");
-                $view_data["show_expense_info"] = (get_setting("module_expense") == "1" && $expense_access_info->access_type == "all") ? true : false;
-
-                //admin can access all members attendance and leave
-                //none admin users can only access to his/her own information 
-
-                if ($this->login_user->is_admin || $user_info->id === $this->login_user->id) {
-                    $show_attendance = true;
-                    $show_leave = true;
-                    $view_data['show_job_info'] = true;
-                    $view_data['show_account_settings'] = true;
-                } else {
-                    //none admin users but who has access to this team member's attendance and leave can access this info
-                    $access_timecard = $this->get_access_info("attendance");
-                    if ($access_timecard->access_type === "all" || in_array($user_info->id, $access_timecard->allowed_members)) {
-                        $show_attendance = true;
-                    }
-
-                    $access_leave = $this->get_access_info("leave");
-                    if ($access_leave->access_type === "all" || in_array($user_info->id, $access_leave->allowed_members)) {
-                        $show_leave = true;
-                    }
+                if($tab == 'general'){
+                    $view_data['user_info']= $user_info;
+                    $this->template->rander('employees/view',$view_data);
                 }
-
-
-                //check module availability
-                $view_data['show_attendance'] = $show_attendance && get_setting("module_attendance") ? true : false;
-                $view_data['show_leave'] = $show_leave && get_setting("module_leave") ? true : false;
-
-
-                //check contact info view permissions
-                $show_cotact_info = $this->can_view_team_members_contact_info();
-                $show_social_links = $this->can_view_team_members_social_links();
-
-                //own info is always visible
-                if ($id == $this->login_user->id) {
-                    $show_cotact_info = true;
-                    $show_social_links = true;
-                }
-
-                $view_data['show_cotact_info'] = $show_cotact_info;
-                $view_data['show_social_links'] = $show_social_links;
-
-
-                //show projects tab to admin
-                $view_data['show_projects'] = false;
-                if ($this->login_user->is_admin) {
-                    $view_data['show_projects'] = true;
-                }
-
-
-                $view_data['tab'] = $tab; //selected tab
-                $view_data['user_info'] = $user_info;
-                $view_data['social_link'] = $this->Social_links_model->get_one($id);
-                $this->template->rander("team_members/view", $view_data);
+                
             } else {
                 show_404();
             }
@@ -610,57 +547,6 @@ class Employees extends MY_Controller {
         }
     }
 
-    //show projects list of a team member
-    function projects_info($user_id) {
-        if ($user_id) {
-            $view_data['user_id'] = $user_id;
-            $view_data["custom_field_headers"] = $this->Custom_fields_model->get_custom_field_headers_for_table("projects", $this->login_user->is_admin, $this->login_user->user_type);
-            $this->load->view("team_members/projects_info", $view_data);
-        }
-    }
-
-    //show attendance list of a team member
-    function attendance_info($user_id) {
-        if ($user_id) {
-            $view_data['user_id'] = $user_id;
-            $this->load->view("team_members/attendance_info", $view_data);
-        }
-    }
-
-    //show weekly attendance list of a team member
-    function weekly_attendance() {
-        $this->load->view("team_members/weekly_attendance");
-    }
-
-    //show weekly attendance list of a team member
-    function custom_range_attendance() {
-        $this->load->view("team_members/custom_range_attendance");
-    }
-
-    //show attendance summary of a team member
-    function attendance_summary($user_id) {
-        $view_data["user_id"] = $user_id;
-        $this->load->view("team_members/attendance_summary", $view_data);
-    }
-
-    //show leave list of a team member
-    function leave_info($applicant_id) {
-        if ($applicant_id) {
-            $view_data['applicant_id'] = $applicant_id;
-            $this->load->view("team_members/leave_info", $view_data);
-        }
-    }
-
-    //show yearly leave list of a team member
-    function yearly_leaves() {
-        $this->load->view("team_members/yearly_leaves");
-    }
-
-    //show yearly leave list of a team member
-    function expense_info($user_id) {
-        $view_data["user_id"] = $user_id;
-        $this->load->view("team_members/expenses", $view_data);
-    }
 
 }
 

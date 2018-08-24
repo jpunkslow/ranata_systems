@@ -9,20 +9,12 @@
 
         <div class="col-md-6 text-center cover-widget">
             <div class="row p20">
-                <?php
-                count_project_status_widget($user_info->id);
-                count_total_time_widget($user_info->id);
-                ?> 
             </div>
         </div>
     </div>
 
 
     <ul data-toggle="ajax-tab" class="nav nav-tabs" role="tablist">
-
-        <?php if ($show_timeline) { ?>
-            <li><a  role="presentation" class="active" href="javascript:;" data-target="#tab-timeline"> <?php echo lang('timeline'); ?></a></li>
-        <?php } ?>
 
         <?php if ($show_general_info) { ?>
             <li><a  role="presentation" href="<?php echo_uri("team_members/general_info/" . $user_info->id); ?>" data-target="#tab-general-info"> <?php echo lang('general_info'); ?></a></li>
@@ -40,20 +32,6 @@
             <li><a role="presentation" href="<?php echo_uri("team_members/account_settings/" . $user_info->id); ?>" data-target="#tab-account-settings"> <?php echo lang('account_settings'); ?></a></li>
         <?php } ?>
 
-        <?php if ($show_projects) { ?>
-            <li><a role="presentation" href="<?php echo_uri("team_members/projects_info/" . $user_info->id); ?>" data-target="#tab-projects-info"><?php echo lang('projects'); ?></a></li>
-        <?php } ?> 
-
-        <?php if ($show_attendance) { ?>
-            <li><a role="presentation" href="<?php echo_uri("team_members/attendance_info/" . $user_info->id); ?>" data-target="#tab-attendance-info"> <?php echo lang('attendance'); ?></a></li>
-        <?php } ?>
-
-        <?php if ($show_leave) { ?>
-            <li><a role="presentation" href="<?php echo_uri("team_members/leave_info/" . $user_info->id); ?>" data-target="#tab-leave-info"><?php echo lang('leaves'); ?></a></li>
-        <?php } ?>
-        <?php if ($show_expense_info) { ?>
-            <li><a role="presentation" href="<?php echo_uri("team_members/expense_info/" . $user_info->id); ?>" data-target="#tab-expense-info"><?php echo lang('expenses'); ?></a></li>
-        <?php } ?> 
 
     </ul>
 
