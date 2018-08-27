@@ -1502,10 +1502,12 @@ if(!function_exists('getCodeId')){
 
         $urut = (int) substr($query->max_code, 0);
         $urut++;
-        $data = $prefix.date("y").sprintf("%03s",$urut);
+        $data = $prefix.date("y").date("m").sprintf("%03s",$urut);
         return $data;
     }
 }
+
+
 
 
 

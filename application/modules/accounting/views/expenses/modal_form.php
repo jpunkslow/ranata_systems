@@ -45,8 +45,10 @@
                         "id" => "voucher_code",
                         "name" => "voucher_code",
                         "class" => "form-control",
-                        "value" => getCodeId('transaction_journal_header','BKK-'),
+                        "value" => getCodeId('transaction_journal_header','VCE-'),
                         "data-rule-required" => true,
+                        "readonly" => true,
+                        
                         "placeholder" => 'Voucher Number',
                         "data-msg-required" => lang("field_required")
                     ));

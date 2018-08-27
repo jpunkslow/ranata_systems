@@ -29,7 +29,9 @@
                         "id" => "voucher_code",
                         "name" => "voucher_code",
                         "class" => "form-control",
+                        "value" => getCodeId('transaction_journal_header',"VCU-"),
                         "data-rule-required" => true,
+                        "readonly" => true,
                         "placeholder" => 'Voucher Number',
                         "data-msg-required" => lang("field_required")
                     ));
