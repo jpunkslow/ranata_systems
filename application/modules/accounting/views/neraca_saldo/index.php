@@ -101,6 +101,13 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
     foreach ($getCoa->result() as $row) {
         $debet = $this->Accounting_model->getDebetKas($row->id,$periode_default,$periode_now);
         $credit = $this->Accounting_model->getCreditKas($row->id,$periode_default,$periode_now);
+
+        $saldo_awal_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode_now);
+        $saldo_awal_credit= $this->Master_Saldoawal_model->getCredit($row->id,$periode_now);
+
+
+
+
         // $jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
         $html = "<tr>";
         if($row->parent == "Head"){
@@ -111,12 +118,12 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         	// $html .= '<td class="h_tengah"> '.$row->account_number.' </td>';
             if($row->account_type == "Kas/Bank"){
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-            $html .= '<td class="h_kanan">'.number_format($debet->debet - $credit->credit).'</td>';
+            $html .= '<td class="h_kanan">'.number_format(($debet->debet+$saldo_awal_debet) - $credit->credit).'</td>';
             $html .= '<td class="h_kanan">'.number_format(0).'</td>';
             }else{
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-                $html .= '<td class="h_kanan">'.number_format($debet->debet).'</td>';
-                $html .= '<td class="h_kanan">'.number_format($credit->credit).'</td>';
+                $html .= '<td class="h_kanan">'.number_format($debet->debet+$saldo_awal_debet).'</td>';
+                $html .= '<td class="h_kanan">'.number_format($credit->credit+$saldo_awal_credit).'</td>';
 
 
             }

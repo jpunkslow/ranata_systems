@@ -9,8 +9,9 @@ class Neraca_saldo extends MY_Controller {
         parent::__construct();
 
         //check permission to access this module
-        $this->load->model('reports/Accounting_model');
+                $this->load->model('reports/Accounting_model');
                 $this->load->model('reports/Reports_model');
+                $this->load->model('master/Master_Saldoawal_model');
  
     }
 
