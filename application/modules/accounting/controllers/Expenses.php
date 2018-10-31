@@ -246,7 +246,8 @@ class Expenses extends MY_Controller {
             "id" => 'numeric'
             // "journal_code" => "required"
         ));
-
+        $fid_project = $this->input->post('fid_project');
+        $fid_header = $this->input->post('fid_header');
         $fid_coa = $this->input->post('fid_coa');
          $data = array(
             "code" => $this->input->post('code'),
@@ -412,6 +413,55 @@ class Expenses extends MY_Controller {
         return $row_data;
     }
 
+    function list_view_entry($id) {
+
+        $list_data = $this->Expenses_model->get_details(array('fid_header' => $id))->result();
+        $result = array();
+        foreach ($list_data as $data) {
+            $result[] = $this->_make_view_entry($data);
+        }
+        echo json_encode(array("data" => $result));
+    }
+
+    /* return a row of client list  table */
+
+    private function _row_view_entry($id) {
+        $options = array(
+            "id" => $id
+        );
+        $data = $this->Expenses_model->get_details($options)->row();
+        return $this->_make_view_entry($data);
+    }
+
+    /* prepare a row of client list table */
+
+    private function _make_view_entry($data) {
+        // $options = array(
+        //     "id" => $data->id
+        // );
+        // $query = $this->Master_Customers_model->get_details($options)->row();
+        $kas = $this->Master_Coa_Type_model->getCoaKas("100");
+        $value = $this->Master_Coa_Type_model->get_details(array("id"=> $data->fid_coa))->row();
+        // $row_data = array();
+        if(!in_array($value->account_number, $kas)){
+            $row_data = array(
+                $value->account_number,
+                $value->account_name,
+
+                number_format($data->debet + $data->credit),
+                // number_format(),
+
+            );
+            return $row_data;
+
+            
+        }else{
+            return [];
+        }
+       
+        
+    }
+
 
     public function entry($id = 0,$fid_coa = 0){
         if($id){
@@ -429,6 +479,93 @@ class Expenses extends MY_Controller {
 
 
             $this->template->rander("expenses/entry", $view_data);
+  
+        } else{
+            show_404();
+        }
+
+    }
+
+
+    public function view($id = 0,$fid_coa = 0){
+        if($id){
+            // echo $id;
+            
+            $view_data['info_header'] = $this->Expenses_header_model->get_details(array("id" => $id))->row();
+            // print_r($view_data['info_header']);
+            // exit();
+            $kas = $this->Master_Coa_Type_model->getCoaKas("100");
+            $view_data['listing'] = $this->db->query("SELECT
+                                                t.voucher_code,
+                                                t.debet + t.credit as amount,
+                                                t.description,
+                                                a.account_number,
+                                                a.account_name
+                                            FROM
+                                                transaction_journal t
+                                            JOIN acc_coa_type a ON t.fid_coa = a.id
+                                            WHERE
+                                                t.type = 'pengeluaran' 
+                                                AND t.fid_header = $id 
+                                                AND t.fid_coa != $fid_coa 
+                                                AND t.deleted = 0");
+            
+            
+            $view_data['info_coa'] = $this->Master_Coa_Type_model->get_details(array("id"=> $view_data['info_header']->fid_coa))->row();
+            $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+
+
+            $this->template->rander("expenses/view", $view_data);
+  
+        } else{
+            show_404();
+        }
+
+    }
+
+    public function download($id = 0,$fid_coa = 0){
+        if($id){
+            // echo $id;
+            $this->load->library('pdf');
+            $this->pdf->setPrintHeader(false);
+            $this->pdf->setPrintFooter(false);
+            $this->pdf->SetCellPadding(1.5);
+            $this->pdf->setImageScale(1.42);
+            $this->pdf->AddPage();
+            $this->pdf->SetFontSize(10);
+
+            
+            $view_data['info_header'] = $this->Expenses_header_model->get_details(array("id" => $id))->row();
+            // print_r($view_data['info_header']);
+            // exit();
+            $kas = $this->Master_Coa_Type_model->getCoaKas("100");
+            $view_data['listing'] = $this->db->query("SELECT
+                                                t.voucher_code,
+                                                t.debet + t.credit as amount,
+                                                t.description,
+                                                a.account_number,
+                                                a.account_name
+                                            FROM
+                                                transaction_journal t
+                                            JOIN acc_coa_type a ON t.fid_coa = a.id
+                                            WHERE
+                                                t.type = 'pengeluaran' 
+                                                AND t.fid_header = $id 
+                                                AND t.fid_coa != $fid_coa 
+                                                AND t.deleted = 0");
+            $data = $this->Expenses_model->get_details(array("id"=> $fid_coa));
+        
+            
+            $view_data['info_coa'] = $this->Master_Coa_Type_model->get_details(array("id"=> $view_data['info_header']->fid_coa))->row();
+            $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+
+
+            // $this->template->rander("expenses/download", $view_data);
+            $html = $this->load->view("expenses/download", $view_data, true);
+
+            $this->pdf->writeHTML($html, true, false, true, false, '');
+            $pdf_file_name = "Expenses_".$view_data['info_header']->voucher_code."_".date("d-M-Y").".pdf";
+            $this->pdf->Output($pdf_file_name, "D");
   
         } else{
             show_404();

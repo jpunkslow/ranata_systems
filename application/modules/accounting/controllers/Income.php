@@ -406,4 +406,90 @@ class Income extends MY_Controller {
 
     }
 
+    public function view($id = 0,$fid_coa = 0){
+        if($id){
+            // echo $id;
+            
+            $view_data['info_header'] = $this->Income_header_model->get_details(array("id" => $id))->row();
+            // print_r($view_data['info_header']);
+            // exit();
+            $kas = $this->Master_Coa_Type_model->getCoaKas("100");
+            $view_data['listing'] = $this->db->query("SELECT
+                                                t.voucher_code,
+                                                t.debet + t.credit as amount,
+                                                t.description,
+                                                a.account_number,
+                                                a.account_name
+                                            FROM
+                                                transaction_journal t
+                                            JOIN acc_coa_type a ON t.fid_coa = a.id
+                                            WHERE
+                                                t.type = 'pemasukan' 
+                                                AND t.fid_header = $id 
+                                                AND t.fid_coa != $fid_coa 
+                                                AND t.deleted = 0");
+            $data = $this->Income_model->get_details(array("id"=> $fid_coa));
+        
+            
+            $view_data['info_coa'] = $this->Master_Coa_Type_model->get_details(array("id"=> $view_data['info_header']->fid_coa))->row();
+            $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+
+
+            $this->template->rander("income/view", $view_data);
+  
+        } else{
+            show_404();
+        }
+
+    }
+
+    public function download($id = 0,$fid_coa = 0){
+        if($id){
+            // echo $id;
+            $this->load->library('pdf');
+            $this->pdf->setPrintHeader(false);
+            $this->pdf->setPrintFooter(false);
+            $this->pdf->SetCellPadding(1.5);
+            $this->pdf->setImageScale(1.42);
+            $this->pdf->AddPage();
+            $this->pdf->SetFontSize(10);
+
+            
+            $view_data['info_header'] = $this->Income_header_model->get_details(array("id" => $id))->row();
+            // print_r($view_data['info_header']);
+            // exit();
+            $kas = $this->Master_Coa_Type_model->getCoaKas("100");
+            $view_data['listing'] = $this->db->query("SELECT
+                                                t.voucher_code,
+                                                t.debet + t.credit as amount,
+                                                t.description,
+                                                a.account_number,
+                                                a.account_name
+                                            FROM
+                                                transaction_journal t
+                                            JOIN acc_coa_type a ON t.fid_coa = a.id
+                                            WHERE
+                                                t.type = 'pemasukan' 
+                                                AND t.fid_header = $id 
+                                                AND t.fid_coa != $fid_coa 
+                                                AND t.deleted = 0");
+            
+            
+            $view_data['info_coa'] = $this->Master_Coa_Type_model->get_details(array("id"=> $view_data['info_header']->fid_coa))->row();
+            $view_data['kas_dropdown'] = $this->Master_Coa_Type_model->getCashCoa();
+
+
+            // $this->template->rander("expenses/download", $view_data);
+            $html = $this->load->view("income/download", $view_data, true);
+
+            $this->pdf->writeHTML($html, true, false, true, false, '');
+            $pdf_file_name = "Income_".$view_data['info_header']->voucher_code."_".date("d-M-Y").".pdf";
+            $this->pdf->Output($pdf_file_name, "D");
+  
+        } else{
+            show_404();
+        }
+
+    }
+
 }

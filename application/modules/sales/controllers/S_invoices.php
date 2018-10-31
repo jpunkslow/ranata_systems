@@ -111,6 +111,121 @@ class S_invoices extends MY_Controller {
 
     /* insert or update a client */
 
+    function insert($id = 0){
+        if($id === 0 || empty($id)){
+            $data = array(
+                "fid_order" => 0,
+                "fid_project" => 0,
+                "code" => getMaxId('sales_invoices',"INV"),
+                "fid_cust" => 0,
+                "status" => "draft",
+                "inv_date" => date("Y-m-d"),
+                "end_date" => date("Y-m-d"),
+            );
+            $this->db->insert('sales_invoices',$data);
+
+            $last_id = $this->db->insert_id();
+
+            redirect(base_url("sales/s_invoices/insert/").$last_id);
+        }else{
+
+
+
+
+            $view_data['model_info'] = $this->Sales_Invoices_model->get_one($id);
+            $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
+            $view_data['order_dropdown'] = array("" => "-") + $this->Sales_Order_model->get_dropdown_list(array("code"));
+            $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name")) + array("ADD" => "+");
+
+
+            $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
+            $data = get_s_invoices_making_data($id);
+            $view_data['invoice_info'] = $data['invoice_info'];
+            $options = array(
+                "id" => $id,
+            );
+             $view_data['model_info'] = $this->Sales_Invoices_model->get_details($options)->row();
+            $view_data['invoice_status'] = $this->_get_invoices_status_label($data["invoice_info"], true);
+                
+            $view_data['invoice_status_label'] = $this->_get_invoices_status_label($data["invoice_info"]);
+
+             
+            $this->template->rander("invoice/form_add", $view_data);
+        }
+    }
+    function edit($id){
+        if($id == NULL || empty($id)){
+
+            redirect(base_url("sales/s_invoices"));
+        }else{
+
+
+
+
+            // $view_data['model_info'] = $this->Sales_Invoices_model->get_one($id);
+            $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
+            $view_data['order_dropdown'] = array("" => "-") + $this->Sales_Order_model->get_dropdown_list(array("code"));
+            $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name")) + array("ADD" => "+ ADD New Project");
+
+
+            $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));
+            $data = get_s_invoices_making_data($id);
+            $view_data['invoice_info'] = $data['invoice_info'];
+            $options = array(
+                "id" => $id,
+            );
+             $view_data['model_info'] = $this->Sales_Invoices_model->get_details($options)->row();
+            
+            $view_data['invoice_status'] = $this->_get_invoices_status_label($data["invoice_info"], true);
+                
+            $view_data['invoice_status_label'] = $this->_get_invoices_status_label($data["invoice_info"]);
+
+             
+            $this->template->rander("invoice/form_add", $view_data);
+        }
+    }
+
+    function getOrder($order_id){
+        if (!empty($order_id)) {
+            // $save_id = $this->Sales_Invoices_model->save($data);
+            $check = $this->db->query("SELECT * FROM sales_order_items WHERE fid_order = '$order_id' AND deleted = 0")->result();
+
+            if($check){
+                $total_harga = 0;
+                foreach($check as $row){
+
+                    $item["data"] = array(
+                        "fid_invoices" => $save_id,
+                        "title" => $row->title,
+                        "description" => $row->description,
+                        "category" => $row->category,
+                        "quantity" => $row->quantity,
+                        "unit_type" => $row->unit_type,
+                        "basic_price" => $row->basic_price,
+                        "fid_items" => $row->fid_items,
+                        "rate" => $row->rate,
+                        "total" => $row->total
+                    );
+                    $total_harga +=$row->total;
+
+                    // $save_data = $this->Sales_InvoicesItems_model->save($item["data"]);
+                }
+
+
+                    $query = array("fid_order" => $order_id,"amount" => $total_harga);
+                    $exe = $this->Sales_Invoices_model->save($query,$save_id); 
+               
+                    $options = array("id" => $save_data);
+                    $item_info = $this->Sales_InvoicesItems_model->get_details($options)->row();
+                    // echo json_encode(array("success" => true, "invoice_id" => $item_info->fid_order, "data" => $this->_make_item_row($item_info), "invoice_total_view" => $this->_get_invoice_total_view($item_info->fid_order), 'id' => $save_data, 'message' => lang('record_saved')));
+                    echo json_encode(array("success" => true, "data" => $this->_row_data($item_info), 'id' => $item_info,'message' => lang('record_saved')));
+                
+            }else{
+                 echo json_encode(array("success" => false, 'message' => lang('error_occurred').$order_id));
+            }
+        } 
+    }
+
     function add() {
         validate_submitted_data(array(
             "code" => "required",
@@ -188,6 +303,41 @@ class S_invoices extends MY_Controller {
     }
 
     function save() {
+        $customers_id = $this->input->post('id');
+
+
+        validate_submitted_data(array(
+            "code" => "required",
+            "fid_cust" => "required"
+        ));
+
+        $data = array(
+            "code" => $this->input->post('code'),
+            "fid_cust" => $this->input->post('fid_cust'),
+            "inv_address" => $this->input->post('inv_address'),
+            "delivery_address" => $this->input->post('delivery_address'),
+            // "status" => $this->input->post('status'),
+
+            "fid_order" => $this->input->post('fid_order'),
+            "fid_project" => $this->input->post('fid_project'),
+            "email_to" => $this->input->post('email_to'),
+            "inv_date" => $this->input->post('inv_date'),
+            "end_date" => $this->input->post('end_date'),
+            "fid_tax" => $this->input->post('fid_tax'),
+            "currency" => $this->input->post('currency')
+        );
+
+
+        $save_id = $this->Sales_Invoices_model->save($data, $customers_id);
+        if ($save_id) {
+
+            echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $save_id,'message' => lang('record_saved')));
+        } else {
+            echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
+        }
+    }
+
+    function update() {
         $customers_id = $this->input->post('id');
 
 
@@ -501,7 +651,7 @@ class S_invoices extends MY_Controller {
         );
 
         if($data->status != "posting"){
-           $row_data[] = modal_anchor(get_uri("sales/s_invoices/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id))
+           $row_data[] = anchor(get_uri("sales/s_invoices/edit/".$data->id), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client')))
                 . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("sales/s_invoices/delete"), "data-action" => "delete"));
 
         }

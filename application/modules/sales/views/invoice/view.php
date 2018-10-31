@@ -22,9 +22,9 @@
                     </ul>
                 </span>
 
-                        <?php if($invoice_info->status != "paid"){ ?>
+<!--                         <?php if($invoice_info->status != "paid"){ ?>
                 <?php if($invoice_info->paid != "paid" && $invoice_info->status != "posting" ) echo modal_anchor(get_uri("sales/s_invoices/item_modal_form"), "<i class='fa fa-plus-circle'></i> " . lang('add_item'), array("class" => "btn btn-default", "title" => lang('add_item'), "data-post-invoice_id" => $invoice_info->id)); } ?>
-                <?php  echo modal_anchor(get_uri("sales/s_invoices/send_invoice_modal_form/" . $invoice_info->id), "<i class='fa fa-envelope-o'></i> " . "Send Email Invoice", array("class" => "btn btn-primary","title" => lang('email_invoice_to_client'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?>
+ -->                <?php  echo modal_anchor(get_uri("sales/s_invoices/send_invoice_modal_form/" . $invoice_info->id), "<i class='fa fa-envelope-o'></i> " . "Send Email Invoice", array("class" => "btn btn-primary","title" => lang('email_invoice_to_client'), "data-post-id" => $invoice_info->id, "role" => "menuitem", "tabindex" => "-1")); ?>
                 <?php if($invoice_info->paid != "paid" && $invoice_info->status != "posting" )  echo modal_anchor(get_uri("sales/s_invoices/posting_modal_form/" . $invoice_info->id), "<i class='fa fa-money'></i> " . "Posting Invoices", array("class" => "btn btn-default","title" => "Posting to Journal", "data-post-id" => $invoice_info->id)); ?>
             </div>
         </div>

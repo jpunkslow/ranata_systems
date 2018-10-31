@@ -4,6 +4,9 @@
             <h1>Expenses entry</h1>
             <div class="title-button-group">
                 <div class="btn-group" role="group">
+                    <a href="<?php echo get_uri("accounting/expenses/download/").$this->uri->segment(4).'/'.$this->uri->segment(5) ?>" class="btn btn-default"><i class='fa fa-download'></i> DOWNLOAD PDF</a>
+                    <a href="<?php echo get_uri("accounting/expenses/view/").$this->uri->segment(4).'/'.$this->uri->segment(5) ?>" class="btn btn-default"><i class='fa fa-print'></i> PRINT PREVIEW</a>
+                    
                 </div>
                 <?php
                 echo modal_anchor(get_uri("accounting/expenses/modal_form_edit"), "<i class='fa fa-pencil'></i> " . "Edit", array("class" => "btn btn-default", "title" => "Edit","data-post-id" => $info_header->id));

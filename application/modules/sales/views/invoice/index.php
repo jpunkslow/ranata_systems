@@ -6,7 +6,7 @@
                 <div class="btn-group" role="group">
                 </div>
                 <?php
-                    echo modal_anchor(get_uri("sales/s_invoices/modal_form"), "<i class='fa fa-plus-circle'></i> " . "Add Invoices", array("class" => "btn btn-primary", "title" => "Add Invoices"));
+                    echo anchor(get_uri("sales/s_invoices/insert"), "<i class='fa fa-plus-circle'></i> " . "Add Invoices", array("class" => "btn btn-primary", "title" => "Add Invoices"));
                 
                 ?>
             </div>
@@ -32,7 +32,7 @@
                 {title: "INVOICE DATE"},
                 {title: "CURRENCY"},
                 {title: "INVOICE TOTAL"},
-                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
+                {title: '<i class="fa fa-bars"></i>', "class": "text-center option w10"}
             ],
             printColumns: [0, 1, 2, 3, 4,5,6,7,8],
             xlsColumns: [0, 1, 2, 3, 4,5,6,7,8]

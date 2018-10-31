@@ -39,7 +39,6 @@
                         "id" => "description",
                         "name" => "description",
                         "class" => "form-control",
-                        "data-rule-required" => true,
                         "placeholder" => 'Memo',
                         "data-msg-required" => lang("field_required")
                     ));

@@ -1,6 +1,7 @@
 <?php echo form_open(get_uri("accounting/expenses/save"), array("id" => "master_coa-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
     <input type="hidden" name="id" value="<?php echo $model_info->id ?>">
+    <input type="hidden" name="fid_header" value="<?php echo $this->uri->segment(4); ?>">
     <div class="tab-content mt15">
         <div role="tabpanel" class="tab-pane active" id="general-info-tab">
             
