@@ -132,8 +132,8 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         // $jml_dapat += $jumlah;
         $html .= '</tr>';
         echo $html;
-        $jml_debet += $debet->debet;
-        $jml_credit += $credit->credit;
+        $jml_debet += $debet->debet+$saldo_awal_debet;
+        $jml_credit += $credit->credit+$saldo_awal_credit;
         $no_dapat++;
     }
     ?>

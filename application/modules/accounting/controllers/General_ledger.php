@@ -27,8 +27,10 @@ class General_ledger extends MY_Controller {
         $end = $_GET['end'];
         $saldo = 0;
         $periode = substr($start, 0,4);
-        $start = date("Y")."-01-01";
-        $end = date("Y-m-d");
+        if(!isset($_GET['start']))$start = date("Y")."-01-01";
+        if(!isset($_GET['end']))$end = date("Y-m-d");
+
+
         $where_coa = "";
         $where_coa_id = "";
 
@@ -63,6 +65,8 @@ class General_ledger extends MY_Controller {
         
             
             $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
+
+            //echo $this->db->last_query();exit();
 
             foreach($data->result() as $db){
 
