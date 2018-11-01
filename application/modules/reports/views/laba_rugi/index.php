@@ -174,9 +174,9 @@ $ararymonth=array(
 
 			echo '<td><b>'.$row->account_name.'</b></td>';
 				
-			}else if(strlen($row->account_number)==9){
+		}else if(strlen($row->account_number)==9){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
-			}
+		}
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
@@ -220,6 +220,10 @@ $ararymonth=array(
 				
 			}else if(strlen($row->account_number)==9){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
+			}
+
+			else if(strlen($row->account_number)==10){
+					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
 			for ($i=$month; $i <=$loop ;$i++) {
 				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
@@ -268,9 +272,18 @@ $ararymonth=array(
 		if(strlen($row->account_number)==6){
 			echo '<td><b>'.$row->account_name.'</b></td>';
 				
+			}else if(strlen($row->account_number)==7){
+				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}else if(strlen($row->account_number)==9){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
+			}else if(strlen($row->account_number)==10){
+				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
+			}else if(strlen($row->account_number)==11){
+				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
+			}else if(strlen($row->account_number)==12){
+				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
+
 			for ($i=$month; $i <=$loop ;$i++) {
 				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
 				$jumlah_beban = $jml_akun->jum_debet + $jml_akun->jum_kredit;
@@ -321,6 +334,9 @@ $ararymonth=array(
 			}else if(strlen($row->account_number)==9){
 				echo '<td>-'.$row->account_name.'</td>';
 			}
+			else if(strlen($row->account_number)==10){
+					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
+			}
 		for ($i=$month; $i <=$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
@@ -361,6 +377,8 @@ $ararymonth=array(
 				
 			}else if(strlen($row->account_number)==9){
 				echo '<td>-'.$row->account_name.'</td>';
+			}else if(strlen($row->account_number)==10){
+				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
 			for ($i=$month; $i <=$loop ;$i++) {
 				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
