@@ -292,7 +292,7 @@ $ararymonth=array(
 						$jml_beban_operasional[$i] += $jumlah_beban;
 					}else{
 						echo '<td class="h_kanan">'.number_format(nsi_round($jumlah_beban)).'</td>';
-						// $jml_beban_operasional[$i] += $jumlah;
+						$jml_beban_operasional[$i] += $jumlah_beban;
 					}
 		}
 		echo '</tr>';

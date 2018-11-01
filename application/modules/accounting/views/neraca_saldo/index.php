@@ -122,7 +122,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
             $html .= '<td class="h_kanan">'.number_format(0).'</td>';
             }else{
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-                $html .= '<td class="h_kanan">'.number_format($debet->debet+$saldo_awal_debet).'</td>';
+                $html .= '<td class="h_kanan">'.number_format($debet->debet+$saldo_awal_debet-($credit->credit+$saldo_awal_credit)).'</td>';
                 $html .= '<td class="h_kanan">'.number_format($credit->credit+$saldo_awal_credit).'</td>';
 
 
