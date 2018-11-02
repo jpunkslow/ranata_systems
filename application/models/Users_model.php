@@ -33,6 +33,8 @@ class Users_model extends Crud_model {
             }
 
             $this->session->set_userdata('user_id', $user_info->id);
+            $this->session->set_userdata('user_type', $user_info->user_type);
+            $this->session->set_userdata('is_admin', $user_info->is_admin);
             return true;
         }
     }
