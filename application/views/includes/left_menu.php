@@ -11,10 +11,11 @@
             $jurnal_submenu[] = array("name" => "Expense", "slug"=>"expenses","url" => "accounting/expenses");
             $jurnal_submenu[] = array("name" => "Income", "slug"=>"income","url" => "accounting/income");
 
-            if($user_type == 'sales' || $is_admin || $user_type == 'admin' || $user_type == 'manager' || $user_type == 'finance'){
+            if($is_admin || $user_type == 'admin' || $user_type == 'manager' || $user_type == 'finance'){
                 $sidebar_menu[] = array("name" => "Input Journal", "slug"=>"","url" => "#", "class" => "fa-money", "submenu" => $jurnal_submenu);
-
+            }
             
+            if($is_admin || $user_type == 'sales' || $user_type =='manager'){
 
                 $ar_submenu = array();
                 $ar_submenu[] = array("name" => "Sales Quotation", "slug"=>"quotation","url" => "sales/quotation");
