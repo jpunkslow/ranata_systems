@@ -33,6 +33,9 @@ class Master_Saldoawal_model extends Crud_model {
         }
         return $result;
     }
+
+
+   
     
 
     function getDebit($no,$p){

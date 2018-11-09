@@ -16,7 +16,7 @@ class General_ledger extends MY_Controller {
 
     function index() {
         $view_data['periode_dropdown'] = $this->Master_Saldoawal_model->getPeriode();
-        $view_data['coa_dropdown'] = array("" => "Choose COA Account") + $this->Master_Coa_Type_model->getCoaDrop();
+        $view_data['coa_dropdown'] = array("" => "All COA") + $this->Master_Coa_Type_model->getCoaDrop();
     	$this->template->rander('general_ledger/index',$view_data);
     }
 
@@ -33,24 +33,37 @@ class General_ledger extends MY_Controller {
 
         $where_coa = "";
         $where_coa_id = "";
+         if(!empty($start) && !empty($end)){
+            $where2 = " AND a.date >= '$start' AND  a.date <= '$end' ";
+        }
+        $grouping_coa_query = $this->db->query("select distinct(fid_coa) no_coa,account_name,account_number from transaction_journal a join acc_coa_type b on a.fid_coa=b.id where 1=1 $where2 order by b.account_number asc ");
+        $html ='';
+        //echo $this->db->last_query();exit();
+        foreach($grouping_coa_query->result() as $coadb){
+        $html .="<tr ><td colspan='2' align='left' style='background-color:lightgrey;'><strong>".$coadb->account_number." </strong></td><td colspan='2' align='right' style='background-color:lightgrey;'><strong>".$coadb->account_name." </strong></td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'></td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'></td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'></td> </tr>";  
 
-        if(!empty($id)){
-            $where_coa = "AND fid_coa = '$id'  ";
+        //echo $coadb->account_name.' '.$coadb->account_number.' '.$coadb->no_coa;exit(); 
 
-            $sa_debet = $this->Master_Saldoawal_model->getDebit($id,$periode);
-            $sa_credit = $this->Master_Saldoawal_model->getCredit($id,$periode);
+        //if(!empty($id)){
+            $where_coa = "AND fid_coa = '$coadb->no_coa'  ";
+
+            $sa_debet = $this->Master_Saldoawal_model->getDebit($coadb->no_coa,$periode);
+            $sa_credit = $this->Master_Saldoawal_model->getCredit($coadb->no_coa,$periode);
         // echo "Woi : ".$id;
         // exit();
-        }else{
-            $where_coa = "";
-            $sa_debet = $this->Master_Saldoawal_model->getDebitAll($periode);
-            $sa_credit = $this->Master_Saldoawal_model->getCreditAll($periode);
-        }
+        // }else{
+        //     $where_coa = "";
+        //     $sa_debet = $this->Master_Saldoawal_model->getDebitAll($periode);
+        //     $sa_credit = $this->Master_Saldoawal_model->getCreditAll($periode);
+        // }
         
 
         $saldo = $saldo + $sa_debet - $sa_credit;
 
-        $html = "<tr ><td colspan='4' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
+        $html .= "<tr ><td colspan='4' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
         $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_debet)."</td>";
         $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_credit)."</td>";
         $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo)."</td> </tr>";
@@ -67,17 +80,21 @@ class General_ledger extends MY_Controller {
             $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
 
             //echo $this->db->last_query();exit();
-
+            $no=0;
             foreach($data->result() as $db){
 
                 $saldo = $saldo+$db->debet-$db->credit;
 
                 $html .= "<tr>";
-                $html .= "<td>".$db->journal_code."</td>";
+                $html .= "<td>".++$no."</td>";
+                //$html .= "<td>".$db->journal_code."</td>";
+                $html .= "<td>".$db->voucher_code."</td>";
                 $html .= "<td>".$db->date."</td>";
+                $html .= "<td>".$db->type."</td>";
                 // $html .= "<td>".$db->description."</td>";
-                $html .= "<td>".$db->account_number."</td>";
-                $html .= "<td>".$db->account_name."</td>";
+                // $html .= "<td>".$db->account_number."</td>";
+                // $html .= "<td>".$db->account_name."</td>";
+                $html .= "<td>".$db->description."</td>";
                 $html .= "<td align='right' width='100'>".number_format($db->debet)."</td>";
                 $html .= "<td align='right' width='100'>".number_format($db->credit)."</td>";
                 $html .= "<td align='right' width='100'>".number_format($saldo)."</td></tr>";
@@ -85,6 +102,7 @@ class General_ledger extends MY_Controller {
                 $jml_deb = $jml_deb + $db->debet;
                 $jml_cre = $jml_cre + $db->credit;
         }
+    }
 
                 echo $html;
         

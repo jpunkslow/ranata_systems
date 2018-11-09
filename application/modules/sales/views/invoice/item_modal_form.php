@@ -94,7 +94,7 @@
             echo form_input(array(
                 "id" => "invoice_item_basic",
                 "name" => "invoice_item_basic",
-                "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price) : "",
+                "value" => $model_info->basic_price ? to_decimal_format($model_info->basic_price/$model_info->quantity) : "",
                 "class" => "form-control",
                 "placeholder" => "0",
                 // "type" => 'number'

@@ -71,11 +71,14 @@ if(!empty($_GET['start'])){
             <table id="generalledger-table" class="display dataTable" cellspacing="0" width="100%" style="border: 1px solid #ededed; ">  
                 <thead ">
                     <tr>
-                        <th>Journal Code</th>
+                        <th>No</th>
+                        <th>No Voucher</th>
                         <th>Date</th>
+                        <th>Sumber</th>
                         <!-- <th>Description</th> -->
-                        <th>Account Number</th>
-                        <th>Account Name</th>
+                        <!--<th>Account Number</th>
+                        <th>Account Name</th>-->
+                        <th>Deskripsi</th>
                         <th>Debet</th>
                         <th>Credit</th>
                         <th>Saldo</th>

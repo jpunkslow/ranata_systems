@@ -29,6 +29,7 @@
                 {title: "VOUCHER CODE"},
                 {title: "RECEIVED FROM TO"},
                 {title: "DATE"},
+                {title: "TOTAL"},
                 {title: "DESCRIPTION"},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
             ],

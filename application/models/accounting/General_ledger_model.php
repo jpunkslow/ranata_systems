@@ -10,6 +10,8 @@ class General_ledger_model extends Crud_model {
     }
 
 
+
+
     function get_details($options = array()){
         $id = get_array_value($options, "id");
         $where = "";

@@ -751,7 +751,7 @@ class S_invoices extends MY_Controller {
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
             "fid_items" => $this->input->post('fid_item'),
-            "basic_price" => unformat_currency($this->input->post('invoice_item_basic')),
+            "basic_price" => unformat_currency($this->input->post('invoice_item_basic'))* $quantity,
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
 
             "total" => $rate * $quantity,

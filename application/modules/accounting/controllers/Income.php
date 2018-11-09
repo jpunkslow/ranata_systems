@@ -324,6 +324,7 @@ class Income extends MY_Controller {
             $data->voucher_code,
             $value->account_number." - ".$value->account_name,
             format_to_date($data->date, false),
+            number_format($data->total),
             $data->description// $status
 
 

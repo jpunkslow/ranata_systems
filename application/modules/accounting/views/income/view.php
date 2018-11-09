@@ -5,7 +5,7 @@
                     <h1> Preview #<?php echo $info_header->voucher_code ?></h1></a>
             <div class="title-button-group">
                 <span class="dropdown inline-block">
-                    <a href="<?php echo get_uri("accounting/expenses/download/").$this->uri->segment(4).'/'.$this->uri->segment(5) ?>" class="btn btn-default"><i class='fa fa-download'></i> DOWNLOAD PDF</a>
+                    <a href="<?php echo get_uri("accounting/income/download/").$this->uri->segment(4).'/'.$this->uri->segment(5) ?>" class="btn btn-default"><i class='fa fa-download'></i> DOWNLOAD PDF</a>
                     
                 </span>
 
