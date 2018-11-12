@@ -14,6 +14,7 @@ if(!empty($_GET['start'])){
                 
                 <?php
                     echo modal_anchor(get_uri("accounting/general_ledger/print"), "<i class='fa fa-print'></i> " . "Print", array("class" => "btn btn-default", "title" => "Print"));
+                     echo anchor(get_uri("accounting/general_ledger/getDownloadXls"), "<i class='fa fa-print'></i> " . "Download XLS", array("class" => "btn btn-default", "target"=>"_blank", "title" => "Download XLS"));
                 
                 ?>
             </div>

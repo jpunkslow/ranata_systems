@@ -20,7 +20,7 @@ class Expenses_model extends Crud_model {
         if ($fid_header) {
             $where = " AND fid_header=$fid_header";
         }
-        $data = $this->db->query("SELECT * FROM $this->table WHERE type = 'pengeluaran' $where AND  deleted = 0  ".$where." ORDER BY id DESC");
+        $data = $this->db->query("SELECT * FROM $this->table WHERE type = 'pengeluaran' $where AND  deleted = 0  ".$where." ORDER BY date DESC");
         return $data;
     }
 

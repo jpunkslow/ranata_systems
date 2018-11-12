@@ -23,7 +23,7 @@
 
         $("#income-table").appTable({
             source: '<?php echo_uri("accounting/income/list_data") ?>',
-            // order: [[1, "asc"]],
+            order: [[3, "DESC"]],
             columns: [
                 {title: "TRANS CODE #"},
                 {title: "VOUCHER CODE"},

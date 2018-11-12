@@ -9,6 +9,8 @@ class General_ledger extends MY_Controller {
         parent::__construct();
         $this->load->model("accounting/General_ledger_model");
         $this->load->model("master/Master_Saldoawal_model");
+        $this->load->library("PHPExcel");
+        $this->load->library("PHPExcel/IOFactory");
         //check permission to access this module
     }
 
@@ -39,81 +41,153 @@ class General_ledger extends MY_Controller {
         $grouping_coa_query = $this->db->query("select distinct(fid_coa) no_coa,account_name,account_number from transaction_journal a join acc_coa_type b on a.fid_coa=b.id where 1=1 $where2 order by b.account_number asc ");
         $html ='';
         //echo $this->db->last_query();exit();
-        foreach($grouping_coa_query->result() as $coadb){
-        $html .="<tr ><td colspan='2' align='left' style='background-color:lightgrey;'><strong>".$coadb->account_number." </strong></td><td colspan='2' align='right' style='background-color:lightgrey;'><strong>".$coadb->account_name." </strong></td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'></td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'></td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'></td> </tr>";  
+            foreach($grouping_coa_query->result() as $coadb){
+                $html .="<tr ><td colspan='2' align='left' style='background-color:lightgrey;'><strong>".$coadb->account_number." </strong></td><td colspan='2' align='right' style='background-color:lightgrey;'><strong>".$coadb->account_name." </strong></td>";
+                $html .= "<td align='right' style='background-color:lightgrey;'></td>";
+                $html .= "<td align='right' style='background-color:lightgrey;'></td>";
+                $html .= "<td align='right' style='background-color:lightgrey;'></td> </tr>";  
 
-        //echo $coadb->account_name.' '.$coadb->account_number.' '.$coadb->no_coa;exit(); 
+                //echo $coadb->account_name.' '.$coadb->account_number.' '.$coadb->no_coa;exit(); 
 
-        //if(!empty($id)){
-            $where_coa = "AND fid_coa = '$coadb->no_coa'  ";
+                //if(!empty($id)){
+                    $where_coa = "AND fid_coa = '$coadb->no_coa'  ";
 
-            $sa_debet = $this->Master_Saldoawal_model->getDebit($coadb->no_coa,$periode);
-            $sa_credit = $this->Master_Saldoawal_model->getCredit($coadb->no_coa,$periode);
-        // echo "Woi : ".$id;
-        // exit();
-        // }else{
-        //     $where_coa = "";
-        //     $sa_debet = $this->Master_Saldoawal_model->getDebitAll($periode);
-        //     $sa_credit = $this->Master_Saldoawal_model->getCreditAll($periode);
-        // }
-        
+                    $sa_debet = $this->Master_Saldoawal_model->getDebit($coadb->no_coa,$periode);
+                    $sa_credit = $this->Master_Saldoawal_model->getCredit($coadb->no_coa,$periode);
+                // echo "Woi : ".$id;
+                // exit();
+                // }else{
+                //     $where_coa = "";
+                //     $sa_debet = $this->Master_Saldoawal_model->getDebitAll($periode);
+                //     $sa_credit = $this->Master_Saldoawal_model->getCreditAll($periode);
+                // }
+                
 
-        $saldo = $saldo + $sa_debet - $sa_credit;
+                $saldo = $saldo + $sa_debet - $sa_credit;
 
-        $html .= "<tr ><td colspan='4' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_debet)."</td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_credit)."</td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo)."</td> </tr>";
+                $html .= "<tr ><td colspan='4' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
+                $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_debet)."</td>";
+                $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($sa_credit)."</td>";
+                $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo)."</td> </tr>";
+                $where = '';
+                if(!empty($start) && !empty($end)){
+                    $where = " AND date >= '$start' AND  date <= '$end' ";
+                }
+                
+
+                $jml_deb = 0;
+                $jml_cre = 0;
+                
+                    
+                    $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
+
+                    //echo $this->db->last_query();exit();
+                    $no=0;
+                    foreach($data->result() as $db){
+
+                        $saldo = $saldo+$db->debet-$db->credit;
+
+                        $html .= "<tr>";
+                        $html .= "<td>".++$no."</td>";
+                        //$html .= "<td>".$db->journal_code."</td>";
+                        $html .= "<td>".$db->voucher_code."</td>";
+                        $html .= "<td>".$db->date."</td>";
+                        $html .= "<td>".$db->type."</td>";
+                        // $html .= "<td>".$db->description."</td>";
+                        // $html .= "<td>".$db->account_number."</td>";
+                        // $html .= "<td>".$db->account_name."</td>";
+                        $html .= "<td>".$db->description."</td>";
+                        $html .= "<td align='right' width='100'>".number_format($db->debet)."</td>";
+                        $html .= "<td align='right' width='100'>".number_format($db->credit)."</td>";
+                        $html .= "<td align='right' width='100'>".number_format($saldo)."</td></tr>";
+
+                        $jml_deb = $jml_deb + $db->debet;
+                        $jml_cre = $jml_cre + $db->credit;
+                }
+            }
+
+                echo $html;
+
+    }
+
+    function getDownloadXls(){
+        $id = $_GET['id'];
+        $start = $_GET['start'];
+        $end = $_GET['end'];
+        $saldo = 0;
+        $periode = substr($start, 0,4);
+        if(!isset($_GET['start']))$start = date("Y")."-01-01";
+        if(!isset($_GET['end']))$end = date("Y-m-d");
+
+        $where_coa = "";
+        $where_coa_id = "";
+         if(!empty($start) && !empty($end)){
+            $where2 = " AND a.date >= '$start' AND  a.date <= '$end' ";
+        }
+        $grouping_coa_query = $this->db->query("select distinct(fid_coa) no_coa,account_name,account_number from transaction_journal a join acc_coa_type b on a.fid_coa=b.id where 1=1 $where2 order by b.account_number asc ");
+
         $where = '';
         if(!empty($start) && !empty($end)){
             $where = " AND date >= '$start' AND  date <= '$end' ";
-        }
-        
+        }            
 
         $jml_deb = 0;
         $jml_cre = 0;
         
-            
-            $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
-
-            //echo $this->db->last_query();exit();
-            $no=0;
-            foreach($data->result() as $db){
-
-                $saldo = $saldo+$db->debet-$db->credit;
-
-                $html .= "<tr>";
-                $html .= "<td>".++$no."</td>";
-                //$html .= "<td>".$db->journal_code."</td>";
-                $html .= "<td>".$db->voucher_code."</td>";
-                $html .= "<td>".$db->date."</td>";
-                $html .= "<td>".$db->type."</td>";
-                // $html .= "<td>".$db->description."</td>";
-                // $html .= "<td>".$db->account_number."</td>";
-                // $html .= "<td>".$db->account_name."</td>";
-                $html .= "<td>".$db->description."</td>";
-                $html .= "<td align='right' width='100'>".number_format($db->debet)."</td>";
-                $html .= "<td align='right' width='100'>".number_format($db->credit)."</td>";
-                $html .= "<td align='right' width='100'>".number_format($saldo)."</td></tr>";
-
-                $jml_deb = $jml_deb + $db->debet;
-                $jml_cre = $jml_cre + $db->credit;
-        }
-    }
-
-                echo $html;
-        
-
-        
-        // echo json_encode(array("success" => true, "data" => $html,'message' => lang('record_saved')));
+        $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
 
 
+       
+       $xls = new PHPExcel();
+       $xls->getProperties()->setTitle("Laporan General Ledger")->setDescription("General Ledger ");
 
+       $xls->setActiveSheetIndex(0);
 
+       $table_columns = array("No","No Voucher", "Date", "Sumber", "Deskripsi", "Debet","Credit","Saldo");
 
+        $column = 0;
+
+        foreach($data as $field)
+          {
+           $xls->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+           $column++;
+          }
+
+          $employee_data = $this->db->query("SELECT * FROM transaction_journal ORDER BY date DESC" );
+
+          $excel_row = 2;
+
+          foreach($grouping_coa_query->result() as $coadb){
+
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(0,$excel_row,$coadb->account_number);
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(1,$excel_row,$coadb->account_name);
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(2,$excel_row,"");
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(3,$excel_row,"");
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(4,$excel_row,"");
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(5,$excel_row,"");
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(6,$excel_row,"");
+            $xls->getActiveSheet()->setCellValueByColumnAndRow(7,$excel_row,"");
+
+          }
+
+          // foreach($employee_data->result() as $row)
+          // {
+          //  $xls->getActiveSheet()->setCellValueByColumnAndRow(0, $excel_row, $row->journal_code);
+          //  $xls->getActiveSheet()->setCellValueByColumnAndRow(1, $excel_row, $row->date);
+          //  $xls->getActiveSheet()->setCellValueByColumnAndRow(2, $excel_row, $row->description);
+          //  $xls->getActiveSheet()->setCellValueByColumnAndRow(3, $excel_row, $row->voucher_code);
+          //  $xls->getActiveSheet()->setCellValueByColumnAndRow(4, $excel_row, $row->debet);
+          //  $xls->getActiveSheet()->setCellValueByColumnAndRow(4, $excel_row, $row->credit);
+           
+          //  $excel_row++;
+          // }
+
+       $filename= date("Y-m-d").'.xls'; //save our workbook as this file name
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); //no cache
+       $objWriter = IOFactory::createWriter($xls, 'Excel5');
+        $objWriter->save('php://output');
 
     }
 

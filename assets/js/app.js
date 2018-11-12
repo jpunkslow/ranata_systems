@@ -384,7 +384,7 @@ if (typeof TableTools != 'undefined') {
             pdfColumns: [], // array of pdf exportable column numbers
             printColumns: [], // array of printable column numbers
             columns: [], //column title and options
-            order: [[0, "asc"]], //default sort value
+            // order: [[0, "asc"]], //default sort value
             hideTools: false, //show/hide tools section
             displayLength: displayLength, //default rows per page
             dateRangeType: "", // type: daily, weekly, monthly, yearly. output params: start_date and end_date

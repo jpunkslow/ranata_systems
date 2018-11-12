@@ -16,7 +16,7 @@ class Expenses_header_model extends Crud_model {
         if ($id) {
             $where = " AND id=$id";
         }
-        $data = $this->db->query("SELECT *,(select sum(debet) as total from transaction_journal where fid_header=transaction_journal_header.id) as total FROM $this->table WHERE type = 'expenses' AND  deleted = 0 ".$where."  ");
+        $data = $this->db->query("SELECT *,(select sum(debet) as total from transaction_journal where fid_header=transaction_journal_header.id) as total FROM $this->table WHERE type = 'expenses' AND  deleted = 0 ".$where." ORDER BY date DESC ");
         return $data;
     }
 
