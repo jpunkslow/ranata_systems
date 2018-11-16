@@ -14,7 +14,6 @@ if(!empty($_GET['start'])){
                 
                 <?php
                     echo modal_anchor(get_uri("accounting/general_ledger/print"), "<i class='fa fa-print'></i> " . "Print", array("class" => "btn btn-default", "title" => "Print"));
-                     echo anchor(get_uri("accounting/general_ledger/getDownloadXls"), "<i class='fa fa-print'></i> " . "Download XLS", array("class" => "btn btn-default", "target"=>"_blank", "title" => "Download XLS"));
                 
                 ?>
             </div>
@@ -59,7 +58,7 @@ if(!empty($_GET['start'])){
                 <div class="form-group">
                     <label for="code" class=" col-md-2"></label>
                     <div class="col-md-4">    
-                        <button type="button" class="btn btn-primary"  onclick="showLedgerBtn();">SEARCH</button> <button type="button" class="btn btn-danger" onclick="clearFilter();">CLEAR</button>
+                        <button type="button" class="btn btn-primary"  onclick="showLedgerBtn();">SEARCH</button> <button type="button" class="btn btn-danger" onclick="clearFilter();">CLEAR</button> <button type="button" class="btn btn-success" onclick="tableToExcel('generalledger-table', 'GL')" value="Export to Excel">Export XLS</button>
                     </div>
                 </div>
            
@@ -194,4 +193,6 @@ if(!empty($_GET['start'])){
                 });
         });
     }
+
+   
 </script>    

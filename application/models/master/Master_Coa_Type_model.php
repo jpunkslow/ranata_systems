@@ -104,7 +104,7 @@ class Master_Coa_Type_model extends Crud_model {
     function getCoaExpenses() {
         // $where["deleted"] = 0;
         // $where["id"] = (2,3);
-        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND deleted = 0 AND left(account_number,3)!='100' order by account_number asc")->result();
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL AND deleted = 0  order by account_number asc")->result();
         $result = array();
         foreach ($list_data as $data) {
             // $text = "";
@@ -118,7 +118,7 @@ class Master_Coa_Type_model extends Crud_model {
     function getCoaIncome() {
         // $where["deleted"] = 0;
         // $where["id"] = (2,3);
-        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL  AND deleted = 0 AND left(account_number,3)!='100' order by account_number asc")->result();
+        $list_data = $this->db->query("SELECT * FROM $this->table WHERE parent is NULL  AND deleted = 0  order by account_number asc")->result();
         $result = array();
         foreach ($list_data as $data) {
             // $text = "";

@@ -22,7 +22,7 @@
                         </td>
                         <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
+                             <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table', 'Aging')"><i class=" fa fa-file-excel-o"></i> Excel</a>
 
                         </td>
                    </tr>
@@ -33,11 +33,16 @@
         <div class="mt15">
             <div class="panel panel-default p15 b-t">
             	<div>
-            		<center><h3>Laporan Rincian Umur Hutang</h3>
-
-					<p><strong><?php echo $date_range ?></strong></p>
+            		
 					</center>
-            		<table class="table table-bordered">
+            		<table id="table" class="display dataTable" >
+                    <tr>
+                        <th colspan="8">
+                            <center><h3>Laporan Rincian Umur Hutang</h3>
+                            <p><strong><?php echo $date_range ?></strong></p>
+                        </th>
+
+                    </tr>
             			<tr>
             				<th style="text-align: center;">Invoice #</th>
                             <th style="text-align: center;">Vendor</th>

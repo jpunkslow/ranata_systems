@@ -101,7 +101,7 @@ $ararymonth=array(
                         </td>
                          <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
+                            <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table-print', 'Cashflow')"><i class=" fa fa-file-excel-o"></i> Excel</a>
 
                         </td>
                     </tr>
@@ -111,14 +111,15 @@ $ararymonth=array(
 
                 <div class="table-responsive mt15 pl15 pr15">
 
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Arus Kas  <br> Periode <?php echo $ararymonth[$month];?> Tahun  <?php  echo date("Y")?></p>
+
     
     <hr>
 
 
     <div>
         
-        <table class="table table-bordered ">
+        <table  class="table table-bordered" id="table-print" style="">
+             <tr><th colspan="3" ><p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Arus Kas  <br> Periode <?php echo $ararymonth[$month];?> Tahun  <?php  echo date("Y")?></p></th></tr>
             <tr>
                 <th>KODE AKUN</th>
                 <th>AKTIVITAS OPERASI</th>

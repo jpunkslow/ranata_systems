@@ -23,7 +23,7 @@
 
         $("#expenses-table").appTable({
             source: '<?php echo_uri("accounting/expenses/list_data") ?>',
-            order: [[3, "DESC"]],
+            // order: [[1, "asc"]],
             columns: [
                 {title: "TRANS CODE #"},
                 {title: "VOUCHER CODE"},

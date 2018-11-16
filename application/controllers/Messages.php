@@ -13,6 +13,17 @@ class Messages extends MY_Controller {
         redirect("messages/inbox");
     }
 
+    function getApi(){
+
+        $this->db->where('id',$_REQUEST['id']);
+        $sql = $this->db->get($_REQUEST['table']);
+
+        if(!$sql){
+            echo json_encode(array());
+        }
+        echo json_encode($sql->result());
+    }
+
     /* show new message modal */
 
     function modal_form($user_id = 0) {

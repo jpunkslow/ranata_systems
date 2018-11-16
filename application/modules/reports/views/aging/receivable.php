@@ -45,7 +45,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
                        <td><input type="text" class="form-control" name="end" id="end" value="<?php echo $periode_now ?>" autocomplete="off"></td>
                         <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
+                              <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table-print', 'Aging')"><i class=" fa fa-file-excel-o"></i> Excel</a>
 
                         </td>
                    </tr>
@@ -64,11 +64,17 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 
                 <div class="table-responsive mt15 pl15 pr15">
 
-				<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Rincian Umur Piutang <br> Periode <?php echo format_to_date($periode_default)." - ".format_to_date($periode_now);  ?></p>
+				
 	
 				<hr>
 	
 				<table id="table" class="display dataTable" >
+					<tr>
+						<th colspan="6">
+							<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Rincian Umur Piutang <br> Periode <?php echo format_to_date($periode_default)." - ".format_to_date($periode_now);  ?></p>
+						</th>
+
+					</tr>
 					<thead>
 						<th>Faktur Code</th>
 						<th>Customers</th>

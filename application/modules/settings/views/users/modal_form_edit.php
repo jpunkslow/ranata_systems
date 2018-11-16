@@ -61,6 +61,7 @@
             echo form_dropdown('user_type', array(
                 "staff" => "STAFF",
                 'acccounting' => "ACCOUNTING",
+                'inventory' => "INVENTORY",
                 'manager' => "MANAGER",
                 'administrator' => "ADMINISTRATOR"
             ), $model_info->user_type ,"class='select2 mini'");

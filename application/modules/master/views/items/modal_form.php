@@ -51,6 +51,24 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label for="title" class=" col-md-3">Unit</label>
+        <div class="col-md-9">
+            <?php
+            echo form_input(array(
+                "id" => "unit",
+                "name" => "unit",
+                "class" => "form-control validate-hidden",
+                "placeholder" => 'box',
+                "autofocus" => true,
+                "data-rule-required" => true,
+                "autocomplete" => "off",
+                "data-msg-required" => lang("field_required"),
+            ));
+            ?>
+        </div>
+    </div>
+
      <div class="form-group">
         <label for="category" class=" col-md-3">Sales Journal</label>
         <div class="col-md-9">

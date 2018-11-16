@@ -124,7 +124,7 @@ $ararymonth=array(
 	                        </td>
 	                        <td>
 	                            <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-	                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
+	                           <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table-print', 'laba_rugi')"><i class=" fa fa-file-excel-o"></i> Excel</a>
 
 	                        </td>
 	                   </tr>
@@ -143,13 +143,16 @@ $ararymonth=array(
 
                 <div class="table-responsive mt15 pl15 pr15">
 
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
+
 	
 	<hr>
 
 
 
-<table  class="table table-bordered">
+<table  class="table table-bordered" id="table-print" style="">
+    <tr>
+        <th colspan="<?php echo (($loop-$month)+2)?>"><p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Laba Rugi <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
+</th>
 <tr><td colspan="<?php echo (($loop-$month)+2)?>"><b>Pendapatan</b> </td></tr>
 	<tr style="background: lightgrey">
 		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>

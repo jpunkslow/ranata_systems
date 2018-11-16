@@ -60,7 +60,8 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
                         <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
                             <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-file-pdf-o"></i> Pdf</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="3"><i class=" fa fa-file-excel-o"></i> Excel</button>
+                            
+                            <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table-print', 'neraca_saldo')"><i class=" fa fa-file-excel-o"></i> Excel</a>
 
                         </td>
                    </tr>
@@ -79,12 +80,16 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
 
                 <div class="table">
 
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca Saldo  <br> Periode <?php echo format_to_date($periode_default)." - ".format_to_date($periode_now);  ?> </p>
     
     <hr>
 
 
-<table  class="table table-bordered" style="">
+<table  class="table table-bordered" id="table-print" style="">
+    <tr>
+        <th colspan="3"><p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca Saldo  <br> Periode <?php echo format_to_date($periode_default)." - ".format_to_date($periode_now);  ?> </p>
+</th>
+
+    </tr>
     <tr style="background: lightgrey"><!-- 
         <th style="width:10%; vertical-align: middle; text-align:center" ></th> -->
         <th style="width:55%; vertical-align: middle; text-align:center">NAMA AKUN </th>

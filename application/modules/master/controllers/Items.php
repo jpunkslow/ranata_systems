@@ -65,6 +65,7 @@ class Items extends MY_Controller {
             "sales_journal_lawan" => $this->input->post('sales_journal_lawan'),
             "hpp_journal" => $this->input->post('hpp_journal'),
             "lawan_hpp" => $this->input->post('lawan_hpp'),
+            "unit" => $this->input->post('unit'),
             "unit_type" => $this->input->post('unit_type')
         );
 
@@ -92,6 +93,7 @@ class Items extends MY_Controller {
             "category" => $this->input->post('category'),
             "sales_journal" => $this->input->post('sales_journal'),
             "sales_journal_lawan" => $this->input->post('sales_journal_lawan'),
+            "unit" => $this->input->post('unit'),
             
             "hpp_journal" => $this->input->post('hpp_journal'),
             "lawan_hpp" => $this->input->post('lawan_hpp'),
@@ -161,6 +163,7 @@ class Items extends MY_Controller {
             // $data->code,
             $data->category,
             $data->unit_type,
+            $data->unit,
             $data->sales_journal_name,
             $data->sales_journal_lawan_name,
             $data->hpp_journal_name,

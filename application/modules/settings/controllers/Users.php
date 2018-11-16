@@ -8,6 +8,7 @@ class Users extends MY_Controller {
     function __construct() {
         parent::__construct();
         $this->access_only_admin();
+        $this->load->model("settings/User_model");
     }
 
     function index() {
@@ -169,9 +170,9 @@ class Users extends MY_Controller {
 
     private function _make_row($data) {
         return array(
-        	$data->first_name." ".$data->last_name,
-        	$data->user_type,
-        	$data->email,
+            $data->first_name." ".$data->last_name,
+            $data->user_type,
+            $data->email,
             $data->status,
             modal_anchor(get_uri("settings/users/modal_form_edit_password"), "<i class='fa fa-lock'></i>", array("class" => "edit", "title" => "Set New Password", "data-post-id" => $data->id)).modal_anchor(get_uri("settings/users/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => "Edit User", "data-post-id" => $data->id))
             . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_tax'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("settings/users/delete"), "data-action" => "delete"))

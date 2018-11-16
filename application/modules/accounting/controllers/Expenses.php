@@ -227,9 +227,9 @@ class Expenses extends MY_Controller {
             }
     }
 
-    function _triggerUpdateProject($fid_header,$fid_project = 0){
-        $query = $this->db->query("UPDATE transaction_journal SET project_id = $fid_project WHERE fid_header = $fid_header ");
-                
+    function _triggerUpdateProject($fid_header,$fid_project = 0,$date){
+        $query = $this->db->query("UPDATE transaction_journal SET project_id = $fid_project,`date`='".$date."' WHERE fid_header = $fid_header ");
+        
         if($query == true){
             return true;
         }else{
@@ -260,7 +260,8 @@ class Expenses extends MY_Controller {
 
         $save_id = $this->Expenses_header_model->save($data,$data_id);
         if ($save_id) {
-            $this->_triggerUpdateProject($fid_header,$fid_project);
+
+            $this->_triggerUpdateProject($data_id,$fid_project,$this->input->post('date'));
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $data_id,'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
@@ -468,8 +469,8 @@ class Expenses extends MY_Controller {
         if($id){
             // echo $id;
             $this->_triggerUpdate($id,$fid_coa);
-            $project = $this->db->query("SELECT fid_project FROM transaction_journal_header WHERE id = '$id' ")->row();
-            $this->_triggerUpdateProject($id,$project->fid_project);
+            $project = $this->db->query("SELECT fid_project,date FROM transaction_journal_header WHERE id = '$id' ")->row();
+            $this->_triggerUpdateProject($id,$project->fid_project,$project->date);
             
             $view_data['info_header'] = $this->Expenses_header_model->get_details(array("id" => $id))->row();
             // print_r($view_data['info_header']);

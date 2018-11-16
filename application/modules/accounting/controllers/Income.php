@@ -234,7 +234,7 @@ class Income extends MY_Controller {
 
         $save_id = $this->Income_header_model->save($data,$data_id);
         if ($save_id) {
-
+            $this->_triggerUpdateTgl($data_id,$this->input->post('date'));
             echo json_encode(array("success" => true, "data" => $this->_row_data($save_id), 'id' => $data_id,'message' => lang('record_saved')));
         } else {
             echo json_encode(array("success" => false, 'message' => lang('error_occurred')));
@@ -264,6 +264,17 @@ class Income extends MY_Controller {
                 echo json_encode(array("success" => false, 'message' => lang('record_cannot_be_deleted')));
             }
         }
+    }
+
+
+      function _triggerUpdateTgl($fid_header,$date){
+        $query = $this->db->query("UPDATE transaction_journal SET `date`='".$date."' WHERE fid_header = $fid_header ");
+        
+        if($query == true){
+            return true;
+        }else{
+            return false;
+        }   
     }
 
      function delete_detail() {

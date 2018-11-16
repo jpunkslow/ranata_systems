@@ -65,7 +65,7 @@
                         <td><select name="type" class="form-control"><option value="1" <?php if ($type == 1) echo 'selected' ?>>1 Month</option><option value="3" <?php if ($type == 3) echo 'selected' ?>>3 Month</option><option value="6" <?php if ($type == 6) echo 'selected' ?>>6 Month</option><option value="12" <?php if ($type == 12) echo 'selected' ?>>12 Month</option></select></td>
                      <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
-                            <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-print"></i> Print</button>
+                              <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table-print', 'Neraca')"><i class=" fa fa-file-excel-o"></i> Excel</a>
 
                         </td>
                         
@@ -84,16 +84,19 @@
                 
 
                 <div class="table-responsive mt15 pl15 pr15">
-<?php if(empty($_GET['type']) || $_GET["type"] == 1){ ?>
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." ".$year?></p>
-<?php }else{ ?>
-	<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
-	<?php } ?>
+
 	<hr>
 
 
 
-<table  class="table table-bordered">
+<table  class="table table-bordered" id="table-print" style="">
+    <tr>
+        <th colspan="<?php echo (($loop-$month)+2)?>"><?php if(empty($_GET['type']) || $_GET["type"] == 1){ ?>
+<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." ".$year?></p>
+<?php }else{ ?>
+	<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
+	<?php } ?>
+</th>
 <tr><td colspan="<?php echo (($loop-$month)+2)?>"><b>Pendapatan</b> </td></tr>
 	<tr style="background: lightgrey">
 		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
