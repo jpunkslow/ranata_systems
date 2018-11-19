@@ -63,7 +63,9 @@
                         <li><?php echo get_client_contact_profile_link($this->login_user->id . '/account', "<i class='fa fa-key mr10'></i>" . lang('change_password')); ?></li>
                     <?php } else { ?>
                         <li><?php echo get_team_member_profile_link($this->login_user->id . '/general', "<i class='fa fa-user mr10'></i>" . lang('my_profile')); ?></li>
-                        <li><?php echo get_team_member_profile_link($this->login_user->id . '/account', "<i class='fa fa-key mr10'></i>" . lang('change_password')); ?></li>
+                        <li>
+                             <?php echo modal_anchor(get_uri("settings/users/modal_form_edit_password"), "<i class='fa fa-key mr10'></i>" . lang('change_password'), array("class" => "edit", "title" => "Set New Password", "data-post-id" =>$this->session->userdata('user_id')))?>
+                            </li>
                     <?php } ?>
                     <li class="divider"></li>
                     <li><a href="<?php echo_uri('signin/sign_out'); ?>"><i class="fa fa-power-off mr10"></i> <?php echo lang('sign_out'); ?></a></li>

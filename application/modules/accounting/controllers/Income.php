@@ -100,6 +100,7 @@ class Income extends MY_Controller {
             "fid_coa" => $this->input->post('fid_coa'),
             "date" => $this->input->post('date'),
             "description" => $this->input->post('description'),
+            "created_by" => $this->session->userdata('user_name'),
             "status" => 1,
             "type" => "income"
 
@@ -121,7 +122,7 @@ class Income extends MY_Controller {
                 "fid_header" => $save_id,
                 "debet" => 0,
                 "credit" => 0,
-                "username" => "admin",
+                "username" => $this->session->userdata('user_name'),
                 "created_at" => get_current_utc_time()
             );
 
@@ -228,6 +229,8 @@ class Income extends MY_Controller {
             "voucher_code" => $this->input->post('voucher_code'),
             // "fid_coa" => $this->input->post('fid_coa'),
             "date" => $this->input->post('date'),
+            "update_by" => $this->session->userdata('user_name'),
+            "update_at" => date('Y-m-d H:i:s'),
             "description" => $this->input->post('description')
         );
 
@@ -336,7 +339,9 @@ class Income extends MY_Controller {
             $value->account_number." - ".$value->account_name,
             format_to_date($data->date, false),
             number_format($data->total),
-            $data->description// $status
+            $data->description,
+            $data->created_by,
+            $data->update_by// $status
 
 
         );

@@ -7,11 +7,12 @@ class Users extends MY_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->access_only_admin();
+        
         $this->load->model("settings/User_model");
     }
 
     function index() {
+        $this->access_only_admin();
         $this->template->rander("users/index");
     }
 
@@ -24,7 +25,7 @@ class Users extends MY_Controller {
      function modal_form_edit() {
 
         
-
+        $this->access_only_admin();
         $view_data['model_info'] = $this->User_model->get_one($this->input->post('id'));
         $this->load->view('users/modal_form_edit', $view_data);
     }
@@ -38,7 +39,7 @@ class Users extends MY_Controller {
     }
 
     function add() {
-
+        $this->access_only_admin();
         validate_submitted_data(array(
             "first_name" => "required",
             "last_name" => "required",
@@ -73,7 +74,7 @@ class Users extends MY_Controller {
         }
     }
     function save() {
-
+        $this->access_only_admin();
         validate_submitted_data(array(
             "first_name" => "required",
             "last_name" => "required",
@@ -113,6 +114,7 @@ class Users extends MY_Controller {
         ));
         $id = $this->input->post('id');
 
+        if($this->session->userdata('user_type')!='super_admin')$id=$this->session->userdata('user_id');
 
         $password = $this->input->post('password');
 
@@ -132,6 +134,7 @@ class Users extends MY_Controller {
     }
 
     function delete() {
+        $this->access_only_admin();
         validate_submitted_data(array(
             "id" => "numeric|required"
         ));
@@ -154,6 +157,7 @@ class Users extends MY_Controller {
     }
 
     function list_data() {
+        $this->access_only_admin();
         $list_data = $this->User_model->get_details()->result();
         $result = array();
         foreach ($list_data as $data) {

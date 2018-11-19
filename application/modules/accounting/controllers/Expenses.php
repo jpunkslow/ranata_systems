@@ -104,6 +104,7 @@ class Expenses extends MY_Controller {
             "date" => $this->input->post('date'),
             "description" => $this->input->post('description'),
             "status" => 1,
+            "created_by" => $this->session->userdata('user_name'),
             "type" => "expenses"
 
         );
@@ -124,7 +125,7 @@ class Expenses extends MY_Controller {
                 "fid_header" => $save_id,
                 "debet" => 0,
                 "credit" => 0,
-                "username" => "admin",
+                "username" =>$this->session->userdata('user_name'),
                 "created_at" => get_current_utc_time()
             );
 
@@ -254,9 +255,12 @@ class Expenses extends MY_Controller {
             "voucher_code" => $this->input->post('voucher_code'),
             "fid_project" => $this->input->post('fid_project'),
             "date" => $this->input->post('date'),
+            "update_by" => $this->session->userdata('user_name'),
+            "update_at" => date('Y-m-d H:i:s'),
             "description" => $this->input->post('description')
         );
 
+         //print_r($this->session);exit();
 
         $save_id = $this->Expenses_header_model->save($data,$data_id);
         if ($save_id) {
@@ -354,7 +358,9 @@ class Expenses extends MY_Controller {
             $value->account_number." - ".$value->account_name,
             format_to_date($data->date, false),
             number_format($data->total),
-            $data->description// $status
+            $data->description,
+            $data->created_by,
+            $data->update_by// $status
 
 
         );

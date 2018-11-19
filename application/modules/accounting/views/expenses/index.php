@@ -31,6 +31,8 @@
                 {title: "DATE"},
                 {title: "TOTAL"},
                 {title: "DESCRIPTION"},
+                {title: "CREATED BY"},
+                {title: "UPDATED BY"},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
             ],
             printColumns: [0, 1, 2, 3, 4,5,6,7,8],

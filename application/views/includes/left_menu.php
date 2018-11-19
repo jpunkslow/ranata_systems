@@ -60,17 +60,29 @@
             // $sidebar_menu[] = array("name" => "", "slug"=>"#","url" => "#", "class" => "fa-line-chart", "submenu" => $rpt_submenu);
             // MENU DATA MASTER INPUT
             $master_submenu = array();
-            $master_submenu[] = array("name" => "Chart Of Account", "slug"=>"coa","url" => "master/coa");
-            $master_submenu[] = array("name" => "COA Balance", "slug"=>"saldoawal","url" => "master/saldoawal");
+
             $master_submenu[] = array("name" => "Customers", "slug"=>"customers","url" => "master/customers");
             $master_submenu[] = array("name" => "Vendors", "slug"=>"vendors","url" => "master/vendors");
             $master_submenu[] = array("name" => "Items or Products", "slug"=>"items","url" => "master/items");
-            $master_submenu[] = array("name" => "Fixed Assets", "slug"=>"assets","url" => "master/assets");
+            
             $master_submenu[] = array("name" => "Projects", "slug"=>"projects","url" => "master/projects");
+
+
+            $master_submenu_accounting = array();
+            $master_submenu_accounting[] = array("name" => "Chart Of Account", "slug"=>"coa","url" => "master/coa");
+            $master_submenu_accounting[] = array("name" => "COA Balance", "slug"=>"saldoawal","url" => "master/saldoawal");
+            $master_submenu_accounting[] = array("name" => "Fixed Assets", "slug"=>"assets","url" => "master/assets");
+
+
             // $master_submenu[] = array("name" => "payable", "url" => "accounting/payable");
 
             if($is_admin || $user_type == "manager" || $user_type == "super_admin"){
-                $sidebar_menu[] = array("name" => "Input Master", "slug"=>"","url" => "#", "class" => "fa-list", "submenu" => $master_submenu);
+                $sidebar_menu[] = array("name" => "General Master", "slug"=>"","url" => "#", "class" => "fa-list", "submenu" => $master_submenu);
+            
+            }
+
+            if($is_admin || $user_type == "manager" || $user_type == "super_admin"){
+                $sidebar_menu[] = array("name" => "Master Acc.", "slug"=>"","url" => "#", "class" => "fa-list", "submenu" => $master_submenu_accounting);
             
             }
             // ----- END MENU MASTER
