@@ -28,7 +28,8 @@
                 echo form_dropdown(
                     "category", array(
                         "Akomodasi" => "Akomodasi",
-                        "Transport" => "Transport"
+                        "Transport" => "Transport",
+                        "Etc" => "Etc",
                         ), "", "class='select2 mini'"
                     );
                         ?>
@@ -61,7 +62,6 @@
                 "class" => "form-control validate-hidden",
                 "placeholder" => 'box',
                 "autofocus" => true,
-                "data-rule-required" => true,
                 "autocomplete" => "off",
                 "data-msg-required" => lang("field_required"),
             ));

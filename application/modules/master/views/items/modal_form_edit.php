@@ -115,7 +115,6 @@
                 "class" => "form-control validate-hidden",
                 "placeholder" => 'box',
                 "autofocus" => true,
-                "data-rule-required" => true,
                 "autocomplete" => "off",
                 "data-msg-required" => lang("field_required"),
             ));

@@ -92,19 +92,20 @@ class General_ledger extends MY_Controller {
         $jml_cre = 0;
         
             
-            $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.id ASC");
+            $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.date ASC");
 
             //echo $this->db->last_query();exit();
             $no=0;
             foreach($data->result() as $db){
-
+                $originalDate = $db->date;
+                $newDate = date("d-M-Y", strtotime($originalDate));
                 $saldo = $saldo+$db->debet-$db->credit;
 
                 $html .= "<tr>";
                 $html .= "<td>".++$no."</td>";
                 //$html .= "<td>".$db->journal_code."</td>";
                 $html .= "<td>".$db->voucher_code."</td>";
-                $html .= "<td>".$db->date."</td>";
+                $html .= "<td>".$newDate."</td>";
                 $html .= "<td>".$db->type."</td>";
                 // $html .= "<td>".$db->description."</td>";
                 // $html .= "<td>".$db->account_number."</td>";

@@ -51,7 +51,7 @@
             $acc_submenu[] = array("name" => "Cash Flow Reports", "slug"=>"cashflow","url" => "reports/cashflow");
             $acc_submenu[] = array("name" => "Budgeting", "slug"=>"budgeting","url" => "reports/budgeting");
 
-            if($is_admin || $user_type == 'direktur_utama' || $user_type == 'direktur' || $user_type == 'manager' || $user_type == 'finance'){
+            if($is_admin || $user_type == 'direktur_utama' || $user_type == 'direktur' || $user_type == 'manager' || $user_type == 'finance' ){
                 $sidebar_menu[] = array("name" => "Accounting Reports","slug"=>"accounting", "url" => "#", "class" => "fa-bar-chart", "submenu" => $acc_submenu);
             }
             $rpt_submenu = array();
@@ -62,10 +62,13 @@
             $master_submenu = array();
 
             $master_submenu[] = array("name" => "Customers", "slug"=>"customers","url" => "master/customers");
-            $master_submenu[] = array("name" => "Vendors", "slug"=>"vendors","url" => "master/vendors");
+             if($is_admin || $user_type == "manager" || $user_type == "super_admin"){
+                $master_submenu[] = array("name" => "Vendors", "slug"=>"vendors","url" => "master/vendors");
+            }
             $master_submenu[] = array("name" => "Items or Products", "slug"=>"items","url" => "master/items");
-            
-            $master_submenu[] = array("name" => "Projects", "slug"=>"projects","url" => "master/projects");
+            if($is_admin || $user_type == "manager" || $user_type == "super_admin"){
+              $master_submenu[] = array("name" => "Projects", "slug"=>"projects","url" => "master/projects");
+             }
 
 
             $master_submenu_accounting = array();
@@ -76,7 +79,7 @@
 
             // $master_submenu[] = array("name" => "payable", "url" => "accounting/payable");
 
-            if($is_admin || $user_type == "manager" || $user_type == "super_admin"){
+            if($is_admin || $user_type == "manager" || $user_type == "super_admin" || $user_type == "sales"){
                 $sidebar_menu[] = array("name" => "General Master", "slug"=>"","url" => "#", "class" => "fa-list", "submenu" => $master_submenu);
             
             }
