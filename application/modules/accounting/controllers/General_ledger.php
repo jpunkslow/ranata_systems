@@ -74,7 +74,7 @@ class General_ledger extends MY_Controller {
 
         
 
-        $saldo = $saldo + ($sa_debet+$data3->total_debet) - ($sa_credit+$data3->total_credit);
+        $saldo = $saldo + ($sa_debet+$data3->total_debet - $sa_credit+$data3->total_credit);
 
 
 
