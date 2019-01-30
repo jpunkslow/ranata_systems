@@ -442,8 +442,7 @@ class S_invoices extends MY_Controller {
             if($pay_type == "CREDIT"){
                 
 
-                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$curr,$amount,0);
-                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+      
                 
                //  $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$coa_sales,0,$subtotal);
                 
@@ -459,6 +458,9 @@ class S_invoices extends MY_Controller {
 
                     
                 }
+
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
                 //print_r($row);exit();
                 foreach ($query_hpp->result() as $key) {
                     //print_r($key);exit();
@@ -774,6 +776,9 @@ class S_invoices extends MY_Controller {
         $id = $this->input->post('id');
         $rate = unformat_currency($this->input->post('invoice_item_rate'));
         $quantity = unformat_currency($this->input->post('invoice_item_quantity'));
+        $desc=$this->input->post('invoice_item_title');
+        $get_id_item=$this->db->query('select * from master_items where title="'.$desc.'" AND deleted=0')->row();
+        //echo $this->db->last_query();exit();
 
         $invoice_item_data = array(
             "fid_invoices" => $invoice_id,
@@ -782,7 +787,7 @@ class S_invoices extends MY_Controller {
             "category" => $this->input->post('category'),
             "quantity" => $quantity,
             "unit_type" => $this->input->post('unit_type'),
-            "fid_items" => $this->input->post('fid_item'),
+            "fid_items" =>  $get_id_item->id,
             "basic_price" => unformat_currency($this->input->post('invoice_item_basic'))* $quantity,
             "rate" => unformat_currency($this->input->post('invoice_item_rate')),
 

@@ -71,7 +71,7 @@
                 "name" => "paid_date",
                 "class" => "form-control validate-hidden",
                 "autocomplete" => "off",
-                "value" => date("Y-m-d"),
+                "value" => $model_info->inv_date,
                 "placeholder" => date("Y-m-d"),
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),

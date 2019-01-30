@@ -36,7 +36,7 @@
             ?>
         </div>
     </div>
-    <input type="hidden" name="fid_item" id="fid_item">
+    <input type="hidden" name="fid_item" id="fid_item" value="<?php echo $model_info->fid_item?>">
     <div class="form-group">
         <label for="category" class=" col-md-3">Category</label>
         <div class="col-md-9">
