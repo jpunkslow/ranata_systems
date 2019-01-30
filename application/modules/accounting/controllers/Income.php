@@ -333,11 +333,13 @@ class Income extends MY_Controller {
         
         // $query = $this->Master_Customers_model->get_details($options)->row();
         $value = $this->Master_Coa_Type_model->get_details(array("id"=> $data->fid_coa))->row();
+        $originalDate = $data->date;
+        $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
             anchor(get_uri('accounting/income/entry/').$data->id.'/'.$data->fid_coa, $data->code),
             $data->voucher_code,
             $value->account_number." - ".$value->account_name,
-            format_to_date($data->date, false),
+             $newDate,
             number_format($data->total),
             $data->description,
             $data->created_by,

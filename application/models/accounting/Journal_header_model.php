@@ -19,5 +19,14 @@ class Journal_header_model extends Crud_model {
         $data = $this->db->query("SELECT * FROM $this->table WHERE type = 'jurnal_umum' AND  deleted = 0 ".$where."  ");
         return $data;
     }
+    function get_details_by_id($options = array()){
+        $id = get_array_value($options, "id");
+        $where = "";
+        if ($id) {
+            $where = " AND id=$id";
+        }
+        $data = $this->db->query("SELECT * FROM $this->table WHERE deleted = 0 ".$where."  ");
+        return $data;
+    }
 
 }

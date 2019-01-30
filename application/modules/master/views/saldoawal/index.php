@@ -21,7 +21,6 @@
             order: [[0, 'desc']],
             columns: [
                 {title: 'PERIODE'},
-                {title: 'DATE'},
                 {title: 'COA'},
                 {title: 'DEBET'},
                 {title: 'CREDIT'},

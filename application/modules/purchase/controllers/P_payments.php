@@ -467,6 +467,8 @@ class P_payments extends MY_Controller {
 
         $query = $this->Master_Vendors_model->get_details($options)->row();
         $total = $data->amount + $data->residu;
+        $originalDate = $data->pay_date;
+        $newDate = date("d-M-Y", strtotime($originalDate));
         // $value = $this->Purchase_Payments_model->get_payments_total_summary($data->id);
         $row_data = array(
             anchor(get_uri("purchase/p_payments/prints/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
@@ -474,7 +476,7 @@ class P_payments extends MY_Controller {
             $query->code." - ".$query->name,
             $this->_get_payments_status_label($data),
             // $data->fid_bank,
-            format_to_date($data->pay_date),
+            $newDate,
             $data->memo,
             $data->currency,
             to_currency($data->amount),

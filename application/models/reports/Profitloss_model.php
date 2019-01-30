@@ -15,6 +15,26 @@ class Profitloss_model extends CI_Model {
 		}
 
 	}
+
+
+	function get_debet_total($start_date,$end_date) {
+		$query = $this->db->query("SELECT sum(debet+credit) as jumlah from transaction_journal a LEFT JOIN acc_coa_type b on a.fid_coa=b.id WHERE a.`deleted` = 0 AND fid_coa in(SELECT id FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in ('Pendapatan','Pendapatan Lain-lain') AND parent IS NULL ORDER BY account_number ASC) AND (date>='".$start_date."' AND date<='".$end_date."')")->row();
+		return $query;
+
+	}
+
+	function get_kredit_total($start_date,$end_date) {
+		$query = $this->db->query("SELECT sum(debet+credit) as jumlah from transaction_journal a LEFT JOIN acc_coa_type b on a.fid_coa=b.id WHERE a.`deleted` = 0 AND fid_coa in(SELECT id FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type in ('Harga Pokok Penjualan','Beban Penjualan','Beban Administrasi Umum','Beban Lain-lain') AND parent IS NULL ORDER BY account_number ASC) AND (date>='".$start_date."' AND date<='".$end_date."')")->row();
+		return $query;
+
+	}
+
+	function getBebanPokokPenjualan_total($date) {
+		$query = $this->db->query("SELECT sum(debet+credit) as jumlah FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Harga Pokok Penjualan' AND parent IS NULL ORDER BY account_number ASC")->row();
+		return $query;
+
+	}
+
 	function getPendNonOp(){
 		$query = $this->db->query("SELECT * FROM `acc_coa_type` WHERE `deleted` = 0 AND account_type = 'Pendapatan Lain-lain' AND parent IS NULL ORDER BY account_number ASC");
 		if($query->num_rows() > 0) {
@@ -135,11 +155,44 @@ class Profitloss_model extends CI_Model {
 		return $query;
 	}
 
+		public function get_child($parent)
+		{
+		    $query = $this->db->query("select * from acc_coa_type where parental = '$parent' or id='$parent' AND deleted=0");
 
+		    $result = $query->result();
+
+		    $roles = array();       
+
+		    foreach($result as $key => $val) {
+
+		        if($result[$key]->parental == $parent) {
+		            $role = array();
+
+		            $role['id'] = $result[$key]->id;
+
+		            $children = $this->get_child($result[$key]->id);
+
+		            if( !empty($children) ) {                   
+
+		            	foreach ($children as $w) {
+		            	$roles[] = array('id'=>$w['id']);
+		            	}
+		                
+		            }
+		            $roles[] = $role;
+		        }
+		    }
+		    //print_r($roles);
+
+		    return $roles;
+
+		}	
 	function get_jml_akun($akun,$start,$end) {
+			
+
 			$this->db->select('SUM(debet) AS jum_debet, SUM(credit) AS jum_kredit');
 			$this->db->from('transaction_journal');
-			$this->db->where('fid_coa', $akun);
+			
 
 		// 	if(isset($_REQUEST['tgl_dari']) && isset($_REQUEST['tgl_samp'])) {
 		// 	$tgl_dari = $_REQUEST['tgl_dari'];
@@ -150,22 +203,37 @@ class Profitloss_model extends CI_Model {
 		// }
 		$this->db->where('DATE(date) >= ', ''.$start.'');
 		$this->db->where('DATE(date) <= ', ''.$end.'');
+		$this->db->where('deleted ', '0');
 
 		$query = $this->db->get();
 		return $query->row();
 	}
 
 
-	function get_jml_akun_month($akun,$month,$year,$project=false) {
+	function get_jml_akun_month($akun,$month,$year,$project=false,$akun_number=false) {
 		$start=$year.'-'.$month.'-01';
 		$end=$year.'-'.$month.'-31';
+
+			$total_akun=array();
+			$total_akun[]=$akun;
+			$get_akun=$this->get_child($akun);
+
+			//print_r($get_akun);exit();
+
+			foreach ($get_akun as $rw) {
+				$total_akun[]=$rw['id'];
+				
+			}
+			
+
 
 			$this->db->select('SUM(debet) AS jum_debet, SUM(credit) AS jum_kredit');
 			$this->db->from('transaction_journal');
 			$this->db->join('acc_coa_type','transaction_journal.fid_coa=acc_coa_type.id');
 			$this->db->where('DATE(date) >= ', ''.$start.'');
 			$this->db->where('DATE(date) <= ', ''.$end.'');
-			$this->db->where('(fid_coa='.$akun.' or parental='.$akun.')');
+			$this->db->where('transaction_journal.deleted ', '0');
+			$this->db->where_in('fid_coa', $total_akun);
 			if($project!=false){
 				$this->db->where('project_id ', ''.$project.'');
 			}

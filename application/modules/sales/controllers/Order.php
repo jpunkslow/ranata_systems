@@ -304,7 +304,8 @@ class Order extends MY_Controller {
         // $data_name = (count($quot) == 1 ?  anchor(get_uri('sales/quotation/view/').$quot->id,"#".$quot->code) :"" );
 
 
-
+         $originalDate = $data->exp_date;
+         $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
         
             anchor(get_uri("sales/order/view/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
@@ -312,7 +313,7 @@ class Order extends MY_Controller {
             // $data_name,
             $this->_get_order_status_label($data),
             $data->email_to,
-            format_to_date($data->exp_date, false),
+            $newDate,
             $data->currency,
             to_currency($value->grand_total)
 

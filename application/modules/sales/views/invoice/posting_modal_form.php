@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="paid_date" class=" col-md-3">PAID DATE</label>
+        <label for="paid_date" class=" col-md-3">TRANSACTION DATE</label>
         <div class="col-md-9">
             <?php
             echo form_input(array(
@@ -71,6 +71,7 @@
                 "name" => "paid_date",
                 "class" => "form-control validate-hidden",
                 "autocomplete" => "off",
+                "value" => date("Y-m-d"),
                 "placeholder" => date("Y-m-d"),
                 "data-rule-required" => true,
                 "data-msg-required" => lang("field_required"),

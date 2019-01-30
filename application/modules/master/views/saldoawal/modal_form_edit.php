@@ -48,20 +48,7 @@
     </div>
 
     <input type="hidden" id="dk" name="dk" value="<?php echo $model_info_coa->normally ?>">
-    <div class="form-group">
-        <label for="date" class="col-md-3">DATE</label>
-        <div class=" col-md-9">
-            <?php
-            echo form_input(array(
-                "id" => "date",
-                "name" => "date",
-                "value" => $model_info->date,
-                "class" => "form-control",
-                "placeholder" => "Y-m-d"
-            ));
-            ?>
-        </div>
-    </div>
+  
 </div>
 
 <div class="modal-footer">

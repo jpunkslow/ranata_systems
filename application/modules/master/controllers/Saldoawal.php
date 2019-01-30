@@ -60,7 +60,7 @@ class Saldoawal extends MY_Controller {
 
         $item_data = array(
             "periode" => $this->input->post('periode'),
-            "date" => $this->input->post("date"),
+            //"date" => $this->input->post("date"),
             "fid_coa" => $this->input->post('fid_coa'),
             "debet" => $debet,
             "credit" => $credit
@@ -96,7 +96,7 @@ class Saldoawal extends MY_Controller {
 
         $item_data = array(
             "periode" => $this->input->post('periode'),
-            "date" => $this->input->post("date"),
+            //"date" => $this->input->post("date"),
             "fid_coa" => $this->input->post('fid_coa'),
             "debet" => $debet,
             "credit" => $credit
@@ -160,7 +160,7 @@ class Saldoawal extends MY_Controller {
         $coa = $this->Master_Coa_Type_model->get_details(array("id" => $data->fid_coa))->row();
         return array(
             $data->periode,
-            format_to_date($data->date),
+            //format_to_date($data->date),
             $coa->account_number." - ".$coa->account_name,
             to_currency($data->debet,false),
             to_currency($data->credit,false),

@@ -169,6 +169,8 @@ class Quotation extends MY_Controller {
 
         $query = $this->Master_Customers_model->get_details($options)->row();
         $value = $this->Sales_Quotation_model->get_quotation_total_summary($data->id);
+         $originalDate = $data->exp_date;
+         $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
         
             anchor(get_uri("sales/quotation/view/" . $data->id."/".str_replace("/", "-", $data->code)),"#". $data->code),
@@ -176,7 +178,7 @@ class Quotation extends MY_Controller {
             
             $this->_get_quotation_status_label($data,true),
             $data->email_to,
-            format_to_date($data->exp_date, false),
+            $newDate,
             $data->currency,
             to_currency($value->invoice_total)
 

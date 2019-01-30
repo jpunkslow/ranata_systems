@@ -62,7 +62,8 @@
 
                         </td>
 
-                        <td><select name="type" class="form-control"><option value="1" <?php if ($type == 1) echo 'selected' ?>>1 Month</option><option value="3" <?php if ($type == 3) echo 'selected' ?>>3 Month</option><option value="6" <?php if ($type == 6) echo 'selected' ?>>6 Month</option><option value="12" <?php if ($type == 12) echo 'selected' ?>>12 Month</option></select></td>
+                        <!--<td><select name="type" class="form-control"><option value="1" <?php if ($type == 1) echo 'selected' ?>>1 Month</option><option value="3" <?php if ($type == 3) echo 'selected' ?>>3 Month</option><option value="6" <?php if ($type == 6) echo 'selected' ?>>6 Month</option><option value="12" <?php if ($type == 12) echo 'selected' ?>>12 Month</option></select></td>-->
+                        <input type="hidden" name="type" value='1'>
                      <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
                               <a href="#" name="print"  class="btn btn-default" onclick="tableToExcel('table-print', 'Neraca')"><i class=" fa fa-file-excel-o"></i> Excel</a>
@@ -92,7 +93,7 @@
 <table  class="table table-bordered" id="table-print" style="">
     <tr>
         <th colspan="<?php echo (($loop-$month)+2)?>"><?php if(empty($_GET['type']) || $_GET["type"] == 1){ ?>
-<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." ".$year?></p>
+<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month-1]." ".$year?></p>
 <?php }else{ ?>
 	<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[($month-1)]." - ".$ararymonth[($loop-1)];  ?> <?php echo $year?></p>
 	<?php } ?>
@@ -101,7 +102,7 @@
 	<tr style="background: lightgrey">
 		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
 		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<?php for ($i=0; $i <$loop ;$i++) { ?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) { ?>
 				<th style="width:20%; vertical-align: middle; text-align:center"><?php echo $ararymonth[$i]?> </th>
 		<?php }	?> 
 
@@ -126,7 +127,7 @@
 					<td class="h_tengah"> '.$no_act_lancar.' </td>
 		';
 				$currentAssets .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
@@ -155,7 +156,7 @@
 					<td class="h_tengah"> '.$no_act_nolancar.' </td>
 		';
 				$currentNoAssets .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
@@ -181,7 +182,7 @@
 				<tr>
 					<td class="h_tengah"> '.$no_kwj_lancar.' </td>';
 				$currentLiabilities .= '<td>&nbsp'.$row->account_name.'</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit+$saldo;
@@ -210,7 +211,7 @@
 					<td class="h_tengah"> '.$no_kwj_nolancar.' </td>
 		';
 				$currentNoLiabilities .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
@@ -238,7 +239,7 @@
 					<td class="h_tengah"> '.$no_ekuitas.' </td>
 		';
 		$ekuitas .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit +$saldo;
@@ -262,7 +263,7 @@
 
 	$activa_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Aktiva Lancar</b></td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 		$activa_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_act_lancar[$i];
 		$activa_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
@@ -273,7 +274,7 @@
 
 	$activa_no_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Aktiva Tidak Lancar</b></td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 		$activa_no_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_act_nolancar[$i];
 		$activa_no_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
@@ -284,7 +285,7 @@
 
 	$kwj_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Kewajiban Lancar</b></td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 		$kwj_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_kwj_lancar[$i];
 		$kwj_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
@@ -294,7 +295,7 @@
 
 	$kwj_no_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Kewajiban Tidak Lancar</b></td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 		$kwj_no_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_kwj_nolancar[$i];
 		$kwj_no_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
@@ -304,18 +305,18 @@
 
 	$laba_rugi_ditahan .='<tr >
 		<td class="h_tengah">2<td > Laba (Rugi) Ditahan</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 		$laba_rugi_ditahan .='<td class="h_kanan"><b>';
 		
-		$laba_rugi_ditahan .=number_format(nsi_round(0)).'</b></td>';
+		$laba_rugi_ditahan .=number_format(nsi_round($getDebetTotalPLD-$getKreditTotalPLD)).'</b></td>';
 	 }
 	$laba_rugi_ditahan .='</tr>';
 
 	$laba_rugi_berjalan .='<tr >
 		<td class="h_tengah">3<td > Laba (Rugi) Tahun Berjalan</td>';
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 		$laba_rugi_berjalan .='<td class="h_kanan"><b>';
-		$laba_rugi_berjalan .=number_format(nsi_round(0)).'</b></td>';
+		$laba_rugi_berjalan .=number_format(nsi_round($getDebetTotalPL->jumlah-$getKreditTotalPL->jumlah)).'</b></td>';
 	 }
 	$laba_rugi_berjalan .='</tr>';
 
@@ -325,7 +326,7 @@
 
 		<tr style="background: lightgrey">
 		<td colspan="2" > <b>Aktiva</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $activa_total[$i];
 		echo number_format(nsi_round($jml_p), 0, 0, '.')   ?></b></td>
 	<?php } ?>
@@ -336,7 +337,7 @@
 	<?php echo $currentNoAssets?>
 	<tr style="background: lightgrey">
 		<td colspan="2" > <b>Kewajiban Dan Ekuitas</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $kwj_total[$i];
 		echo number_format(nsi_round($jml_p), 0, 0, '.');   ?></b></td>
 		<?php } ?>

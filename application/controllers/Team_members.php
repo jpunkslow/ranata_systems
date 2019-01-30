@@ -465,6 +465,7 @@ class Team_members extends MY_Controller {
 
         $user_info_updated = $this->Users_model->save($user_data, $user_id);
 
+        save_custom_fields("team_members", $user_id, $this->login_user->is_admin, $this->login_user->user_type);
 
         if ($user_info_updated) {
             echo json_encode(array("success" => true, 'message' => lang('record_updated')));

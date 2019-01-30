@@ -12,9 +12,16 @@ class Purchase_Invoices_model extends Crud_model {
 
     function get_details($options = array()){
         $id = get_array_value($options, "id");
+         $start_date=get_array_value($options, "start_date");
+        $end_date=get_array_value($options, "end_date");
         $where = "";
         if ($id) {
             $where = " AND id=$id";
+        }
+        if ($start_date) {
+            $start_date = get_array_value($options, "start_date");
+            $end_date = get_array_value($options, "end_date");  
+            $where .= " AND (inv_date >='".$start_date."'AND  inv_date <='".$end_date."')";
         }
         $data = $this->db->query("SELECT * FROM $this->table WHERE  deleted = 0  ".$where." ORDER BY id DESC");
         return $data;

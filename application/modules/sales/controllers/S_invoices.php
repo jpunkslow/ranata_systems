@@ -17,8 +17,16 @@ class S_invoices extends MY_Controller {
     }
 
     function index() {
+        $start_date = date("Y-m").'-01';
+            $end_date = date("Y-m-d");
+        if(!empty($_GET['start']) && !empty($_GET['end'])){
+            $start_date = $_GET['start'];
+            $end_date = $_GET['end'];
 
-        $this->template->rander("invoice/index");
+        }
+            $view_data['start_date']=$start_date;
+            $view_data['end_date']=$end_date; 
+        $this->template->rander("invoice/index",$view_data);
     }
 
     function getOrderId($id){
@@ -444,16 +452,23 @@ class S_invoices extends MY_Controller {
                  $query = $this->Sales_InvoicesItems_model->get_hpp($id);
                  $query_hpp = $this->Sales_InvoicesItems_model->get_hpp($id);
                 foreach($query->result() as $row){
+
                     // $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,$row->total,0);
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,0,$row->total);
+                    
 
                     
                 }
-
+                //print_r($row);exit();
                 foreach ($query_hpp->result() as $key) {
+                    //print_r($key);exit();
+                    if($key->hpp_journal!='0')
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
+
+     				if($key->lawan_hpp!='0')           
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
                 }
+
                 $status_data = array("status" => "posting" ,"paid" => "Not Paid", "coa_sales" => $coa_sales,"residual" => $amount,'sub_total' => $subtotal,'ppn' => $ppn);
             
             }
@@ -473,7 +488,9 @@ class S_invoices extends MY_Controller {
                 }
 
                 foreach ($query_hpp->result() as $key) {
+                	if($key->hpp_journal!='0')
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
+                    if($key->lawan_hpp!='0')
                     $this->_insertTransaction($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
                 }
 
@@ -618,9 +635,13 @@ class S_invoices extends MY_Controller {
 
     /* list of clients, prepared for datatable  */
 
-    function list_data() {
+    function list_data($start_date=false,$end_date=false) {
+       if(!$start_date)
+        $start_date = date("Y-m").'-01';
+      if(!$end_date)
+        $end_date = date("Y-m-d");
 
-        $list_data = $this->Sales_Invoices_model->get_details()->result();
+        $list_data = $this->Sales_Invoices_model->get_details(array('start_date' => $start_date,'end_date' => $end_date))->result();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data);
@@ -647,13 +668,15 @@ class S_invoices extends MY_Controller {
 
         $query = $this->Master_Customers_model->get_details($options)->row();
         $value = $this->Sales_Invoices_model->get_invoices_total_summary($data->id);
+        $originalDate = $data->inv_date;
+        $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
         
             anchor(get_uri("sales/s_invoices/view/" . $data->id."/".str_replace("/", "-", $data->code)), "#".$data->code),
             modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
             $this->_get_invoices_status_label($data),
             $data->email_to,
-            format_to_date($data->inv_date, false),
+            $newDate,
             $data->currency,
             to_currency($value->invoice_total)
 

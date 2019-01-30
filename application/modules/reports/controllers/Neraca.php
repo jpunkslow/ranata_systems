@@ -19,38 +19,46 @@ class Neraca extends MY_Controller {
 
     function index() {
 
-            $periode_default = date("Y")."-01-01";
-            $periode_now = date("Y-m-d");
+            $year=date('Y');
+           
+            //$start_awal== date("Y")."-01-01";
+
+            $month=1;
+
+$type=$month;
+$project=false;
+
+if(!empty($_GET['month'])){
+    $month = $_GET['month'];
+}
+if(!empty($_GET['year'])){
+    $year = $_GET['year'];
+}
+if(!empty($_GET['type'])){
+    $type = $_GET['type'];
+}
+
+ $start_awal=$year."-01-01";
+            $periode_default = $year."-01-01";
+            $periode_now = $year;
             if(!empty($_GET['start']) && !empty($_GET['end'])){
                 $periode_default = $_GET['start'];
                 $periode_now = $_GET['end'];
             }
 
-            $month=1;
-            $year=date('Y');
-            $type=$month;
-            $project=false;
+if(!empty($_GET['project'])){
+    $project = $_GET['project'];
+}
+if($project=='')$project=false;
 
-            if(!empty($_GET['month'])){
-                $month = $_GET['month'];
-            }
-            if(!empty($_GET['year'])){
-                $year = $_GET['year'];
-            }
-            if(!empty($_GET['type'])){
-                $type = $_GET['type'];
-            }
-
-            if(!empty($_GET['project'])){
-                $project = $_GET['project'];
-            }
-            if($project=='')$project=false;
-
-            if($type==1){
-                $type=$month;
-            }
-            $loop=$type;
-            if($loop>12)$loop=12;
+$type2=$type;
+if($type==1){
+    $type2=$month;
+}else{
+    $type2=($month+$type)-1;
+}
+$loop=$type2;
+if($loop>12)$loop=12;
             $ararymonth=array(
                         'Januari',
                         'Februari',
@@ -74,6 +82,29 @@ class Neraca extends MY_Controller {
         $view_data['ararymonth']=$ararymonth;
         $view_data['loop']=$loop;
 
+
+
+        $month_start_berjalan=$year.'-'.$month.'-01';
+        $month_end_berjalan=$year.'-'.$month.'-31';
+
+        $view_data['getDebetTotalPL'] = $this->Profitloss_model->get_debet_total($month_start_berjalan,$month_end_berjalan);
+        $view_data['getKreditTotalPL'] = $this->Profitloss_model->get_kredit_total($month_start_berjalan,$month_end_berjalan);
+
+        
+
+        if($month==1){
+            $view_data['getDebetTotalPLD']=0;
+            $view_data['getKreditTotalPLD']=0;
+        }else{
+
+             //$month_start_berjalan=$year.'-'.($month-1).'-01';
+             $month_end_berjalan=$year.'-'.($month-1).'-31';
+             $q=$this->Profitloss_model->get_debet_total($start_awal,$month_end_berjalan);
+             $q2=$this->Profitloss_model->get_kredit_total($start_awal,$month_end_berjalan);
+             //echo $start_awal;exit();
+            $view_data['getDebetTotalPLD'] = $q->jumlah;
+            $view_data['getKreditTotalPLD'] =$q2->jumlah ;
+        }
 
         $view_data['getCurrentAssets'] = $this->Neraca_model->getCurrentAssets();
 

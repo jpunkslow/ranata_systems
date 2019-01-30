@@ -15,8 +15,16 @@ class P_invoices extends MY_Controller {
     }
 
     function index() {
+        $start_date = date("Y-m").'-01';
+            $end_date = date("Y-m-d");
+        if(!empty($_GET['start']) && !empty($_GET['end'])){
+            $start_date = $_GET['start'];
+            $end_date = $_GET['end'];
 
-        $this->template->rander("invoice/index");
+        }
+            $view_data['start_date']=$start_date;
+            $view_data['end_date']=$end_date; 
+        $this->template->rander("invoice/index",$view_data);
     }
 
     function getOrderId($id){
@@ -351,9 +359,12 @@ class P_invoices extends MY_Controller {
 
     /* list of clients, prepared for datatable  */
 
-    function list_data() {
-
-        $list_data = $this->Purchase_Invoices_model->get_details()->result();
+    function list_data($start_date=false,$end_date=false) {
+       if(!$start_date)
+        $start_date = date("Y-m").'-01';
+      if(!$end_date)
+        $end_date = date("Y-m-d");
+        $list_data = $this->Purchase_Invoices_model->get_details(array('start_date' => $start_date,'end_date' => $end_date))->result();
         $result = array();
         foreach ($list_data as $data) {
             $result[] = $this->_make_row($data);
@@ -380,13 +391,15 @@ class P_invoices extends MY_Controller {
 
         $query = $this->Master_Vendors_model->get_details($options)->row();
         $value = $this->Purchase_Invoices_model->get_invoices_total_summary($data->id);
+        $originalDate = $data->inv_date;
+         $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
         
             anchor(get_uri("purchase/p_invoices/view/" . $data->id), "#".$data->code),
             modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
             $this->_get_invoices_status_label($data),
             $data->email_to,
-            format_to_date($data->inv_date, false),
+            $newDate,
             $data->currency,
             to_currency($value->invoice_subtotal)
 

@@ -315,10 +315,12 @@ class Journal_entry extends MY_Controller {
         // );
         
         // $query = $this->Master_Customers_model->get_details($options)->row();
+        $originalDate = $data->date;
+        $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
         	anchor(get_uri('accounting/journal_entry/entry/').$data->id.'/'.$data->fid_coa, $data->code),
             $data->voucher_code,
-            format_to_date($data->date, false),
+            $newDate,
             $data->description// $status
 
 

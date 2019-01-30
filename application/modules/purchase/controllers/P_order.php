@@ -267,13 +267,15 @@ class P_order extends MY_Controller {
 
         $query = $this->Master_Vendors_model->get_details($options)->row();
         $value = $this->Purchase_Order_model->get_order_total_summary($data->id);
+        $originalDate = $data->exp_date;
+        $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
         
             anchor(get_uri("purchase/p_order/view/" . $data->id), "#".$data->code),
             modal_anchor(get_uri("master/customers/view/" . $data->fid_cust), $query->name, array("class" => "view", "title" => "Customers ".$query->name, "data-post-id" => $data->fid_cust)),
             $this->_get_order_status_label($data),
             $data->email_to,
-            format_to_date($data->exp_date, false),
+            $newDate,
             $data->currency,
             to_currency($value->grand_total)
 

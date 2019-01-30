@@ -46,20 +46,7 @@
     <input type="hidden" id="dk" name="dk">
 
    
-    <div class="form-group">
-        <label for="date" class="col-md-3">DATE</label>
-        <div class=" col-md-9">
-            <?php
-            echo form_input(array(
-                "id" => "date",
-                "name" => "date",
-                "value" => date("Y-m-d"),
-                "class" => "form-control",
-                "placeholder" => "Y-m-d"
-            ));
-            ?>
-        </div>
-    </div>
+   
 </div>
 
 <div class="modal-footer">

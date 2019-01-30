@@ -49,10 +49,13 @@ if(!empty($_GET['project'])){
 }
 if($project=='')$project=false;
 
+$type2=$type;
 if($type==1){
-	$type=$month;
+	$type2=$month;
+}else{
+	$type2=($month+$type)-1;
 }
-$loop=$type;
+$loop=$type2;
 if($loop>12)$loop=12;
 $ararymonth=array(
             'Januari',
@@ -68,6 +71,7 @@ $ararymonth=array(
             'November',
             'Desember',
         );
+
 ?>
 <div id="page-content" class="clearfix">
     <div style="max-width: 1000px; margin: auto;">
@@ -156,7 +160,7 @@ $ararymonth=array(
 	<tr style="background: lightgrey">
 		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
 		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<?php for ($i=0; $i <$loop ;$i++) { ?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) { ?>
 				<th style="width:20%; vertical-align: middle; text-align:center"><?php echo $ararymonth[$i]?> </th>
 		<?php }	?> 
 
@@ -179,7 +183,7 @@ $ararymonth=array(
 		}else if(strlen($row->account_number)==9){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 		}
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
@@ -197,7 +201,7 @@ $ararymonth=array(
 	?>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"> <b>Jumlah Pendapatan</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $jml_dapat[$i];
 		echo number_format(nsi_round($jml_p))   ?></b></td>
 	<?php } ?>
@@ -227,7 +231,7 @@ $ararymonth=array(
 			else if(strlen($row->account_number)==10){
 					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
-			for ($i=0; $i <$loop ;$i++) {
+			for ($i=($month-1); $i <$loop ;$i++) {
 				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 				$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
 				if(strlen($row->account_number)==6){
@@ -244,7 +248,7 @@ $ararymonth=array(
 	?>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"> <b>Jumlah Beban Pokok Penjualan</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $jml_beban[$i];
 		echo number_format(nsi_round($jml_p))   ?></b></td>
 	<?php } ?>
@@ -252,7 +256,7 @@ $ararymonth=array(
 
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"><b>Laba Kotor (Gross Profit)</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = ($jml_dapat[$i]-$jml_beban[$i]);
 		echo number_format(nsi_round($jml_p))   ?></b></td>
 	<?php } ?>
@@ -277,7 +281,7 @@ $ararymonth=array(
 			}else if(strlen($row->account_number)==7){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}else if(strlen($row->account_number)==9){
-				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
+				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>'.$row->account_name.'</b></td>';
 			}else if(strlen($row->account_number)==10){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}else if(strlen($row->account_number)==11){
@@ -286,15 +290,16 @@ $ararymonth=array(
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
 
-			for ($i=0; $i <$loop ;$i++) {
-				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
+			for ($i=($month-1); $i <$loop ;$i++) {
+				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project,$row->account_number);
+				//echo $this->db->last_query();exit();
 				$jumlah_beban = $jml_akun->jum_debet + $jml_akun->jum_kredit;
 				if(strlen($row->account_number)==6){
 					echo '<td class="h_kanan"><b>'.number_format(nsi_round($jumlah_beban), 0, 0, '.').'</b></td>';
 						$jml_beban_operasional[$i] += $jumlah_beban;
 					}else{
 						echo '<td class="h_kanan">'.number_format(nsi_round($jumlah_beban), 0, 0, '.').'</td>';
-						$jml_beban_operasional[$i] += $jumlah_beban;
+						//$jml_beban_operasional[$i] += $jumlah_beban;
 					}
 		}
 		echo '</tr>';
@@ -303,14 +308,14 @@ $ararymonth=array(
 	?>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"><b>Jumlah Beban operasional</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $jml_beban_operasional[$i];
 		echo number_format(nsi_round($jml_p))   ?></b></td>
 	<?php } ?>
 	</tr>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"><b>Pendapatan Operasi (Operating Profit)</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = ($jml_dapat[$i]-$jml_beban[$i]-$jml_beban_operasional[$i]);
 		echo number_format(nsi_round($jml_p))   ?></b></td>
 	<?php } ?>
@@ -339,7 +344,7 @@ $ararymonth=array(
 			else if(strlen($row->account_number)==10){
 					echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
-		for ($i=0; $i <$loop ;$i++) {
+		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
@@ -358,7 +363,7 @@ $ararymonth=array(
 	?>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"><b> Jumlah Pendapatan Non Operational</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $jml_dapat_non[$i];
 		echo number_format(nsi_round($jml_p))   ?></b></td>
 	<?php } ?>
@@ -382,7 +387,7 @@ $ararymonth=array(
 			}else if(strlen($row->account_number)==10){
 				echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row->account_name.'</td>';
 			}
-			for ($i=0; $i <$loop ;$i++) {
+			for ($i=($month-1); $i <$loop ;$i++) {
 				$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 				$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit;
 				if(strlen($row->account_number)==6){
@@ -398,15 +403,15 @@ $ararymonth=array(
 	?>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"><b> Jumlah Beban Non Operational</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $jml_beban_non[$i];
 		echo number_format(nsi_round($jml_p), 0, 0, '.')   ?></b></td>
 	<?php } ?>
 	</tr>
 	<tr style="background: lightgrey">
 		<td colspan="2" class="h_kanan"><b>Net Profit</b></td>
-		<?php for ($i=0; $i <$loop ;$i++) {?>
-		<td class="h_kanan"><b><?php $jml_p = ($jml_dapat[$i]-$jml_beban[$i]-$jml_beban_operasional[$i])+($jml_dapat_non[$i]-$jml_beban_non[$i]);
+		<?php for ($i=($month-1); $i <$loop ;$i++) {?>
+		<td class="h_kanan"><b><?php $jml_p = ($jml_dapat[$i]+$jml_dapat_non[$i])-$jml_beban[$i]-$jml_beban_operasional[$i]-$jml_beban_non[$i];
 		echo number_format(nsi_round($jml_p), 0, 0, '.')   ?></b></td>
 	<?php } ?>
 	</tr>

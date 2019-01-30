@@ -108,6 +108,16 @@ if (!function_exists('timeline_widget')) {
  * @param boolean $return_as_data
  * @return html
  */
+if (!function_exists('announcements_alert_widget')) {
+
+    function announcements_alert_widget($return_as_data = false) {
+        $ci = get_instance();
+        $announcements = $ci->Announcements_model->get_unread_announcements($ci->login_user->id, $ci->login_user->user_type)->result();
+        $view_data["announcements"] = $announcements;
+        $ci->load->view("announcements/alert", $view_data, $return_as_data);
+    }
+
+}
 
 
 /**
@@ -481,7 +491,20 @@ if (!function_exists('count_clock_status_widget')) {
  * @param boolean $return_as_data
  * @return html
  */
+if (!function_exists('count_project_status_widget')) {
 
+    function count_project_status_widget($user_id = 0, $return_as_data = false) {
+        $ci = get_instance();
+        $options = array(
+            "user_id" => $user_id ? $user_id : $ci->login_user->id
+        );
+        $info = $ci->Projects_model->count_project_status($options);
+        $view_data["project_open"] = $info->open;
+        $view_data["project_completed"] = $info->completed;
+        $ci->load->view("projects/project_status_widget", $view_data, $return_as_data);
+    }
+
+}
 
 if (!function_exists('count_sales_widget')) {
 

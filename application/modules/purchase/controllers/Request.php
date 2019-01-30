@@ -168,6 +168,7 @@ class Request extends MY_Controller {
 
         $query = $this->Master_Vendors_model->get_details($options)->row();
         $value = $this->Purchase_Request_model->get_request_total_summary($data->id);
+        
         $row_data = array(
         
             anchor(get_uri("purchase/request/view/" . $data->id), "#00".$data->id.$data->code),

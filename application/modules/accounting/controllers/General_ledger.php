@@ -30,7 +30,7 @@ class General_ledger extends MY_Controller {
         if(!isset($_GET['start'])||$_GET['start']=='')$start = date("Y")."-01-01";
         if(!isset($_GET['end'])||$_GET['end']=='')$end = date("Y-m-d");
 
-        $start_sebelum=date("Y")."-01-01";
+        $start_sebelum=substr($start,0,4)."-01-01";
         $end_sebelum=$start;
 
 
@@ -45,6 +45,7 @@ class General_ledger extends MY_Controller {
         if(!empty($start) && !empty($end)){
             $where3 = " AND a.date >= '$start_sebelum' AND  a.date < '$end_sebelum' ";
         }
+        //echo $where3;
 
         $where_id='';
         if($id!='')$where_id= "AND fid_coa='".$id."'";
@@ -66,10 +67,10 @@ class General_ledger extends MY_Controller {
         //if(!empty($id)){
             $where_coa = "AND fid_coa = '$coadb->no_coa'  ";
 
-            $sa_debet = $this->Master_Saldoawal_model->getDebit($coadb->no_coa,($periode-1));
-            $sa_credit = $this->Master_Saldoawal_model->getCredit($coadb->no_coa,($periode-1));
+            $sa_debet = $this->Master_Saldoawal_model->getDebit($coadb->no_coa,$periode);
+            $sa_credit = $this->Master_Saldoawal_model->getCredit($coadb->no_coa,$periode);
        
-            $data3 = $this->db->query("SELECT sum(debet) as total_debet,sum(credit) as total_credit FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where3 ORDER BY a.id ASC")->row();
+            $data3 = $this->db->query("SELECT sum(debet) as total_debet,sum(credit) as total_credit FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where3 ORDER BY a.date ASC")->row();
 
         
 
@@ -92,14 +93,17 @@ class General_ledger extends MY_Controller {
         $jml_cre = 0;
         
             
-            $data = $this->db->query("SELECT a.*,b.account_number,b.account_name FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.date ASC");
+            $data = $this->db->query("SELECT a.*,b.account_number,b.account_name,b.normally FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where ORDER BY a.date,a.voucher_code ASC");
 
             //echo $this->db->last_query();exit();
             $no=0;
             foreach($data->result() as $db){
                 $originalDate = $db->date;
                 $newDate = date("d-M-Y", strtotime($originalDate));
+                if($db->normally=='Debet')
                 $saldo = $saldo+$db->debet-$db->credit;
+                else if($db->normally=='Kredit')
+                    $saldo = $saldo+$db->credit-$db->debet;
 
                 $html .= "<tr>";
                 $html .= "<td>".++$no."</td>";
@@ -124,7 +128,7 @@ class General_ledger extends MY_Controller {
         
 
         
-        // echo json_encode(array("success" => true, "data" => $html,'message' => lang('record_saved')));
+        
 
 
 

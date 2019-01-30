@@ -56,7 +56,7 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
                        <td><input type="text" class="form-control" name="start" id="start" value="<?php echo $periode_default ?>" autocomplete="off"></td>
                         <td><label>End Date</label></td>
                        <td><input type="text" class="form-control" name="end" id="end" value="<?php echo $periode_now ?>" autocomplete="off"></td>
-                       <td><select name="type" class="form-control"><option value="0">Default</option><option value="1">Monthly</option></select></td>
+                       <td><select name="type" class="form-control"><option value="0">Default</option><!--<option value="1">Monthly</option>--></select></td>
                         <td>
                             <button type="submit" name="search" class="btn btn-default" value="1"><i class=" fa fa-search"></i> Filter</button>
                             <button type="submit" name="print"  class="btn btn-default" value="2"><i class=" fa fa-file-pdf-o"></i> Pdf</button>
@@ -103,12 +103,17 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
     $jml_debet = 0;
     $jml_credit = 0;
 
+     $year_periode=substr($periode_default, 0,4);
     foreach ($getCoa->result() as $row) {
+
+        $saldo_awal_debet = $this->Master_Saldoawal_model->getDebit($row->id,($year_periode));
+        $saldo_awal_credit = $this->Master_Saldoawal_model->getCredit($row->id,($year_periode));
+
         $debet = $this->Accounting_model->getDebetKas($row->id,$periode_default,$periode_now);
         $credit = $this->Accounting_model->getCreditKas($row->id,$periode_default,$periode_now);
 
-        $saldo_awal_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode_now);
-        $saldo_awal_credit= $this->Master_Saldoawal_model->getCredit($row->id,$periode_now);
+        // $saldo_awal_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode_now);
+        // $saldo_awal_credit= $this->Master_Saldoawal_model->getCredit($row->id,$periode_now);
 
 
 
@@ -121,14 +126,14 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         
         }else{
         	// $html .= '<td class="h_tengah"> '.$row->account_number.' </td>';
-            if($row->account_type == "Kas/Bank"){
+            if($row->normally == "Debet"){
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
             $html .= '<td class="h_kanan">'.number_format(($debet->debet+$saldo_awal_debet) - $credit->credit, 0, 0, '.').'</td>';
             $html .= '<td class="h_kanan">'.number_format(0).'</td>';
             }else{
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-                $html .= '<td class="h_kanan">'.number_format($debet->debet, 0, 0, '.').'</td>';
-                $html .= '<td class="h_kanan">'.number_format($credit->credit+$saldo_awal_credit, 0, 0, '.').'</td>';
+                $html .= '<td class="h_kanan">'.number_format(0).'</td>';
+                $html .= '<td class="h_kanan">'.number_format(($credit->credit+$saldo_awal_credit)-$debet->debet, 0, 0, '.').'</td>';
 
 
             }

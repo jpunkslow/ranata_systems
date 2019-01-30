@@ -444,13 +444,15 @@ class S_payments extends MY_Controller {
         $query = $this->Master_Customers_model->get_details($options)->row();
         $total = $data->amount + $data->residu;
         // $value = $this->Sales_Payments_model->get_payments_total_summary($data->id);
+         $originalDate = $data->pay_date;
+         $newDate = date("d-M-Y", strtotime($originalDate));
         $row_data = array(
             anchor(get_uri("sales/s_payments/prints/").$data->id."/".str_replace("/", "-", $data->code), $data->code),
             // $data->fid_inv,
             $query->code." - ".$query->name,
             $data->paid,
             // $data->fid_bank,
-            format_to_date($data->pay_date),
+            $newDate,
             $data->memo,
             $data->currency,
             to_currency($data->amount),
