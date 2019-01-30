@@ -33,10 +33,13 @@
              <div class="form-group">
                 <input type="hidden" name="order_id" value="<?php echo $model_info->id ?>">
                 <label for="fid_order" class=" col-md-3">PROJECT #</label>
-                    <div class=" col-md-9">
+                    <div class=" col-md-8">
                         <?php
                            echo form_dropdown("fid_project", $project_dropdown, $model_info->fid_project, "class='select2 validate-hidden' id='fid_project' ");
                             ?>
+                    </div>
+                    <div class="col-md-1">
+                         <?php echo modal_anchor(get_uri("sales/s_invoices/proj_modal_form"), "<i class='fa fa-plus-circle'></i> " , array("class" => "btn btn-default", "title" => "Add Projects")); ?>
                     </div>
             </div>  
             <div class="form-group">
@@ -50,10 +53,13 @@
             </div>  
             <div class="form-group">
                 <label for="fid_cust" class="col-md-3">Customers Name</label>
-                <div class=" col-md-9">
+                <div class=" col-md-8">
                     <?php
                     echo form_dropdown("fid_cust", $clients_dropdown, $model_info->fid_cust, "class='select2 validate-hidden' id='fid_cust' data-rule-required='true', data-msg-required='" . lang('field_required') . "'");
                     ?>
+                </div>
+                <div class="col-md-1">
+                     <?php echo modal_anchor(get_uri("sales/s_invoices/cust_modal_form"), "<i class='fa fa-plus-circle'></i> " , array("class" => "btn btn-default", "title" => "Add Customers")); ?>
                 </div>
             </div>
             <div class="form-group">

@@ -123,12 +123,12 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
         	// $html .= '<td class="h_tengah"> '.$row->account_number.' </td>';
             if($row->account_type == "Kas/Bank"){
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-            $html .= '<td class="h_kanan">'.number_format(($debet->debet+$saldo_awal_debet) - $credit->credit).'</td>';
+            $html .= '<td class="h_kanan">'.number_format(($debet->debet+$saldo_awal_debet) - $credit->credit, 0, 0, '.').'</td>';
             $html .= '<td class="h_kanan">'.number_format(0).'</td>';
             }else{
                 $html .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row->account_name."</td>";
-                $html .= '<td class="h_kanan">'.number_format($debet->debet).'</td>';
-                $html .= '<td class="h_kanan">'.number_format($credit->credit+$saldo_awal_credit).'</td>';
+                $html .= '<td class="h_kanan">'.number_format($debet->debet, 0, 0, '.').'</td>';
+                $html .= '<td class="h_kanan">'.number_format($credit->credit+$saldo_awal_credit, 0, 0, '.').'</td>';
 
 
             }
@@ -149,8 +149,8 @@ if(!empty($_GET['start']) && !empty($_GET['end'])){
     </tr> -->
 <tr style="background-color: lightgrey; font-weight: bold">
     <td  class="h_kanan" > SALDO </td>
-        <td class="h_kanan"><?php echo number_format($jml_debet); ?></td>
-        <td class="h_kanan"><?php echo number_format($jml_credit); ?></td>
+        <td class="h_kanan"><?php echo number_format($jml_debet, 0, 0, '.'); ?></td>
+        <td class="h_kanan"><?php echo number_format($jml_credit, 0, 0, '.'); ?></td>
     </tr>
 </table>
 

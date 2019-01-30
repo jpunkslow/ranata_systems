@@ -60,6 +60,7 @@
             <?php
             echo form_dropdown('user_type', array(
                 "staff" => "STAFF",
+		"sales" => "SALES",
                 'acccounting' => "ACCOUNTING",
                 'inventory' => "INVENTORY",
                 'manager' => "MANAGER",

@@ -55,7 +55,7 @@
                         	<select class="form-control" name="year">
                         		<?php for($a=date('Y');$a>=2017;$a--){?>
 
-                        			<option value="<?php echo $a?>"><?php echo $a?></option>
+                        			<option value="<?php echo $a?>" <?php if ($year == $a) echo 'selected' ?>><?php echo $a?></option>
                         		<?php } ?>
 
                         	</select>
@@ -94,14 +94,14 @@
         <th colspan="<?php echo (($loop-$month)+2)?>"><?php if(empty($_GET['type']) || $_GET["type"] == 1){ ?>
 <p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." ".$year?></p>
 <?php }else{ ?>
-	<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[$month]." - ".$ararymonth[$loop];  ?> <?php echo $year?></p>
+	<p style="text-align:center; font-size: 15pt; font-weight: bold;"> Laporan Neraca <br> Periode <?php echo $ararymonth[($month-1)]." - ".$ararymonth[($loop-1)];  ?> <?php echo $year?></p>
 	<?php } ?>
 </th>
 <tr><td colspan="<?php echo (($loop-$month)+2)?>"><b>Pendapatan</b> </td></tr>
 	<tr style="background: lightgrey">
 		<th style="width:5%; vertical-align: middle; text-align:center" > No. </th>
 		<th style="width:75%; vertical-align: middle; text-align:center">Keterangan </th>
-		<?php for ($i=$month; $i <=$loop ;$i++) { ?>
+		<?php for ($i=0; $i <$loop ;$i++) { ?>
 				<th style="width:20%; vertical-align: middle; text-align:center"><?php echo $ararymonth[$i]?> </th>
 		<?php }	?> 
 
@@ -126,12 +126,12 @@
 					<td class="h_tengah"> '.$no_act_lancar.' </td>
 		';
 				$currentAssets .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 
-			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
+			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
 			
-					$currentAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
+					$currentAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_act_lancar[$i] += $jumlah;
 					
 			}
@@ -155,11 +155,11 @@
 					<td class="h_tengah"> '.$no_act_nolancar.' </td>
 		';
 				$currentNoAssets .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 
-			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
+			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
-					$currentNoAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
+					$currentNoAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_act_nolancar[$i] += $jumlah;
 					
 			}
@@ -181,12 +181,12 @@
 				<tr>
 					<td class="h_tengah"> '.$no_kwj_lancar.' </td>';
 				$currentLiabilities .= '<td>&nbsp'.$row->account_name.'</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 
-			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
+			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit+$saldo;
 		
-					$currentLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
+					$currentLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_kwj_lancar[$i] += $jumlah;
 					
 			}
@@ -210,11 +210,11 @@
 					<td class="h_tengah"> '.$no_kwj_nolancar.' </td>
 		';
 				$currentNoLiabilities .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 
-			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
+			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
-					$currentNoLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
+					$currentNoLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_kwj_lancar[$i] += $jumlah;
 					
 			}
@@ -238,12 +238,12 @@
 					<td class="h_tengah"> '.$no_ekuitas.' </td>
 		';
 		$ekuitas .= '<td>&nbsp;'.$row->account_name.'</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 
-			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,$i,$year,$project);
+			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
 			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit +$saldo;
 				
-						$ekuitas .='<td class="h_kanan">'.number_format(nsi_round($jumlah)).'</td>';
+						$ekuitas .='<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 			}
 			$ekuitas .= '</tr>';
 			$no_ekuitas++;
@@ -262,10 +262,10 @@
 
 	$activa_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Aktiva Lancar</b></td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 		$activa_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_act_lancar[$i];
-		$activa_lancar .=number_format(nsi_round($jml_p)).'</b></td>';
+		$activa_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
 		$activa_total[$i] +=$jml_p;
 	 }
 	$activa_lancar .='</tr>';
@@ -273,10 +273,10 @@
 
 	$activa_no_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Aktiva Tidak Lancar</b></td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 		$activa_no_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_act_nolancar[$i];
-		$activa_no_lancar .=number_format(nsi_round($jml_p)).'</b></td>';
+		$activa_no_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
 		$activa_total[$i] +=$jml_p;
 	 }
 	$activa_no_lancar .='</tr>';
@@ -284,27 +284,27 @@
 
 	$kwj_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Kewajiban Lancar</b></td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 		$kwj_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_kwj_lancar[$i];
-		$kwj_lancar .=number_format(nsi_round($jml_p)).'</b></td>';
+		$kwj_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
 		$kwj_total[$i] +=$jml_p;
 	 }
 	$kwj_lancar .='</tr>';
 
 	$kwj_no_lancar .='<tr style="background: lightgrey">
 		<td colspan="2" > <b>Kewajiban Tidak Lancar</b></td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		for ($i=0; $i <$loop ;$i++) {
 		$kwj_no_lancar .='<td class="h_kanan"><b>';
 		$jml_p = $jml_kwj_nolancar[$i];
-		$kwj_no_lancar .=number_format(nsi_round($jml_p)).'</b></td>';
+		$kwj_no_lancar .=number_format(nsi_round($jml_p), 0, 0, '.').'</b></td>';
 		$kwj_total[$i] +=$jml_p;
 	 }
 	$kwj_no_lancar .='</tr>';
 
 	$laba_rugi_ditahan .='<tr >
-		<td>2<td > Laba (Rugi) Ditahan</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		<td class="h_tengah">2<td > Laba (Rugi) Ditahan</td>';
+		for ($i=0; $i <$loop ;$i++) {
 		$laba_rugi_ditahan .='<td class="h_kanan"><b>';
 		
 		$laba_rugi_ditahan .=number_format(nsi_round(0)).'</b></td>';
@@ -312,8 +312,8 @@
 	$laba_rugi_ditahan .='</tr>';
 
 	$laba_rugi_berjalan .='<tr >
-		<td>2<td > Laba (Rugi) Tahun Berjalan</td>';
-		for ($i=$month; $i <=$loop ;$i++) {
+		<td class="h_tengah">3<td > Laba (Rugi) Tahun Berjalan</td>';
+		for ($i=0; $i <$loop ;$i++) {
 		$laba_rugi_berjalan .='<td class="h_kanan"><b>';
 		$laba_rugi_berjalan .=number_format(nsi_round(0)).'</b></td>';
 	 }
@@ -325,9 +325,9 @@
 
 		<tr style="background: lightgrey">
 		<td colspan="2" > <b>Aktiva</b></td>
-		<?php for ($i=$month; $i <=$loop ;$i++) {?>
+		<?php for ($i=0; $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $activa_total[$i];
-		echo number_format(nsi_round($jml_p))   ?></b></td>
+		echo number_format(nsi_round($jml_p), 0, 0, '.')   ?></b></td>
 	<?php } ?>
 	</tr>
 	<?php echo $activa_lancar ?>
@@ -336,9 +336,9 @@
 	<?php echo $currentNoAssets?>
 	<tr style="background: lightgrey">
 		<td colspan="2" > <b>Kewajiban Dan Ekuitas</b></td>
-		<?php for ($i=$month; $i <=$loop ;$i++) {?>
+		<?php for ($i=0; $i <$loop ;$i++) {?>
 		<td class="h_kanan"><b><?php $jml_p = $kwj_total[$i];
-		echo number_format(nsi_round($jml_p));   ?></b></td>
+		echo number_format(nsi_round($jml_p), 0, 0, '.');   ?></b></td>
 		<?php } ?>
 	</tr>
 	<?php echo $kwj_lancar?>

@@ -49,10 +49,9 @@ class Neraca extends MY_Controller {
             if($type==1){
                 $type=$month;
             }
-            $loop=$type+$month;
+            $loop=$type;
             if($loop>12)$loop=12;
             $ararymonth=array(
-                        '',
                         'Januari',
                         'Februari',
                         'Maret',

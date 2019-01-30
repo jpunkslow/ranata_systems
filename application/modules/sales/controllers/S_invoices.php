@@ -57,6 +57,15 @@ class S_invoices extends MY_Controller {
         $this->load->view('invoice/modal_form',$view_data);
     }
 
+    function cust_modal_form() {
+        //get custom fields
+        $this->load->view('invoice/cust_modal_form',$view_data);
+    }
+    function proj_modal_form() {
+        //get custom fields
+        $this->load->view('invoice/proj_modal_form',$view_data);
+    }
+
 
 
 
@@ -135,7 +144,7 @@ class S_invoices extends MY_Controller {
             $view_data['model_info'] = $this->Sales_Invoices_model->get_one($id);
             $view_data['taxes_dropdown'] = array("" => "-") + $this->Taxes_model->get_dropdown_list(array("title"));
             $view_data['order_dropdown'] = array("" => "-") + $this->Sales_Order_model->get_dropdown_list(array("code"));
-            $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name")) + array("ADD" => "+");
+            $view_data['project_dropdown'] = array(0 => "-") + $this->Master_Project_model->get_dropdown_list(array("project_name","company_name"));
 
 
             $view_data['clients_dropdown'] = array("" => "-") + $this->Master_Customers_model->get_dropdown_list(array("name"));

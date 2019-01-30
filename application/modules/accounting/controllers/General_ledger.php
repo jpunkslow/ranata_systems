@@ -79,9 +79,9 @@ class General_ledger extends MY_Controller {
 
         $html .= "<tr ><td colspan='4' align='right' style='background-color:lightgrey;'><strong>Saldo Awal Sebelumnya </strong></td>";
         $html .= "<td align='right' style='background-color:lightgrey;'></td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format(($sa_debet+$data3->total_debet))."</td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format(($sa_credit+$data3->total_credit))."</td>";
-        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo)."</td> </tr>";
+        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format(($sa_debet+$data3->total_debet), 0, 0, '.')."</td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format(($sa_credit+$data3->total_credit), 0, 0, '.')."</td>";
+        $html .= "<td align='right' style='background-color:lightgrey;'>".number_format($saldo, 0, 0, '.')."</td> </tr>";
         $where = '';
         if(!empty($start) && !empty($end)){
             $where = " AND date >= '$start' AND  date <= '$end' ";
@@ -111,9 +111,9 @@ class General_ledger extends MY_Controller {
                 // $html .= "<td>".$db->account_number."</td>";
                 // $html .= "<td>".$db->account_name."</td>";
                 $html .= "<td>".$db->description."</td>";
-                $html .= "<td align='right' width='100'>".number_format($db->debet)."</td>";
-                $html .= "<td align='right' width='100'>".number_format($db->credit)."</td>";
-                $html .= "<td align='right' width='100'>".number_format($saldo)."</td></tr>";
+                $html .= "<td align='right' width='100'>".number_format($db->debet, 0, 0, '.')."</td>";
+                $html .= "<td align='right' width='100'>".number_format($db->credit, 0, 0, '.')."</td>";
+                $html .= "<td align='right' width='100'>".number_format($saldo, 0, 0, '.')."</td></tr>";
 
                 $jml_deb = $jml_deb + $db->debet;
                 $jml_cre = $jml_cre + $db->credit;
