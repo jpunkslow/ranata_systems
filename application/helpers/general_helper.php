@@ -6,6 +6,37 @@
  * @param string $uri
  * @return print url
  */
+if(!function_exists("printCoa")){
+    function printCoa($coa_id = 0, $full = false){
+        $ci =& get_instance();
+
+        $query = $ci->db->query("SELECT * FROM acc_coa_type  WHERE id = '$coa_id' limit 1")->row();
+        if($full == true){
+            return $query->account_number."<br>".$query->account_name ;
+        }else{
+            return $query->account_number;
+        }
+
+    }
+}
+
+if(!function_exists('checkJournal')){
+
+    function checkJournal($project = 0,$code,$voucher_code,$date,$type,$description,$fid_coa,$debet,$credit){
+        $html = "";
+        $ci = get_instance();
+         // $html = "<table class='table table-bordered'>";
+         $html .= "<tr>";
+         $html .= "<td>".printCoa($fid_coa,true)."</td>";
+         $html .= "<td align='center'>".to_decimal_format($debet)."</td>";
+         $html .= "<td align='center'>".to_decimal_format($credit)."</td>";
+         $html .= "<td align='right'>".$description."</td>";
+         $html .= "</tr>";
+
+         return $html."";
+
+    }
+}
 
 if (!function_exists('build_child')) {
     function build_child($oldID,$exclude = array()){

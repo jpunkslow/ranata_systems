@@ -1,16 +1,19 @@
 <?php echo form_open(get_uri("sales/s_invoices/posting_save"), array("id" => "invoices-form", "class" => "general-form", "role" => "form")); ?>
 <div class="modal-body clearfix">
 
-     <input type="hidden" name="id" value="<?php echo $model_info->id; ?>" />
+     <input type="hidden" name="id" id="id" value="<?php echo $model_info->id; ?>" />
      <input type="hidden" name="fid_cust" value="<?php echo $model_info->fid_cust; ?>" />
-     <input type="hidden" name="fid_project" value="<?php echo $model_info->fid_project; ?>" />
+     <input type="hidden" name="fid_project" id="fid_project" value="<?php echo $model_info->fid_project; ?>" />
 
      <input type="hidden" name="fid_tax" value="<?php echo $model_info->fid_tax; ?>" />
+     <input type="hidden" name="pay_type" id="pay_type" value="CREDIT">
+    <input type="hidden" name="fid_bank" id="fid_bank" value="0">
+
 
 
     <div class="form-group">
         <label for="code" class=" col-md-3">INVOICES ID</label>
-        <div class="col-md-9">
+        <div class="col-md-7">
             <?php
             echo form_input(array(
                 "id" => "code",
@@ -23,6 +26,7 @@
             ));
             ?>
         </div>
+        
     </div>
     
     <div class="form-group">
@@ -40,7 +44,7 @@
                         ?>
         </div>
     </div>
-     <div class="form-group">
+    <!--  <div class="form-group">
         <label for="pay_type" class=" col-md-3">PAYMENT TYPE</label>
         <div class="col-md-9">
              <?php 
@@ -52,16 +56,16 @@
                     );
                         ?>
         </div>
-    </div>
-    <div class="form-group" id="cash">
+    </div> -->
+    <!-- <div class="form-group" id="cash">
         <label for="fid_bank" class="col-md-3">CASH / BANK</label>
         <div class=" col-md-9">
             <?php
-            echo form_dropdown("fid_bank", $bank_dropdown, "", "class='select2 tax-select2'");
+            echo form_dropdown("fid_bank", $bank_dropdown, $model_info->fid_bank, "class='select2' id='fid_bank'");
             
             ?>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label for="paid_date" class=" col-md-3">TRANSACTION DATE</label>
         <div class="col-md-9">
@@ -175,10 +179,26 @@
         </div>
     </div>
 </div>
+<div class="row">
+<table class="table table-bordered">
+    <caption ><center> <button type="button" id="showing" class="btn btn-primary btn-sm">Show Journal Review</button></center></caption>
+    <thead>
+        <tr>
+            <th>COA INFO</th>
+            <th>DEBET</th>
+            <th>CREDIT</th>
+            <th>DESCRIPTION</th>
+        </tr>
+    </thead>
+    <tbody id="showJournal">
+            
+    </tbody>
+</table>   
+</div>
 
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal"><span class="fa fa-close"></span> <?php echo lang('close'); ?></button>
-    <button type="submit" class="btn btn-primary"><span class="fa fa-check-circle"></span> <?php echo lang('save'); ?></button>
+    <button type="submit" class="btn btn-primary"><span class="fa fa-check-circle"></span> <?php echo lang('save_posting'); ?></button>
 </div>
 <?php echo form_close(); ?>
 
@@ -211,21 +231,73 @@
 
         
         
-        $("#pay_type").select2().on("change", function () {
-            var client_id = $(this).val();
-            if ($(this).val()) {
-                if(client_id == "DP"){
-                    $("#dp_field").show();
-                }
+        $("#showing").click( function () {
+            
+            var client_id = $("#pay_type").val();
+            
+            var inv_id = $('#id').val();
+            var amount = $('#amount').val();
+            var memo = $('#memo').val();
+            var fid_bank = $('#fid_bank :selected').val();
+            var ppn = $('#ppn').val();
+            var code = $('#code').val();
+            var currency = $('#currency :selected').val();
+            var subtotal = $('#subtotal').val();
+            var paid_date = $('#paid_date').val();
+            var pay_type = $('#pay_type').val();
+            // if(fid_bank != 0){ 
+                var data = {
+                    "inv_id":inv_id,
+                    "amount":amount ,
+                    "memo" : memo,
+                    "fid_bank" : fid_bank,
+                    "ppn" : ppn,
+                    "code" : code,
+                    "currency" : currency,
+                    "subtotal" : subtotal,
+                    "pay_type" : pay_type,
+                    "paid_date" : paid_date 
+                };
                 if(client_id == "CASH"){
                     $("#cash").show();
                     $("#total_amount_cr").hide();
+                    // $("#invoices-form").submit(function() {
+                        
+                        // var data = $("#invoices-form").serialize(); 
+                        
+                         $.ajax({
+                            url: "<?php echo get_uri("sales/s_invoices/checkJournal") ?>" + "/" + client_id ,
+                            dataType: "html",
+                            data: data,
+                            type:'POST',
+                            success: function (row) {
+                                $("#showJournal").html(row);
+                                // alert(fid_project);
+                                 
+                            }
+                        });
+                     // });
                 }if(client_id == "CREDIT"){
-                    // $("#total_amount").hide();
-                    // $("#total_amount_cr").show();
+                    // $("#invoices-form").submit(function(e) {
+                        // e.preventDefault();
+                        // var data = ; 
+                         $.ajax({
+                            url: "<?php echo get_uri("sales/s_invoices/checkJournal") ?>" + "/" + client_id,
+                            dataType: "html",
+                            data: data,
+                            type:'POST',
+                            success: function (row) {
+                                $("#showJournal").html(row);
+                                 // alert(fid_project);
+                            }
+                        });
+                     // });
                        
                 }
-            }
+            // }else{
+            //     alert("Please Select CASH/BANK ");
+            // }
+            
         });
         $("#fid_cust").select2().on("change", function () {
             var client_id = $(this).val();

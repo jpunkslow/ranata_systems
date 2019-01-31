@@ -12,6 +12,8 @@ $lang["edit"] = "Edit";
 $lang["close"] = "Close";
 $lang["cancel"] = "Cancel";
 $lang["save"] = "Save";
+$lang["save_posting"] = "Posting";
+
 $lang["delete"] = "Delete";
 $lang["description"] = "Description";
 $lang["admin"] = "Admin";

@@ -1073,6 +1073,106 @@ class S_invoices extends MY_Controller {
     }
 
 
+    function checkJournal(){
+        $id = $this->input->post('inv_id');
+
+
+        validate_submitted_data(array(
+            "code" => "required",
+            // "paid_date" => "required"
+            
+        ));
+
+        
+        $code = $this->input->post("code");
+        $voucher_code = "";
+        $date = $this->input->post("paid_date");
+        $type = "sales";
+        // $coa_sales = $this->input->post("sales_coa");
+        $description = $this->input->post("memo");
+        $amount = unformat_currency($this->input->post('amount'));
+        // $amount_cr = unformat_currency($this->input->post('amount_cr'));
+        $subtotal = unformat_currency($this->input->post('subtotal'));
+        $ppn = unformat_currency($this->input->post('ppn'));
+
+        // $dp = unformat_currency($this->input->post('dp'));
+        $pay_type = $this->input->post('pay_type');
+        $fid_coa = $this->input->post('fid_bank');
+        // $fid_cust = $this->input->get('fid_cust');
+        // $fid_project = $this->input->get('fid_project');
+
+        $view_data = array();
+        $currency = $this->input->post('currency');
+        $curr = 12;
+        if($currency == "IDR"){
+            $curr = 12;
+        }
+        if($currency == "USD"){
+            $curr = 13;
+        }
+
+
+            $ppn_coa = 95;
+
+
+            if($pay_type == "CREDIT"){
+
+
+
+                
+                 $query = $this->Sales_InvoicesItems_model->get_hpp($id);
+                 $query_hpp = $this->Sales_InvoicesItems_model->get_hpp($id);
+                 foreach($query->result() as $row){
+                    echo checkJournal($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,0,$row->total);
+                 }
+
+                echo checkJournal($fid_project,$code,$voucher_code,$date,$type,$description,$curr,$amount,0);
+                echo checkJournal($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                    foreach ($query_hpp->result() as $key) {
+                    //print_r($key);exit();
+                        if($key->hpp_journal!='0'){
+                         echo checkJournal($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
+                        }
+                        if($key->lawan_hpp!='0'){
+                
+                        echo checkJournal($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
+                        }
+                    }
+
+
+                 
+             }if($pay_type == "CASH"){
+                echo checkJournal($fid_project,$code,$voucher_code,$date,$type,$description,$fid_coa,$amount,0);
+                
+                echo checkJournal($fid_project,$code,$voucher_code,$date,$type,$description,$ppn_coa,0,$ppn);
+                 $query = $this->Sales_InvoicesItems_model->get_hpp($id);
+                 $query_hpp = $this->Sales_InvoicesItems_model->get_hpp($id);
+                foreach($query->result() as $row){
+                    echo checkJournal($fid_project,$code,$voucher_code,$date,$type,$row->title,$row->sales_journal,0,$row->total);
+
+                    
+                }
+
+                foreach ($query_hpp->result() as $key) {
+                    if($key->hpp_journal!='0')
+                    echo checkJournal($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->hpp_journal,$key->basic_price,0);
+                    if($key->lawan_hpp!='0')
+                    echo checkJournal($fid_project,$code,$voucher_code,$date,$type,"HPP - ".$key->title,$key->lawan_hpp,0,$key->basic_price);
+                }
+
+                
+             }
+             
+                 
+            
+            
+
+               
+            
+            
+        
+    }
+
 }
 
 /* End of file clients.php */
