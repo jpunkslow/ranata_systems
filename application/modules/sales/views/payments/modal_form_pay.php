@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="fid_bank" class="col-md-3">Kas/Bank</label>
+        <label for="fid_bank" class="col-md-3">CASH/BANK</label>
         <div class=" col-md-9">
             <?php
             echo form_dropdown("fid_bank", $bank_dropdown, "", "class='select2 tax-select2'");
@@ -124,7 +124,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="memo" class="col-md-3">Memo</label>
+        <label for="memo" class="col-md-3">MEMO</label>
         <div class=" col-md-9">
             <?php
             echo form_textarea(array(

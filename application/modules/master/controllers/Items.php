@@ -29,7 +29,7 @@ class Items extends MY_Controller {
 
 
         $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
-        $view_data['sales_journal_lawan'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100');
+        $view_data['sales_journal_lawan'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','110001');
         $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
         $view_data['lawan_hpp'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','150');
 
@@ -43,7 +43,7 @@ class Items extends MY_Controller {
         ));
 
          $view_data['sales_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','400');
-         $view_data['sales_journal_lawan'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','100');
+         $view_data['sales_journal_lawan'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','110001');
         
         $view_data['hpp_journal'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','500');
          $view_data['lawan_hpp'] = $this->Master_Coa_Type_model->getCoaDrop('account_number','150');
