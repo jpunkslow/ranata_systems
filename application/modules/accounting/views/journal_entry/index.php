@@ -6,7 +6,7 @@
                 <div class="btn-group" role="group">
                 </div>
                 <?php
-                    echo modal_anchor(get_uri("accounting/journal_entry/modal_form"), "<i class='fa fa-plus-circle'></i> " . "Add Voucher", array("class" => "btn btn-primary", "title" => "Add Voucher"));
+                    echo modal_anchor(get_uri("accounting/journal_entry/modal_form"), "<i class='fa fa-plus-circle'></i> " . "Add Item", array("class" => "btn btn-primary", "title" => "Add Item"));
                 
                 ?>
             </div>

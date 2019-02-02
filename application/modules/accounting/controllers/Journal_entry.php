@@ -256,6 +256,7 @@ class Journal_entry extends MY_Controller {
             }
         } else {
             if ($this->Journal_header_model->delete($id)) {
+                $this->Journal_header_model->triggerDelete($id);
                 echo json_encode(array("success" => true, 'message' => lang('record_deleted')));
             } else {
                 echo json_encode(array("success" => false, 'message' => lang('record_cannot_be_deleted')));
@@ -327,7 +328,7 @@ class Journal_entry extends MY_Controller {
         );
 
         	$row_data[] = anchor(get_uri("accounting/journal_entry/entry/").$data->id.'/'.$data->fid_coa, "<i class='fa fa-plus'></i>", array("class" => "edit", "title" => "Add Entry", "data-post-id" => $data->id)).modal_anchor(get_uri("accounting/journal_entry/modal_form_edit"), "<i class='fa fa-pencil'></i>", array("class" => "edit", "title" => lang('edit_client'), "data-post-id" => $data->id))
-                . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/journal_entry/delete"), "data-action" => "delete_entry"));
+                . js_anchor("<i class='fa fa-times fa-fw'></i>", array('title' => lang('delete_client'), "class" => "delete", "data-id" => $data->id, "data-action-url" => get_uri("accounting/journal_entry/delete"), "data-action" => "delete"));
         
         return $row_data;
     }

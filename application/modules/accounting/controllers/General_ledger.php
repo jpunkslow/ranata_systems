@@ -71,10 +71,9 @@ class General_ledger extends MY_Controller {
             $sa_credit = $this->Master_Saldoawal_model->getCredit($coadb->no_coa,$periode);
        
             $data3 = $this->db->query("SELECT sum(debet) as total_debet,sum(credit) as total_credit FROM transaction_journal a JOIN acc_coa_type b ON b.id  = a.fid_coa WHERE  a.deleted = 0 $where_coa $where3 ORDER BY a.date ASC")->row();
-
         
 
-        $saldo = $saldo + ($sa_debet+$data3->total_debet - $sa_credit+$data3->total_credit);
+        $saldo = $saldo + (($sa_debet+$data3->total_debet) - ($sa_credit+$data3->total_credit));
 
 
 

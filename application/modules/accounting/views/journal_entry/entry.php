@@ -36,7 +36,7 @@
                         <td><?php echo $info_header->description ?></td>
                     </tr>
                 </table>
-
+                            <?php echo modal_anchor(get_uri("accounting/journal_entry/modal_form_detail"), "<i class='fa fa-plus-circle'></i> " . "Add Row", array("class" => "btn btn-primary", "title" => "Add Row","data-post-id" => $info_header->id)); ?>
         
             </div>
         </div>
@@ -68,7 +68,7 @@
                 {title: "REF #"},
                 {title: "DESCRIPTION"},
                 {title: "DEBET"},
-                {title: "CREDIT"}
+                {title: "CREDIT"},
                 {title: '<i class="fa fa-bars"></i>', "class": "text-center option w150"}
             ]
 
