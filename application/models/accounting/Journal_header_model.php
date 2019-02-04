@@ -29,4 +29,11 @@ class Journal_header_model extends Crud_model {
         return $data;
     }
 
+    function triggerDelete($id){
+
+        $data = $this->db->query("UPDATE transaction_journal SET deleted = 1 WHERE fid_header = '$id'");
+
+        return $data;
+    }
+
 }
