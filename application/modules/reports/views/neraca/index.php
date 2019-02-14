@@ -115,13 +115,19 @@
 	$no_act_lancar = 1;
 	$jml_act_lancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
-	foreach ($getCurrentAssets as $row) {
-		 
-        
-        $sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
-        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
 
-        $saldo = $sa_debet + $sa_credit;
+	foreach ($getCurrentAssets as $row) { 
+		
+		$getchild=$this->db->query('select id from acc_coa_type where id="'.$row->id.'" OR parental="'.$row->id.'"');
+		$saldo=0;
+		foreach ($getchild ->result() as $t) {
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($t->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($t->id,$periode);
+    	//echo $t->id."<br/>";
+    	$saldo = $sa_debet + $sa_credit+$saldo;
+    	}
+
+        
 		$currentAssets .='
 				<tr>
 					<td class="h_tengah"> '.$no_act_lancar.' </td>
@@ -130,8 +136,8 @@
 		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
-			
+			if($row->normally=='Debet')$jumlah = ($jml_akun->jum_debet - $jml_akun->jum_kredit) + $saldo;
+			else $jumlah = ($jml_akun->kredit - $jml_akun->debet) + $saldo;
 					$currentAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_act_lancar[$i] += $jumlah;
 					
@@ -146,11 +152,14 @@
 	$jml_act_nolancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getCurrentNonAssets as $row) {
-
-		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
-        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
-
-        $saldo = $sa_debet + $sa_credit;
+		$saldo=0;
+		$getchild=$this->db->query('select id from acc_coa_type where id="'.$row->id.'" OR parental="'.$row->id.'"');
+		foreach ($getchild ->result() as $t) {
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($t->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($t->id,$periode);
+    	//echo $t->id."<br/>";
+    	$saldo = $sa_debet + $sa_credit+$saldo;
+    	}
 		$currentNoAssets .= '
 				<tr>
 					<td class="h_tengah"> '.$no_act_nolancar.' </td>
@@ -159,7 +168,8 @@
 		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
+			if($row->normally=='Debet')$jumlah = ($jml_akun->jum_debet - $jml_akun->jum_kredit) + $saldo;
+			else $jumlah = ($jml_akun->kredit - $jml_akun->debet) + $saldo;
 					$currentNoAssets .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_act_nolancar[$i] += $jumlah;
 					
@@ -172,12 +182,17 @@
 	$currentLiabilities='';
 	$no_kwj_lancar = 1;
 	$jml_kwj_lancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
-
+	$saldo=0;
 	foreach ($getCurrentLiabilities as $row) {
-		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
-        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+$getchild=$this->db->query('select id from acc_coa_type where id="'.$row->id.'" OR parental="'.$row->id.'"');
+		$saldo=0;
+		foreach ($getchild ->result() as $t) {
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($t->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($t->id,$periode);
+    	//echo $t->id."<br/>";
+    	$saldo = $sa_debet + $sa_credit+$saldo;
+    	}
 
-        $saldo =  $sa_debet + $sa_credit;
 		$currentLiabilities .='
 				<tr>
 					<td class="h_tengah"> '.$no_kwj_lancar.' </td>';
@@ -185,7 +200,8 @@
 		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit+$saldo;
+			if($row->normally=='Debet')$jumlah = ($jml_akun->jum_debet - $jml_akun->jum_kredit) + $saldo;
+			else $jumlah = ($jml_akun->kredit - $jml_akun->debet) + $saldo;
 		
 					$currentLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_kwj_lancar[$i] += $jumlah;
@@ -202,10 +218,16 @@
 	$jml_kwj_nolancar =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getLongTermPayable as $row) {
-		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
-        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
+		$saldo=0;
+		$getchild=$this->db->query('select id from acc_coa_type where id="'.$row->id.'" OR parental="'.$row->id.'"');
+		foreach ($getchild ->result() as $t) {
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($t->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($t->id,$periode);
+    	//echo $t->id."<br/>";
+    	$saldo = $sa_debet + $sa_credit+$saldo;
+    	}
 
-        $saldo = $sa_debet + $sa_credit;
+
 		$currentNoLiabilities .='
 				<tr>
 					<td class="h_tengah"> '.$no_kwj_nolancar.' </td>
@@ -214,7 +236,8 @@
 		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit + $saldo;
+			if($row->normally=='Debet')$jumlah = ($jml_akun->jum_debet - $jml_akun->jum_kredit) + $saldo;
+			else $jumlah = ($jml_akun->kredit - $jml_akun->debet) + $saldo;
 					$currentNoLiabilities .= '<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 						$jml_kwj_lancar[$i] += $jumlah;
 					
@@ -230,10 +253,14 @@
 	$jml_ekuitas =array(0,0,0,0,0,0,0,0,0,0,0,0,0);
 
 	foreach ($getEquity as $row) {
-		$sa_debet = $this->Master_Saldoawal_model->getDebit($row->id,$periode);
-        $sa_credit = $this->Master_Saldoawal_model->getCredit($row->id,$periode);
-
-        $saldo = $sa_debet + $sa_credit;
+		$saldo=0;
+		$getchild=$this->db->query('select id from acc_coa_type where id="'.$row->id.'" OR parental="'.$row->id.'"');
+		foreach ($getchild ->result() as $t) {
+        $sa_debet = $this->Master_Saldoawal_model->getDebit($t->id,$periode);
+        $sa_credit = $this->Master_Saldoawal_model->getCredit($t->id,$periode);
+    	//echo $t->id."<br/>";
+    	$saldo = $sa_debet + $sa_credit+$saldo;
+    	}
 		$ekuitas .='
 				<tr>
 					<td class="h_tengah"> '.$no_ekuitas.' </td>
@@ -242,7 +269,8 @@
 		for ($i=($month-1); $i <$loop ;$i++) {
 
 			$jml_akun = $this->Profitloss_model->get_jml_akun_month($row->id,($i+1),$year,$project);
-			$jumlah = $jml_akun->jum_debet + $jml_akun->jum_kredit +$saldo;
+			if($row->normally=='Debet')$jumlah = ($jml_akun->jum_debet - $jml_akun->jum_kredit) + $saldo;
+			else $jumlah = ($jml_akun->kredit - $jml_akun->debet) + $saldo;
 				
 						$ekuitas .='<td class="h_kanan">'.number_format(nsi_round($jumlah), 0, 0, '.').'</td>';
 			}
